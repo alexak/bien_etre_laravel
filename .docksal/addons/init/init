@@ -15,22 +15,22 @@ LARAVEL_ROOT="web"
 
 if [ -d "$PROJECT_ROOT/$LARAVEL_ROOT" ]; then
   echo -e "${yellow}Directory exists${NC}: $PROJECT_ROOT/$LARAVEL_ROOT"
-  echo "Delete this directory and start Laravel installation?"
-  echo "Press Enter to delete it and continue or Ctrl-C to cancel..."
+#  echo "Delete this directory and start Laravel installation?"
+#  echo "Press Enter to delete it and continue or Ctrl-C to cancel..."
   read -p ""
 fi
 
-rm -r "$PROJECT_ROOT/$LARAVEL_ROOT" 2>/dev/null
+#rm -r "$PROJECT_ROOT/$LARAVEL_ROOT" 2>/dev/null
 
 # Reset containers
-fin reset -f
+#fin reset -f
 
 # Require installer
-fin exec composer global require "laravel/installer"
+#fin exec composer global require "laravel/installer"
 
 # Install laravel
 cd "$PROJECT_ROOT"
-fin exec composer create-project --prefer-dist laravel/laravel "$LARAVEL_ROOT"
+#fin exec composer create-project --prefer-dist laravel/laravel "$LARAVEL_ROOT"
 
 echo "Copying Database settings..."
 fin exec sed -i 's/DB_HOST=127.0.0.1/DB_HOST=db/g' "${LARAVEL_ROOT}/.env"
@@ -39,7 +39,7 @@ fin exec sed -i 's/DB_USERNAME=root/DB_USERNAME=user/g' "${LARAVEL_ROOT}/.env"
 fin exec sed -i 's/DB_PASSWORD=/DB_PASSWORD=user/g' "${LARAVEL_ROOT}/.env"
 
 echo "Installing artisan addon..."
-fin addon install artisan
+#fin addon install artisan
 
 echo "------------------------------------"
 echo -e "${green}Installation complete.${NC}"
