@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
       <header>
         <TopMenu />
       </header>  
-      <main className="flex-grow container mx-auto px-8 px-40">
+      <main className="flex-grow container mx-auto px-8 mg:px-20 lg:px-40">
         {children}
       </main>
       <footer>

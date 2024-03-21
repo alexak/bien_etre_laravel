@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Inertia::share([
             'categories' => function () {
-                return Category::all(); // Fetch categories once here
+                return Category::all(); 
             },
             'auth' => [
                 'user' => function () {
