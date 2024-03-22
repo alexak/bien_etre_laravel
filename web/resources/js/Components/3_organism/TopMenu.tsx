@@ -116,7 +116,7 @@ export default function TopMenu() {
                   <Link
                     className="w-full flex flex-row pb-8"
                     key={category.slug} // Key for efficient rendering
-                    href={`/categories/${category.slug}`}
+                    href={`/category/${category.slug}`}
                   >
                     <div className="w-[50px]">
                       <img src={category.image} className="max-w-[50px] max-h-[30px] pr-4" />
@@ -159,7 +159,7 @@ export default function TopMenu() {
                         <Button 
                             variant="text"
                             ripple={false}
-                            className="text-gray-500 hover:text-gray-700"
+                            className="text-gray-500 hover:text-gray-700 text-base normal-case focus-visible:border-none focus-visible:border-0"
                         >
                             <span className="pr-4">
                                 Categories
@@ -176,7 +176,7 @@ export default function TopMenu() {
                                 <MenuItem key={category.id}>
                                     <Link
                                         className="w-full text-gray-500 hover:text-gray-700 flex flex-row pb-8" 
-                                        href={`/categories/${category.slug}`}
+                                        href={`/category/${category.slug}`}
                                     >
                                         <img src={category.image} className='max-w-[50px] max-h-[30px] pr-4'/>
                                         <div className="flex flex-col">

@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('commerce_service', function (Blueprint $table) {
             $table->id();
             $table->foreignId('commerce_id')
-                ->constrained('commerce')
+                ->constrained('commerces')
                 ->onDelete('cascade');
             $table->foreignId('service_id')
-                ->constrained('service')
+                ->constrained('services')
                 ->onDelete('cascade');
             $table->timestamps();
 

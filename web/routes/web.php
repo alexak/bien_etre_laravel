@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,7 @@ use App\Http\Controllers\HomeController;
 |
 */
 Route::get('/', [HomeController::class, 'index']);
+Route::get('/category/{categoryname}', [CategoryController::class, 'index']);
 
 Route::get('/welcome', function () {
     return Inertia::render('Welcome', [
