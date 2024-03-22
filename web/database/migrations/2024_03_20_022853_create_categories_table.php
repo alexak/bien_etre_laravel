@@ -20,6 +20,10 @@ class CreateCategoriesTable extends Migration
             $table->string('image');
             $table->text('description');
             $table->string('slug')->unique();
+            $table->foreignId('parent_category_id')
+                ->nullable()
+                ->constrained('categories')
+                ->onDelete('set null');
             $table->timestamps();
         });
 
