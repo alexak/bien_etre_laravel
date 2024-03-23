@@ -4,8 +4,7 @@ import { Link, usePage } from "@inertiajs/react";
 import { Button, Collapse, IconButton, Menu, MenuHandler, MenuItem, MenuList } from "@material-tailwind/react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faBars, faXmark, faC} from '@fortawesome/free-solid-svg-icons';
-
-
+import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 
 export default function TopMenu() {
 
@@ -18,13 +17,37 @@ export default function TopMenu() {
     const user = props.auth?.user;
 
     const userMenu = (
-        <div className="text-gray-800 md:text-gray-500 hover:text-gray-700 flex flex-row items-center h-[50px] pb-8 md:pb-0">
-             <div className="w-[50px] md:w-max mr-0 md:mr-2">
-                <img className="mr-2" src="/images/icons/logout.png" alt="logout" />
+        <div className="flex flex-col md:flex-row">
+          <Link
+            href={route('favorites')} 
+            className="text-gray-800 md:text-gray-500 hover:text-gray-700 flex flex-row items-center h-[50px] pr-4 pb-8 md:pb-0"
+          >  
+            <div className="w-[50px] md:w-max mr-0 md:mr-2">
+              <FontAwesomeIcon 
+                className="h-4 w-4" 
+                icon={faHeartRegular}
+              />
             </div>
             <div className="leading-4">
-                Deconnexion
+              Mes favoris
             </div>
+          </Link>
+          <Link
+            href={route('logout')} 
+            method="post"
+            className="text-gray-800 md:text-gray-500 hover:text-gray-700 flex flex-row items-center h-[50px] pb-8md:pb-0"
+          >  
+            <div className="w-[50px] md:w-max mr-0 md:mr-2">
+              <img
+                className="h-[20px]" 
+                src="/images/icons/logout.png" 
+                alt="logout"
+              />
+            </div>
+            <div className="leading-4">
+              Deconnexion
+            </div>
+          </Link>
         </div>
     );
           
@@ -68,7 +91,7 @@ export default function TopMenu() {
     // narrow menu used by mobile phones
     const menuNarrow = (
         <>
-          <div className="flex flex-col w-full border-b-2 px-8 md:hidden ">
+          <div className="flex flex-col w-full border-b-2 px-8 md:hidden z-20">
             {/** menu small header */}
             <div className="flex flex-row w-full justify-between h-[50px] items-center mb-4">
               <div>

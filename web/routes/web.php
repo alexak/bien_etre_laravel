@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\FavoriteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,14 @@ use App\Http\Controllers\HomeController;
 */
 Route::get('/', [HomeController::class, 'index']);
 Route::get('/category/{categoryname}', [CategoryController::class, 'index']);
+
+/** Favorites routes */
+Route::get('/favorites', [FavoriteController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('favorites');
+Route::put('/favorites', [FavoriteController::class, 'addFavoriteToUser']);
+Route::delete('/favorites', [FavoriteController::class, 'deleteFavoriteFromUser']);
+
 
 Route::get('/welcome', function () {
     return Inertia::render('Welcome', [
