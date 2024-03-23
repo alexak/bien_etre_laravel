@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+
 
 return new class extends Migration
 {
@@ -21,10 +23,10 @@ return new class extends Migration
             $table->boolean('isAtStore');
             $table->string('address_1');
             $table->string('address_2');            
-            $table->foreignId('city_id')
-                ->nullable()
-                ->constrained('cities')
-                ->onDelete('set null');
+            //$table->foreignId('city_id')
+            //    ->nullable()
+            //    ->constrained('cities')
+            //    ->onDelete('set null');
             $table->geometry('position');
             $table->foreignId('manager_user_id')
                 ->nullable() 
@@ -46,6 +48,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        Schema::dropIfExists('commerces');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 };
