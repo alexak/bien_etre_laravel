@@ -42,4 +42,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /** 
+    * Get the commerces a user has favorited.
+    *
+    * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    */
+   public function favorites()
+   {
+       return $this->belongsToMany(Commerce::class, 'users_commerces', 'user_id', 'commerces_id');
+   }
 }
