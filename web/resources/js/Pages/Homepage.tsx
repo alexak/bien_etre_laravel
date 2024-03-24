@@ -8,7 +8,7 @@ export default function Homepage()
   
     return (
       <>
-        <Auth />
+        Hello world
       </>
     );
 };

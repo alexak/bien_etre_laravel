@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,9 +30,12 @@ Route::get('/favorites', [FavoriteController::class, 'index'])
 Route::put('/favorites', [FavoriteController::class, 'addFavoriteToUser']);
 Route::delete('/favorites', [FavoriteController::class, 'deleteFavoriteFromUser']);
 
+require __DIR__.'/auth.php';
 
-Route::get('/welcome', function () {
-    return Inertia::render('Welcome', [
+
+/** Example routes */
+Route::get('/example/welcome', function () {
+    return Inertia::render('Example/Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -38,8 +43,8 @@ Route::get('/welcome', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+Route::get('/example/dashboard', function () {
+    return Inertia::render('Example/Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -48,4 +53,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+Route::middleware('guest')->group(function () {
+    Route::get('/example/register', function () {
+        return Inertia::render('Example/Auth/Register');
+    })->name('example_register');
+
+    Route::get('/example/login', function () {
+        return Inertia::render('Example/Auth/Login');
+    })->name('example_login');
+});
+
