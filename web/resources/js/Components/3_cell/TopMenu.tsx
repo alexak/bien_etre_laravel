@@ -20,7 +20,7 @@ export default function TopMenu() {
         <div className="flex flex-col md:flex-row">
           <Link
             href={route('favorites')} 
-            className="text-gray-800 md:text-gray-500 hover:text-gray-700 flex flex-row items-center h-[50px] pr-4 pb-8 md:pb-0"
+            className="text-gray-800 md:text-gray-500 hover:text-gray-700 flex flex-row items-center pr-4 pb-4 md:pb-0"
           >  
             <div className="w-[50px] md:w-max mr-0 md:mr-2">
               <FontAwesomeIcon 
@@ -91,9 +91,9 @@ export default function TopMenu() {
     // narrow menu used by mobile phones
     const menuNarrow = (
         <>
-          <div className="flex flex-col w-full border-b-2 px-8 md:hidden z-20">
+          <div className="flex flex-col w-full border-b-2 px-8 md:hidden  bg-white">
             {/** menu small header */}
-            <div className="flex flex-row w-full justify-between h-[50px] items-center mb-4">
+            <div className="flex flex-row w-full justify-between h-[50px] items-center">
               <div>
                 <Link href="/">
                   <img src="/images/logo.svg" alt="logo" width="50" height="50" />
@@ -109,7 +109,7 @@ export default function TopMenu() {
             </div>
       
             {/** menu small body */}
-            <Collapse open={openMenuSmall} className="w-full flex flex-col text-gray-800">
+            <Collapse open={openMenuSmall} className="w-full flex flex-col text-gray-800 z-20 absolute top-[50px] left-0 px-8 bg-white overflow-y-auto">
               {/** category label */}
               <div
                 className="w-full justify-between flex pb-8"
