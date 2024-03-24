@@ -37,7 +37,10 @@ export default function LoginForm({ setActiveForm }) {
 
 
     return (
-        <form onSubmit={submit}>
+        <form 
+            onSubmit={submit}
+            className="w-full"
+        >
             <div className="text-white text-center text-3xl font-bold uppercase pb-8">
                 CONNEXION
             </div>
@@ -59,7 +62,6 @@ export default function LoginForm({ setActiveForm }) {
                     placeholder='Mot de passe'
                     name="password"
                     inputType='password'
-                    icon={faStarOfLife}
                     error={errors.password}
                     isSubmitted={isSubmitted}
                     onChange={(e) => setData('password', e.target.value)}

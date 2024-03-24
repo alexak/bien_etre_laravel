@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
       <header>
         <TopMenu />
       </header>
-      <main className="container mx-auto px-0 mg:px-20 lg:px-40">
+      <main className="container mx-auto p-0">
         {children}
       </main>
       <footer>

@@ -28,7 +28,10 @@ export default function ForgotPassword() {
 
 
     return (
-        <form onSubmit={submit}>
+        <form 
+            onSubmit={submit}
+            className="w-full"
+        >
             <div className="text-white text-center text-3xl font-bold uppercase pb-8">
                 mot de passe
             </div>

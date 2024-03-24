@@ -5,14 +5,15 @@ import React, {useEffect, useState} from 'react';
 import { 
     faEye,
     faEyeSlash,
+    faUser
 } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon, IconDefinition } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 // Define a type for the component props
 type FormInputProps = {
     className?: string;
-    icon?: IconDefinition; // Using FontAwesome IconDefinition type
+    icon?: any; // Using FontAwesome IconDefinition type
     inputType?: 'text' | 'password';
     placeholder?: string;
     value?: string;
@@ -33,7 +34,6 @@ const FormInput: React.FC<FormInputProps> = ({
     error,
     onChange,
     onBlur,
-    // Add a prop to indicate if the form has been submitted
     isSubmitted,
   }) => {
     const [placeholderText, setPlaceholderText] = useState(error || placeholder);
@@ -42,9 +42,10 @@ const FormInput: React.FC<FormInputProps> = ({
   
     const type = inputType === 'text' || shown ? "text" : "password";
   
+    
     let fieldIcon = icon;
     if (inputType === 'password') {
-      fieldIcon = shown ? faEye : faEyeSlash;
+        fieldIcon = shown ? faEye : faEyeSlash;
     }
   
     // Update placeholder and error state when error prop changes or form is submitted
@@ -61,7 +62,7 @@ const FormInput: React.FC<FormInputProps> = ({
 
   
     return (
-      <div className={`w-full border-2 rounded-full flex flex-row items-center relative ${className}`}>
+      <div className={`w-full border-2 rounded-full flex flex-row items-center relative px-2 ${className}`}>
         <input
           type={type}
           value={value}
@@ -72,10 +73,12 @@ const FormInput: React.FC<FormInputProps> = ({
           onBlur={(e) => handleOnBlur(e.target.value)}
           onChange={onChange}
         />
-        {inputType === 'password' && (
-          <button onClick={() => setShown(!shown)} className="p-2">
-            <FontAwesomeIcon className="pr-2" icon={fieldIcon} />
+        {inputType === 'password' ? (
+          <button onClick={() => setShown(!shown)}>
+            <FontAwesomeIcon className="pr-2" icon={fieldIcon}/>
           </button>
+        ):(
+            <FontAwesomeIcon className="pr-2" icon={fieldIcon}/>
         )}
       </div>
     );
