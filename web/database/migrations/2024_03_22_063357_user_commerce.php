@@ -18,6 +18,10 @@ return new class extends Migration
             $table->foreignId('commerces_id')
                 ->constrained('commerces')
                 ->onDelete('cascade');
+
+            // Add indexes for faster filtering
+            $table->index('user_id');
+            $table->index('commerces_id');
         });   
     }
 

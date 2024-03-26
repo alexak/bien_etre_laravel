@@ -18,11 +18,16 @@ return new class extends Migration
             $table->string('name');
             $table->longText('description');
             $table->string('image');
-            $table->tinyInteger('rating');
-            $table->boolean('isAtHome');
-            $table->boolean('isAtStore');
-            $table->string('address_1');
-            $table->string('address_2');            
+            $table->tinyInteger('rating')
+                ->nullable();
+            $table->boolean('isAtHome')
+                ->default(false);
+            $table->boolean('isAtStore')
+                ->default(true);
+            $table->string('address_1')
+                ->nullable();
+            $table->string('address_2')
+                ->nullable();            
             //$table->foreignId('city_id')
             //    ->nullable()
             //    ->constrained('cities')
@@ -32,12 +37,15 @@ return new class extends Migration
                 ->nullable() 
                 ->constrained('users')
                 ->onDelete('set null');
-            $table->string('contact_mail');
-            $table->string('contact_phone');
+            $table->string('contact_mail')
+                ->nullable();
+            $table->string('contact_phone')
+                ->nullable();
             $table->foreignId('maincategory_id')
                 ->nullable() 
                 ->constrained('categories')
-                ->onDelete('set null');            
+                ->onDelete('set null');
+   
             $table->index(['maincategory_id']);
             $table->spatialIndex(['position']);
         });

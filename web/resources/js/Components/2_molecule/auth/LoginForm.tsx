@@ -30,8 +30,8 @@ export default function LoginForm({ setActiveForm }) {
         setIsSubmitted(true);
     };
     
-    const handleChange = (attribute, e) =>  {
-        setData(attribute, e.target.value);
+    const handleChange = (key, value) =>  {
+        setData(key, value);
         setIsSubmitted(false);
     }
 
@@ -72,7 +72,7 @@ export default function LoginForm({ setActiveForm }) {
                 {canResetPassword && (
                     <div 
                         onClick={()=>{setActiveForm('forgotPassword')}}
-                        className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                        className="underline cursor-pointer text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                     >
                         Mot de passe oublié?
                     </div>
@@ -86,16 +86,24 @@ export default function LoginForm({ setActiveForm }) {
                     Se connecter
                 </Button>
             </div>
-            <div className="mx-8">
-                <Checkbox
-                    name="remember"
-                    checked={data.remember}
-                    onChange={(e) => setData('remember', e.target.checked)}
-                    label={
-                        <span className="pl-2">Se souvenir de moi</span>
-                    }
-                    ripple={false}
-                />
+            <div className="flex flex-row justify-between">
+                <div className="mx-8">
+                    <Checkbox
+                        name="remember"
+                        checked={data.remember}
+                        onChange={(e) => setData('remember', e.target.checked)}
+                        label={
+                            <span className="pl-2">Se souvenir de moi</span>
+                        }
+                        ripple={false}
+                        />
+                </div>
+                <div 
+                    onClick={()=>{setActiveForm('newAccount')}}
+                    className="pr-8 cursor-pointer underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                >
+                    Pas de compte? Enregistrez-vous. 
+                </div>
             </div>
         </form>
     );

@@ -43,13 +43,20 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    /** 
-    * Get the commerces a user has favorited.
-    *
-    * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-    */
-   public function favorites()
-   {
-       return $this->belongsToMany(Commerce::class, 'users_commerces', 'user_id', 'commerces_id');
-   }
+    /**
+     * Get the commerces a user has favorited, including the linked commerces.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function favorites()
+    {
+        return $this->belongsToMany(Commerce::class, 'users_commerces', 'user_id', 'commerces_id');
+    }
+
+
+    public function favoriteCommerceIds()
+    {
+        return $this->belongsToMany(Commerce::class, 'users_commerces', 'user_id', 'commerces_id')
+            ->select('commerces.id AS favorite_commerce_id');
+    }
 }

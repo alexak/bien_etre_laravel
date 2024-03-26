@@ -16,7 +16,7 @@ export default function Auth({authform}) {
                 <div className="w-full lg:w-2/3">
                     <div className="flex flex-col justify-center items-center h-screen md:px-20 lg:m-0 bg-gradient-to-br  from-customBlue-400 to-customBlue-300 ">
                         <Logo className="w-[100px] h-[100px] fill-white" />
-                        {activeForm === 'newAccount' && <NewAccount />}
+                        {activeForm === 'newAccount' && <NewAccount setActiveForm={setActiveForm} />}
                         {activeForm === 'login' && <LoginForm setActiveForm={setActiveForm} />}
                         {activeForm === 'forgotPassword' && <ForgotPassword />}
                     </div>

@@ -1,9 +1,8 @@
 
-import CommerceCard from "@/Components/3_cell/CommerceCard";
-import CommerceList from "@/Components/3_cell/CommerceList";
-import CommerceMap from "@/Components/3_cell/CommerceMap";
-import { Link } from "@inertiajs/react";
-import { IconButton } from "@material-tailwind/react";
+
+import CommerceCard from "@/Components/2_molecule/commerces/CommerceCard";
+import { Link, usePage } from "@inertiajs/react";
+import { Button, IconButton, Tooltip } from "@material-tailwind/react";
 import React from "react";
 
 /**
@@ -17,58 +16,72 @@ export default function Commerces({commerces}){
 
     return (
         <div className="flex flex-row w-full min-h-screen">
+                
             {/** Filter sidebar */}
-            <div>
-                Todo filder goews here
-                <ul>
-                    <li>Distance</li>
-                    <li>Tagcloud</li>
-                    <li>Price</li>
-                </ul>
+            <div className="flex flex-col h-full w-[200px]">
+                <div>distance</div>
+                <div>tagcloud ?</div>
+                <div>price?</div>
+                <div>{displayMode}</div>
             </div>
 
-            {/** Main body */}
-            <div className="flex felx-col">
-
+            {/** Main content */}
+            <div className="flex flex-col">
+                
                 {/** Header */}
-                <div className="flex flex-row justify-between border-b-2 py-8 m-8 w-full">
-                    {/** left box */}
-                    <div className="flex flex-row">Filterselect box | Pagination selectbox</div>
-
-                    {/** right box */}
-                    <div className="flex flex-row">
-                        show as cards | show as list | show as map
-                        <IconButton 
-                            className={`rounded-md  hover:bg-blue-200 mr-4 ${displayMode}=='card' ? "bg-blue-100" : "bg-blue-50"} `}    
+                <div className="flex flex-row justify-end py-8 w-full">
+    
+                        <div 
+                            className={`cursor-pointer flex justify-center items-center rounded-md hover:bg-gray-200 p-2 mr-4 ${displayMode=='card' ? "bg-gray-200" : ""} `}
                             onClick={()=>setDisplayMode('card')}
                         >
-                            <img src="/images/icons/cards.png" alt="" width="50" height="50" />
-                        </IconButton>
-                        <IconButton 
-                            className={`rounded-md  hover:bg-blue-200 mr-4 ${displayMode}=='list' ? "bg-blue-100" : "bg-blue-50"} `}    
-                            onClick={()=>setDisplayMode('list')}
-                        >
-                            <img src="/images/icons/list.png" alt="" width="50" height="50" />
-                        </IconButton>
-                        <IconButton 
-                            className={`rounded-md  hover:bg-blue-200 ${displayMode}=='map' ? "bg-blue-100" : "bg-blue-50"} `}    
-                            onClick={()=>setDisplayMode('map')}
-                        >
-                            <img src="/images/icons/map.png" alt="" width="50" height="50" />
-                        </IconButton>
+                            <img
+                                className="w-[30px] h-[30px]" 
+                                src="/images/icons/cards.png" 
+                                alt="" 
+                                width="30" 
+                                height="30"
+                            />
+                        </div>
+
+                    <div 
+                        className={`cursor-pointer flex justify-center items-center rounded-md hover:bg-gray-200 p-2 mr-4 ${displayMode=='list' ? "bg-gray-200" : ""} `}    
+                        onClick={()=>setDisplayMode('list')}
+                    >
+                        <img
+                            className="w-[30px] h-[30px]" 
+                            src="/images/icons/list.png" 
+                            alt="" 
+                            width="30" 
+                            height="30"
+                        />
                     </div>
+
+                    <div 
+                        className={`cursor-pointer flex justify-center items-center rounded-md hover:bg-gray-200 p-2 mr-4 ${displayMode=='map' ? "bg-gray-200" : ""} `}    
+                        onClick={()=>setDisplayMode('map')}
+                    >
+                        <img
+                            className="w-[30px] h-[30px]" 
+                            src="/images/icons/map.png" 
+                            alt="" 
+                            width="30" 
+                            height="30"
+                        />
+                    </div>
+
                 </div>
 
-                {/** main content */}
-                <div>
-                    {/** loop through commerces and display them as cards (either quadratic or rectangular) */}
-                    {commerces.map((commerce) => (
-                        <Link key={commerce.id} href={`/commerce/${commerce.id}`}>
-                            {displayMode === 'call' && <CommerceCard commerce={commerce} />}
-                            {displayMode === 'list' && <CommerceList commerce={commerce} />}
-                            {displayMode === 'map' && <CommerceMap commerce={commerce} />}
-                        </Link>
-                    ))}
+                {/** Categories list */}
+                <div className="grid grid-cols-5 grid-flow-row gap-4 w-full">
+                    {commerces.map((commerce) => {
+                        return (
+                            <CommerceCard
+                                key={commerce.id}
+                                commerce={commerce}
+                            />
+                        );
+                    })}
                 </div>
 
             </div>

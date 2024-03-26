@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
             },
             'auth' => [
                 'user' => function () {
-                    return optional(auth()->user()); // Optional chaining for user
+                    return optional(auth()->user()); 
                 },
             ],
         ]);

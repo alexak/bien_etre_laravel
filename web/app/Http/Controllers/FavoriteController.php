@@ -21,8 +21,7 @@ class FavoriteController extends Controller
         $user = Auth::user();
 
         return Inertia::render('Favorites', [
-            'user' => $user,
-            'favoritedCommerces' => $user->favorites()->with('commerce')->get(),
+            'favoritedCommerces' => $user->favorites->with('commerce')->get(),
         ]);
     }
 
@@ -35,6 +34,15 @@ class FavoriteController extends Controller
     public function addFavoriteToUser(Request $request)
     {
         $user = Auth::user();
+
+        //@todo: test if favorite is already set..
+
+        $user->favorites->attach($request->post());
+
+
+
+
+        /*
         $commerceId = $request->input('commerce_id');
 
         // Validate request data (e.g., commerce_id is required)
@@ -49,6 +57,7 @@ class FavoriteController extends Controller
 
         // Attach the commerce to the user's favorites
         $user->favorites()->attach($commerceId);
+        */
 
         return response()->json(['message' => 'Commerce added to favorites']);
     }
@@ -62,6 +71,12 @@ class FavoriteController extends Controller
     public function deleteFavoriteFromUser(Request $request)
     {
         $user = Auth::user();
+        $user->favorites->detach($request->delete());
+
+
+
+        /*
+        $user = Auth::user();
         $commerceId = $request->input('commerce_id');
 
         // Validate request data (e.g., commerce_id is required)
@@ -73,5 +88,6 @@ class FavoriteController extends Controller
         $user->favorites()->detach($commerceId);
 
         return response()->json(['message' => 'Commerce removed from favorites']);
+        */
     }
 }
