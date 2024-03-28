@@ -27,8 +27,10 @@ Route::get('/category/{categoryname}', [CategoryController::class, 'index']);
 Route::get('/favorites', [FavoriteController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('favorites');
-Route::put('/favorites', [FavoriteController::class, 'addFavoriteToUser']);
-Route::delete('/favorites', [FavoriteController::class, 'deleteFavoriteFromUser']);
+Route::post('/favorites', [FavoriteController::class, 'addFavoriteToUser'])
+    ->name('favorites.add');
+Route::delete('/favorites/{commerceId}', [FavoriteController::class, 'deleteFavoriteFromUser'])
+    ->name('favorites.delete');
 
 require __DIR__.'/auth.php';
 

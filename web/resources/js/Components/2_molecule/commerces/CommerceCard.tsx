@@ -18,6 +18,7 @@ import Tooltip from '@material-tailwind/react/components/Tooltip';
 import Card, { CardBody, CardFooter, CardHeader } from '@material-tailwind/react/components/Card';
 import { IconButton, Typography } from '@material-tailwind/react';
 import { usePage } from '@inertiajs/react';
+import FavIcon from '@/Components/1_atom/FavIcon';
 
 
 // Define an interface for the component's props
@@ -37,10 +38,6 @@ interface ServiceProvider {
 
 const CommerceCard = ({ commerce } ) => {
 
-    console.log(commerce);
-
-    const favIcon = commerce.isFavorite ? faHeartSolid : faHeartRegular;
-
     return (
         <Card className="w-full max-w-[26rem] shadow-lg p-4 rounded-lg">
             <CardHeader 
@@ -53,9 +50,9 @@ const CommerceCard = ({ commerce } ) => {
                     src={commerce.image}
                     alt={commerce.name}
                 />
-                <FontAwesomeIcon 
-                    className={`h-4 w-4 absolute top-2 right-2 ${commerce.isFavorite ? 'text-pink-500' :  'text-white' } `} 
-                    icon={favIcon}
+                <FavIcon 
+                    className=' absolute top-1 right-1'
+                    commerce={commerce}
                 />
             </CardHeader>
             <CardBody>

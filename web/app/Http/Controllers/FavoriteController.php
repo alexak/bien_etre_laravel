@@ -19,6 +19,9 @@ class FavoriteController extends Controller
     public function index()
     {
         $user = Auth::user();
+        if (!$user) {
+            return response()->json([], 401);
+        }
 
         return Inertia::render('Favorites', [
             'favoritedCommerces' => $user->favorites->with('commerce')->get(),
@@ -34,32 +37,22 @@ class FavoriteController extends Controller
     public function addFavoriteToUser(Request $request)
     {
         $user = Auth::user();
-
-        //@todo: test if favorite is already set..
-
-        $user->favorites->attach($request->post());
-
-
-
-
-        /*
-        $commerceId = $request->input('commerce_id');
-
-        // Validate request data (e.g., commerce_id is required)
-        $request->validate([
-            'commerce_id' => 'required|integer|exists:commerces,id',
-        ]);
-
-        // Check if commerce is already a favorite to avoid duplicates
-        if ($user->favorites()->where('commerces_id', $commerceId)->exists()) {
-            return response()->json(['message' => 'Commerce already favorited'], 422);
+        if (!$user) {
+            return Inertia::share('error', [
+                'status' => '401',
+                'message' => 'Unautorized'
+            ]);
         }
-
-        // Attach the commerce to the user's favorites
-        $user->favorites()->attach($commerceId);
-        */
-
-        return response()->json(['message' => 'Commerce added to favorites']);
+        
+        if ($user->favorites()->wherePivot('commerces_id', $request->post())->exists()) {
+            return Inertia::share('error', [
+                'status' => '301',
+                'message' => 'Favorite already exists, no change'
+            ]);
+        } else {
+            $user->favorites()->attach($request->post());
+        }
+        return Inertia::share('flash', ['message' => 'OK']);
     }
 
     /**
@@ -68,26 +61,24 @@ class FavoriteController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function deleteFavoriteFromUser(Request $request)
+    public function deleteFavoriteFromUser($commerceId)
     {
         $user = Auth::user();
-        $user->favorites->detach($request->delete());
+        if (!$user) {
+            return Inertia::share('error', [
+                'status' => '401',
+                'message' => 'Unautorized'
+            ]);
+        }
 
-
-
-        /*
-        $user = Auth::user();
-        $commerceId = $request->input('commerce_id');
-
-        // Validate request data (e.g., commerce_id is required)
-        $request->validate([
-            'commerce_id' => 'required|integer|exists:commerces,id',
-        ]);
-
-        // Detach the commerce from the user's favorites
-        $user->favorites()->detach($commerceId);
-
-        return response()->json(['message' => 'Commerce removed from favorites']);
-        */
+        if ($user->favorites()->wherePivot('commerces_id', $commerceId)->exists()) {
+            $user->favorites()->detach($commerceId);
+        } else {
+            return Inertia::share('error', [
+                'status' => '404',
+                'message' => 'Ressource not found'
+            ]);
+        }
+        return Inertia::share('flash', ['message' => 'OK']);
     }
 }
