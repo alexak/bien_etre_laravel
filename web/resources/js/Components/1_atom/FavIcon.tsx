@@ -12,33 +12,23 @@ export default function FavIcon({ commerce, ...props } ) {
     const favIcon = commerce.isFavorite ? faHeartSolid : faHeartRegular;
     const [displayedFavIcon, setDisplayedFavIcon] = useState(favIcon);
     const [currentCommerce, setCurrentCommerce] = useState(commerce);
+    const [ping, setPing] = useState(false);
 
     const toggleFavorite = () => {
-
         if(currentCommerce.isFavorite) {
             router.visit(route('favorites.delete', currentCommerce.id), {
                 method: 'delete',
                 preserveScroll: true,
-                onSuccess: () => {setCurrentCommerce({ ...currentCommerce, isFavorite: !currentCommerce.isFavorite })},
+                onSuccess: () => { setCurrentCommerce({ ...currentCommerce, isFavorite: !currentCommerce.isFavorite }) }
             })
         } else {
             router.visit(route('favorites.add'), {
                 method: 'post',
                 data: {commerceId: currentCommerce.id},
                 preserveScroll: true,
-                onFinish: () => {setCurrentCommerce({ ...currentCommerce, isFavorite: !currentCommerce.isFavorite })},
+                onFinish: () => { setCurrentCommerce({ ...currentCommerce, isFavorite: !currentCommerce.isFavorite }) }
             })
         }
-
-        /*
-        const response = currentCommerce.isFavorite ? 
-            router.delete(route('favorites.delete', currentCommerce.id)) 
-            : router.post(route('favorites.add'), {commerceId: currentCommerce.id});
-        
-        if (response.status === 200) {
-            setCurrentCommerce({ ...currentCommerce, isFavorite: !isFavorite });
-        }
-        */
     } 
 
     return (
@@ -49,7 +39,7 @@ export default function FavIcon({ commerce, ...props } ) {
             {...props}
         >
             <FontAwesomeIcon 
-                className={`h-4 w-4 ${currentCommerce.isFavorite ? 'text-pink-500' :  'text-white' } `} 
+                className={`h-4 w-4 ${currentCommerce.isFavorite ? 'text-pink-500' :  'text-gray-800' } ${ping ? 'animate-ping' : ''} `} 
                 icon={displayedFavIcon}
             />
         </div>

@@ -38,6 +38,9 @@ interface ServiceProvider {
 
 const CommerceCard = ({ commerce } ) => {
 
+
+    console.log(commerce);
+
     return (
         <Card className="w-full max-w-[26rem] shadow-lg p-4 rounded-lg">
             <CardHeader 
@@ -46,12 +49,12 @@ const CommerceCard = ({ commerce } ) => {
                 className="relative"
             >
                 <img
-                    className="rounded-lg w-full h-full"
+                    className="w-full h-full rounded-lg"
                     src={commerce.image}
                     alt={commerce.name}
                 />
                 <FavIcon 
-                    className=' absolute top-1 right-1'
+                    className='absolute flex items-center justify-center w-6 h-6 rounded-full cursor-pointer bg-white/75 align-center top-1 right-1'
                     commerce={commerce}
                 />
             </CardHeader>
@@ -83,7 +86,7 @@ export default CommerceCard;
                     <div className="flex">
                         <FontAwesomeIcon 
                             icon={faStarSolid} 
-                            className="w-5 h-5 pl-2 top-2 right-2 text-gray-800 pr-2" 
+                            className="w-5 h-5 pl-2 pr-2 text-gray-800 top-2 right-2" 
                         />
                         {commerce.rating}
                     </div>
@@ -96,7 +99,7 @@ export default CommerceCard;
                         <Tooltip content="Prestation en centre">
                             <FontAwesomeIcon 
                                 icon={faShop} 
-                                className="cursor-pointer w-5 h-5 p-2 text-gray-600 mr-2 rounded-full bg-orange-100 hover:bg-orange-200" 
+                                className="w-5 h-5 p-2 mr-2 text-gray-600 bg-orange-100 rounded-full cursor-pointer hover:bg-orange-200" 
                             />
                         </Tooltip>
                     )}
@@ -104,7 +107,7 @@ export default CommerceCard;
                         <Tooltip content="Prestation au domicile du client">
                             <FontAwesomeIcon 
                                 icon={faHouse} 
-                                className="cursor-pointer w-5 h-5 p-2 text-gray-600 mr-2 rounded-full bg-orange-100 hover:bg-orange-200" 
+                                className="w-5 h-5 p-2 mr-2 text-gray-600 bg-orange-100 rounded-full cursor-pointer hover:bg-orange-200" 
                             />
                         </Tooltip>
                     )}
@@ -112,7 +115,7 @@ export default CommerceCard;
                         <Tooltip content="Distance">
                             <FontAwesomeIcon 
                                 icon={faArrowsLeftRight} 
-                                className="w-5 h-5 p-2 text-gray-600 mr-2 rounded-full bg-orange-100 hover:bg-orange-200" 
+                                className="w-5 h-5 p-2 mr-2 text-gray-600 bg-orange-100 rounded-full hover:bg-orange-200" 
                             />
                         </Tooltip>
                         <div className="leading-none">

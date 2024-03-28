@@ -15,13 +15,15 @@ class CategoryController extends Controller
     {
         // Query the commerces with pagination and eager loading of mainCategory
         $commerces = Commerce::get([
-            'id',
-            'name',
-            'image',
-            'rating',
-            'isAtHome',
-            'isAtStore'
-        ]);
+                'id',
+                'name',
+                'image',
+                'rating',
+                'isAtHome',
+                'isAtStore',
+                'maincategory_id'
+            ]);
+
 
         $userFavorites = Auth::check() ? Auth::user()->favoriteCommerceIds->pluck('favorite_commerce_id', 'favorite_commerce_id')->toArray() : [];
         foreach($commerces as $commerce) {

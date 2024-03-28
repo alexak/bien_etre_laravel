@@ -12,6 +12,6 @@ class Category extends Model
 
     public function commerces()
     {
-        return $this->belongsToMany(Commerce::class);
+        return $this->hasMany(Commerce::class);
     }
 }
