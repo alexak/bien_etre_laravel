@@ -29,18 +29,18 @@ export default function Commerces({commerces}){
             <div className="flex flex-col">
                 
                 {/** Header */}
-                <div className="flex flex-row justify-end py-8 w-full">
+                <div className="flex flex-row justify-end w-full py-8">
     
                         <div 
                             className={`cursor-pointer flex justify-center items-center rounded-md hover:bg-gray-200 p-2 mr-4 ${displayMode=='card' ? "bg-gray-200" : ""} `}
                             onClick={()=>setDisplayMode('card')}
                         >
                             <img
-                                className="w-[30px] h-[30px]" 
+                                className="w-[20px] h-[20px]" 
                                 src="/images/icons/cards.png" 
                                 alt="" 
-                                width="30" 
-                                height="30"
+                                width="20" 
+                                height="20"
                             />
                         </div>
 
@@ -49,11 +49,11 @@ export default function Commerces({commerces}){
                         onClick={()=>setDisplayMode('list')}
                     >
                         <img
-                            className="w-[30px] h-[30px]" 
+                            className="w-[20px] h-[20px]" 
                             src="/images/icons/list.png" 
                             alt="" 
-                            width="30" 
-                            height="30"
+                            width="20" 
+                            height="20"
                         />
                     </div>
 
@@ -62,18 +62,18 @@ export default function Commerces({commerces}){
                         onClick={()=>setDisplayMode('map')}
                     >
                         <img
-                            className="w-[30px] h-[30px]" 
+                            className="w-[20px] h-[20px]" 
                             src="/images/icons/map.png" 
                             alt="" 
-                            width="30" 
-                            height="30"
+                            width="20" 
+                            height="20"
                         />
                     </div>
 
                 </div>
 
                 {/** Categories list */}
-                <div className="grid grid-cols-5 grid-flow-row gap-4 w-full">
+                <div className="grid w-full grid-flow-row grid-cols-5 gap-4">
                     {commerces.map((commerce) => {
                         return (
                             <CommerceCard

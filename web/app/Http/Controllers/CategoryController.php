@@ -14,17 +14,8 @@ class CategoryController extends Controller
     public function index($categoryname) 
     {
         // Query the commerces with pagination and eager loading of mainCategory
-        $commerces = Commerce::get([
-                'id',
-                'name',
-                'image',
-                'rating',
-                'isAtHome',
-                'isAtStore',
-                'maincategory_id'
-            ]);
-
-
+        $commerces =  Commerce::with('mainCategory')->get();
+        
         $userFavorites = Auth::check() ? Auth::user()->favoriteCommerceIds->pluck('favorite_commerce_id', 'favorite_commerce_id')->toArray() : [];
         foreach($commerces as $commerce) {
             $commerce->isFavorite = isset($userFavorites[$commerce->id]) ? true : false;

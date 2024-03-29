@@ -21,7 +21,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 |
 */
 Route::get('/', [HomeController::class, 'index']);
-Route::get('/category/{categoryname}', [CategoryController::class, 'index']);
+Route::get('/category/{categoryname}', [CategoryController::class, 'index'])
+    ->name('category');
 
 /** Favorites routes */
 Route::get('/favorites', [FavoriteController::class, 'index'])

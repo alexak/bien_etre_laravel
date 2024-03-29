@@ -2,22 +2,21 @@
 import React, { useState } from 'react';
 import FormInput from '@/components/2-atoms/FormInput/FormInput';
 import { 
-    faHeart as faHeartSolid,
     faStar as faStarSolid,
     faArrowsLeftRight,
     faHouse,
     faShop,
 } from '@fortawesome/free-solid-svg-icons';
 import {
-    faHeart as faHeartRegular,
+    faStar as faStarRegular,
   } from '@fortawesome/free-regular-svg-icons';
-import { Button } from '@/components/2-atoms/Boutton/Button';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Tooltip from '@material-tailwind/react/components/Tooltip';
+import { Tooltip } from "@material-tailwind/react";
 
 import Card, { CardBody, CardFooter, CardHeader } from '@material-tailwind/react/components/Card';
 import { IconButton, Typography } from '@material-tailwind/react';
-import { usePage } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import FavIcon from '@/Components/1_atom/FavIcon';
 
 
@@ -38,7 +37,6 @@ interface ServiceProvider {
 
 const CommerceCard = ({ commerce } ) => {
 
-
     console.log(commerce);
 
     return (
@@ -58,8 +56,56 @@ const CommerceCard = ({ commerce } ) => {
                     commerce={commerce}
                 />
             </CardHeader>
-            <CardBody>
-                Hello world
+            <CardBody className="relative px-0 h-[140px]">
+                <div className="flex flex-row justify-between">
+                    <div>
+                        <Link
+                            href={route('category', commerce.main_category.slug)} 
+                            className="text-xs font-medium text-gray-800 uppercase md:text-gray-500 hover:text-gray-700"
+                        >
+                            {commerce.main_category.title}
+                        </Link>
+                    </div>
+                    <div>
+                        <FontAwesomeIcon 
+                            icon={commerce.rating == null ? faStarRegular : faStarSolid} 
+                            className="w-4 h-4 pr-2 text-gray-400" 
+                        />
+                        {commerce.rating}
+                    </div>
+                </div>
+
+                <div className="w-full text-lg">
+                    {commerce.name}
+                </div>
+             
+
+                <div className='absolute left-0 z-10 flex flex-row w-full bottom-2'>
+                    { commerce.isAtHome == true && (
+                        <Tooltip 
+                            className="text-gray-800 bg-white border-2 border-solid drop-shadow-lg"
+                            content="Prestation en centre"
+                            placement="bottom-start"
+                        >
+                            <FontAwesomeIcon 
+                                className="w-4 h-4 pr-4 text-gray-400"
+                                icon={faHouse}
+                            />
+                        </Tooltip>
+                    )}
+                    { commerce.isAtStore == true && (
+                        <Tooltip 
+                            className="text-gray-800 bg-white border-2 border-solid drop-shadow-lg"
+                            content="Prestation en centre"
+                            placement="bottom-start"
+                        >
+                            <FontAwesomeIcon 
+                                className="w-4 h-4 pr-4 text-gray-400"
+                                icon={faShop}
+                            />
+                        </Tooltip>
+                    )}
+                </div>
             </CardBody>
         </Card>
     );
