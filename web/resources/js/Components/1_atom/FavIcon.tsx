@@ -12,7 +12,6 @@ export default function FavIcon({ commerce, ...props } ) {
     const favIcon = commerce.isFavorite ? faHeartSolid : faHeartRegular;
     const [displayedFavIcon, setDisplayedFavIcon] = useState(favIcon);
     const [currentCommerce, setCurrentCommerce] = useState(commerce);
-    const [ping, setPing] = useState(false);
 
     const toggleFavorite = () => {
         if(currentCommerce.isFavorite) {
@@ -39,7 +38,7 @@ export default function FavIcon({ commerce, ...props } ) {
             {...props}
         >
             <FontAwesomeIcon 
-                className={`h-4 w-4 ${currentCommerce.isFavorite ? 'text-pink-500' :  'text-gray-800' } ${ping ? 'animate-ping' : ''} `} 
+                className={`h-4 w-4 ${currentCommerce.isFavorite ? 'text-pink-500' :  'text-gray-800' } `} 
                 icon={displayedFavIcon}
             />
         </div>
