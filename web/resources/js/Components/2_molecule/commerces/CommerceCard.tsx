@@ -18,6 +18,7 @@ import Card, { CardBody, CardFooter, CardHeader } from '@material-tailwind/react
 import { IconButton, Typography } from '@material-tailwind/react';
 import { Link, usePage } from '@inertiajs/react';
 import FavIcon from '@/Components/1_atom/FavIcon';
+import SocialmediaShare from '@/Components/1_atom/SocialmediaShare';
 
 
 // Define an interface for the component's props
@@ -61,7 +62,7 @@ const CommerceCard = ({ commerce } ) => {
                     <div>
                         <Link
                             href={route('category', commerce.main_category.slug)} 
-                            className="text-xs font-medium text-gray-800 uppercase md:text-gray-500 hover:text-gray-700"
+                            className="text-xs font-medium text-gray-500 uppercase hover:text-gray-700"
                         >
                             {commerce.main_category.title}
                         </Link>
@@ -80,31 +81,38 @@ const CommerceCard = ({ commerce } ) => {
                 </div>
              
 
-                <div className='absolute left-0 z-10 flex flex-row w-full bottom-2'>
+                <div className='absolute left-0 z-10 flex flex-row content-end w-full h-4 bottom-2'>
                     { commerce.isAtHome == true && (
-                        <Tooltip 
-                            className="text-gray-800 bg-white border-2 border-solid drop-shadow-lg"
-                            content="Prestation en centre"
-                            placement="bottom-start"
-                        >
-                            <FontAwesomeIcon 
-                                className="w-4 h-4 pr-4 text-gray-400"
-                                icon={faHouse}
-                            />
-                        </Tooltip>
+                        <div className="pr-4">
+                            <Tooltip 
+                                className="text-gray-800 bg-white border-2 border-solid drop-shadow-lg"
+                                content="Prestation en centre"
+                                placement="bottom-start"
+                            >
+                                <FontAwesomeIcon 
+                                    className="w-4 h-4 text-gray-400"
+                                    icon={faHouse}
+                                />
+                            </Tooltip>
+                        </div>
                     )}
                     { commerce.isAtStore == true && (
-                        <Tooltip 
-                            className="text-gray-800 bg-white border-2 border-solid drop-shadow-lg"
-                            content="Prestation en centre"
-                            placement="bottom-start"
-                        >
-                            <FontAwesomeIcon 
-                                className="w-4 h-4 pr-4 text-gray-400"
-                                icon={faShop}
-                            />
-                        </Tooltip>
+                        <div className="pr-4">
+                            <Tooltip 
+                                className="text-gray-800 bg-white border-2 border-solid drop-shadow-lg"
+                                content="Prestation en centre"
+                                placement="bottom-start"
+                            >
+                                <FontAwesomeIcon 
+                                    className="w-4 h-4 text-gray-400"
+                                    icon={faShop}
+                                />
+                            </Tooltip>
+                        </div>
                     )}
+                    <div className="pr-4">
+                        <SocialmediaShare commerce={commerce} className="flex-grow"/>
+                    </div>
                 </div>
             </CardBody>
         </Card>
