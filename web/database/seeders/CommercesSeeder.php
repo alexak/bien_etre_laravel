@@ -6,9 +6,14 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as FakerFactory;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
 
 class CommercesSeeder extends Seeder
 {
+
+    private $slugs = [];
+
     public function run()
     {
         $faker = FakerFactory::create();
@@ -27,6 +32,7 @@ class CommercesSeeder extends Seeder
 
             $commerceData = [
                 'name' => array_key_exists('name', $tags) ? $tags['name'] : null,
+                'slug' => $this->createUniqueSlug($tags['name']),
                 'description' => $faker->paragraph(2), // Replace with appropriate value if available in JSON
                 'image' => "https://picsum.photos/300?random=" . uniqid(),
                 'rating' => rand(0, 5) <= 1 ? null : rand(1, 5), // Replace with appropriate value if available in JSON (consider average of user reviews)
@@ -34,7 +40,7 @@ class CommercesSeeder extends Seeder
                 'isAtStore' => true,   // Assuming hairdressers have a physical store (adjust if needed)
                 'address_1' => $address_1, // Can be populated from address components if available in JSON
                 'address_2' => null, // Can be populated from address components if available in JSON
-                'position' => $position,
+                //'position' => $position,
                 'manager_user_id' => null, // Might need to be populated based on your user management system
                 'contact_mail' => null, // Can be populated from contact details if available in JSON
                 'contact_phone' => (array_key_exists('phone', $tags) ? $tags['phone'] : null) 
@@ -46,4 +52,20 @@ class CommercesSeeder extends Seeder
             DB::table('commerces')->insert($commerceData);
         }
     }
+
+    /** 
+     * Function to create a unique slug
+     */
+    private function createUniqueSlug(string $name): string
+    {
+        $slug = Str::slug($name, '-');
+        $baseSlug = $slug;
+        $counter = 1;
+        do {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        } while(in_array($slug, $this->slugs));
+
+        return $slug;
+    }     
 }

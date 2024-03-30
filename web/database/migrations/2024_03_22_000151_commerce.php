@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('commerces', function (Blueprint $table) {
             $table->id();
+            $table->string('slug')->unique();
             $table->string('name');
             $table->longText('description');
             $table->string('image');
@@ -32,7 +33,7 @@ return new class extends Migration
             //    ->nullable()
             //    ->constrained('cities')
             //    ->onDelete('set null');
-            $table->geometry('position');
+            //$table->geometry('position');
             $table->foreignId('manager_user_id')
                 ->nullable() 
                 ->constrained('users')
@@ -47,7 +48,7 @@ return new class extends Migration
                 ->onDelete('set null');
    
             $table->index(['maincategory_id']);
-            $table->spatialIndex(['position']);
+            //$table->spatialIndex(['position']);
         });
     }
 
