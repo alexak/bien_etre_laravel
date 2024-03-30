@@ -32,8 +32,8 @@ export default function NewAccount({ setActiveForm }) {
         setIsSubmitted(true);
     };
     
-    const handleChange = (attribute, e) =>  {
-        setData(attribute, e.target.value);
+    const handleChange = (attribute, value) =>  {
+        setData(attribute, value);
         setIsSubmitted(false);
     }
 
@@ -43,10 +43,10 @@ export default function NewAccount({ setActiveForm }) {
             onSubmit={submit}
             className="w-full"
         >
-            <div className="text-white text-center text-3xl font-bold uppercase pb-8">
+            <div className="pb-8 text-3xl font-bold text-center text-white uppercase">
                 Créer un nouveau compte
             </div>
-            <div className="mx-8 pb-4">
+            <div className="pb-4 mx-8">
                 <FormInput 
                     name="name"
                     className='text-white border-white'
@@ -54,11 +54,11 @@ export default function NewAccount({ setActiveForm }) {
                     icon={faUser}
                     error={errors.name}
                     isSubmitted={isSubmitted}
-                    onChange={(e) => handleChange('name', e.target.value)}
+                    parentOnChange={ handleChange }
                     onBlur={() =>setIsSubmitted(false)}
                 />
             </div>
-            <div className="mx-8 pb-4">
+            <div className="pb-4 mx-8">
                 <FormInput 
                     name="email"
                     className='text-white border-white'
@@ -66,11 +66,11 @@ export default function NewAccount({ setActiveForm }) {
                     icon={faAt}
                     error={errors.email}
                     isSubmitted={isSubmitted}
-                    onChange={(e) => handleChange('email', e.target.value)}
+                    parentOnChange={ handleChange }
                     onBlur={() =>setIsSubmitted(false)}
                 />
             </div>
-            <div className='mx-8 pb-4'>
+            <div className='pb-4 mx-8'>
                 <FormInput 
                     className='text-white border-white'
                     placeholder='Mot de passe'
@@ -78,11 +78,11 @@ export default function NewAccount({ setActiveForm }) {
                     inputType='password'
                     error={errors.password}
                     isSubmitted={isSubmitted}
-                    onChange={(e) => setData('password', e.target.value)}
+                    parentOnChange={ handleChange }
                     onBlur={() =>setIsSubmitted(false)}
                 />
             </div>
-            <div className='mx-8 pb-4'>
+            <div className='pb-4 mx-8'>
                 <FormInput 
                     className='text-white border-white'
                     placeholder='Confirmation mot de passe'
@@ -90,21 +90,21 @@ export default function NewAccount({ setActiveForm }) {
                     inputType='password'
                     error={errors.password}
                     isSubmitted={isSubmitted}
-                    onChange={(e) => setData('password_confirmation', e.target.value)}
+                    parentOnChange={ handleChange }
                     onBlur={() =>setIsSubmitted(false)}
                 />
             </div>
             <div className="mx-8 mb-2">
                 <Button
                     type="submit" 
-                    className="p-2 bg-pink-500 text-white capitalize rounded-full text-center text-lg w-full"
+                    className="w-full p-2 text-lg text-center text-white capitalize bg-pink-500 rounded-full"
                 >
                     S'enregistrer
                 </Button>
             </div>
             <div 
                 onClick={()=>{setActiveForm('login')}}
-                className="pl-8 cursor-pointer underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                className="pl-8 text-sm text-gray-600 underline rounded-md cursor-pointer dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
             >
                 Déjà membre? Connectez-vous. 
             </div>

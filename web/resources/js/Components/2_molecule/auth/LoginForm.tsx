@@ -41,10 +41,10 @@ export default function LoginForm({ setActiveForm }) {
             onSubmit={submit}
             className="w-full"
         >
-            <div className="text-white text-center text-3xl font-bold uppercase pb-8">
+            <div className="pb-8 text-3xl font-bold text-center text-white uppercase">
                 CONNEXION
             </div>
-            <div className="mx-8 pb-4">
+            <div className="pb-4 mx-8">
                 <FormInput 
                     name="email"
                     className='text-white border-white'
@@ -52,11 +52,11 @@ export default function LoginForm({ setActiveForm }) {
                     icon={faUser}
                     error={errors.email}
                     isSubmitted={isSubmitted}
-                    onChange={(e) => handleChange('email', e.target.value)}
+                    parentOnChange={ handleChange }
                     onBlur={() =>setIsSubmitted(false)}
                 />
             </div>
-            <div className='mx-8 pb-2'>
+            <div className='pb-2 mx-8'>
                 <FormInput 
                     className='text-white border-white'
                     placeholder='Mot de passe'
@@ -64,15 +64,15 @@ export default function LoginForm({ setActiveForm }) {
                     inputType='password'
                     error={errors.password}
                     isSubmitted={isSubmitted}
-                    onChange={(e) => setData('password', e.target.value)}
+                    parentOnChange={ handleChange }
                     onBlur={() =>setIsSubmitted(false)}
                 />
             </div>
-            <div className="ml-10 pb-8">
+            <div className="pb-8 ml-10">
                 {canResetPassword && (
                     <div 
                         onClick={()=>{setActiveForm('forgotPassword')}}
-                        className="underline cursor-pointer text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                        className="text-sm text-gray-600 underline rounded-md cursor-pointer dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                     >
                         Mot de passe oublié?
                     </div>
@@ -81,7 +81,7 @@ export default function LoginForm({ setActiveForm }) {
             <div className="mx-8 mb-2">
                 <Button
                     type="submit" 
-                    className="p-2 bg-pink-500 text-white capitalize rounded-full text-center text-lg w-full"
+                    className="w-full p-2 text-lg text-center text-white capitalize bg-pink-500 rounded-full"
                 >
                     Se connecter
                 </Button>
@@ -100,7 +100,7 @@ export default function LoginForm({ setActiveForm }) {
                 </div>
                 <div 
                     onClick={()=>{setActiveForm('newAccount')}}
-                    className="pr-8 cursor-pointer underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                    className="pr-8 text-sm text-gray-600 underline rounded-md cursor-pointer dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                 >
                     Pas de compte? Enregistrez-vous. 
                 </div>
