@@ -35,7 +35,7 @@ export default function SocialmediaShare ({commerce, ...props}) {
                     icon={faShareNodes}
                 />
             </SpeedDialHandler>
-            <SpeedDialContent className="text-gray-800">
+            <SpeedDialContent className="flex flex-row text-gray-800">
                 <SpeedDialAction>
                     <FacebookShareButton url={route('commerce', commerce.slug) }>        
                         <SocialIcon
