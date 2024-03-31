@@ -20,11 +20,11 @@ export default function TopMenu() {
         <div className="flex flex-col md:flex-row">
           <Link
             href={route('favorites')} 
-            className="text-gray-800 md:text-gray-500 hover:text-gray-700 flex flex-row items-center pr-4 pb-4 md:pb-0"
+            className="flex flex-row items-center pb-4 pr-4 text-gray-800 md:text-gray-500 hover:text-gray-700 md:pb-0"
           >  
             <div className="w-[50px] md:w-max mr-0 md:mr-2">
               <FontAwesomeIcon 
-                className="h-4 w-4" 
+                className="w-4 h-4" 
                 icon={faHeartRegular}
               />
             </div>
@@ -56,7 +56,7 @@ export default function TopMenu() {
         <div className="flex flex-col md:flex-row">
             <Link
                 href={route('register')}
-                className="text-gray-800 md:text-gray-500 hover:text-gray-700 flex flex-row items-center pr-4 w-full pb-8 md:pb-0"
+                className="flex flex-row items-center w-full pb-8 pr-4 text-gray-800 md:text-gray-500 hover:text-gray-700 md:pb-0"
             >
                 <div className="w-[50px] md:w-max mr-0 md:mr-2">
                     <img 
@@ -71,7 +71,7 @@ export default function TopMenu() {
             </Link>
             <Link
                 href={route('login')}
-                className="text-gray-800 md:text-gray-500 hover:text-gray-700 flex flex-row items-center pb-8 md:pb-0"
+                className="flex flex-row items-center pb-8 text-gray-800 md:text-gray-500 hover:text-gray-700 md:pb-0"
             >
                 <div className="w-[50px] md:w-max mr-0 md:mr-2 ">
                     <img 
@@ -91,7 +91,7 @@ export default function TopMenu() {
     // narrow menu used by mobile phones
     const menuNarrow = (
         <>
-          <div className="flex flex-col w-full border-b-2 px-8 md:hidden  bg-white">
+          <div className="flex flex-col w-full px-8 bg-white border-b-2 md:hidden">
             {/** menu small header */}
             <div className="flex flex-row w-full justify-between h-[50px] items-center">
               <div>
@@ -101,9 +101,9 @@ export default function TopMenu() {
               </div>
               <div onClick={() => setOpenMenuSmall(prevState => !prevState)}>
                 {openMenuSmall ? (
-                  <FontAwesomeIcon className="h-4 w-4" icon={faXmark} />
+                  <FontAwesomeIcon className="w-4 h-4" icon={faXmark} />
                 ) : (
-                  <FontAwesomeIcon className="h-4 w-4" icon={faBars} />
+                  <FontAwesomeIcon className="w-4 h-4" icon={faBars} />
                 )}
               </div>
             </div>
@@ -112,7 +112,7 @@ export default function TopMenu() {
             <Collapse open={openMenuSmall} className="w-full flex flex-col text-gray-800 z-20 absolute top-[50px] left-0 px-8 bg-white overflow-y-auto">
               {/** category label */}
               <div
-                className="w-full justify-between flex pb-8"
+                className="flex justify-between w-full pb-8"
                 onClick={() => setOpenMenuCategoriesSmall(prevState => !prevState)}
               >
                 <div className="flex flex-row items-center">
@@ -137,7 +137,7 @@ export default function TopMenu() {
               >
                 {categories.map((category) => (
                   <Link
-                    className="w-full flex flex-row pb-8"
+                    className="flex flex-row w-full pb-8"
                     key={category.slug} // Key for efficient rendering
                     href={`/category/${category.slug}`}
                   >
@@ -182,7 +182,7 @@ export default function TopMenu() {
                         <Button 
                             variant="text"
                             ripple={false}
-                            className="text-gray-500 hover:text-gray-700 text-base normal-case focus-visible:border-none focus-visible:border-0"
+                            className="text-base text-gray-500 normal-case hover:text-gray-700 focus-visible:border-none focus-visible:border-0"
                         >
                             <span className="pr-4">
                                 Categories
@@ -194,11 +194,11 @@ export default function TopMenu() {
                         </Button>
                     </MenuHandler>
                     <MenuList className="w-full max-w-screen-xl">
-                        <div className="grid grid-cols-3 gap-y-2 outline-none outline-0 w-full p-8">
+                        <div className="grid w-full grid-cols-3 p-8 outline-none gap-y-2 outline-0">
                             {categories.map((category) => (
                                 <MenuItem key={category.id}>
                                     <Link
-                                        className="w-full text-gray-500 hover:text-gray-700 flex flex-row pb-8" 
+                                        className="flex flex-row w-full pb-8 text-gray-500 hover:text-gray-700" 
                                         href={`/category/${category.slug}`}
                                     >
                                         <img src={category.image} className='max-w-[50px] max-h-[30px] pr-4'/>

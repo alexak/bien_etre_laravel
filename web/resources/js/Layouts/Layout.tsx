@@ -10,12 +10,12 @@ const Layout = ({ children }) => {
       <header>
         <TopMenu />
       </header>
-      <main className="container mx-auto p-0">
+      <main className="container p-0 mx-auto">
         {children}
       </main>
       <footer>
         <BottomMenu />
-      </footer>
+              </footer>
     </div>
     );
   };

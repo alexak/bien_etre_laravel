@@ -16,7 +16,7 @@ createInertiaApp({
         if (!page) {
             console.error(`Page not found: ${name}.tsx`); 
             return; 
-        }
+        };
         page.default.layout = page.default.layout || (page => <Layout children={page} />);
         return page;
     },
