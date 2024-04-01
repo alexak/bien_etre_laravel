@@ -5,6 +5,10 @@ import { Link, usePage } from "@inertiajs/react";
 import { Button, IconButton, Tooltip } from "@material-tailwind/react";
 import React from "react";
 
+
+
+//hidden md:flex flex-row justify-between h-[50px] border-b-2 w-full items-center px-8 md:px-20 lg:px-40
+
 /**
  * Default rendering pages for commerces views such as search result, categories, favorites.. 
  * 
@@ -15,18 +19,9 @@ export default function Commerces({commerces}){
     const [displayMode, setDisplayMode] = React.useState('card');
 
     return (
-        <div className="flex flex-row w-full min-h-screen">
-                
-            {/** Filter sidebar */}
-            <div className="flex flex-col h-full w-[200px]">
-                <div>distance</div>
-                <div>tagcloud ?</div>
-                <div>price?</div>
-                <div>{displayMode}</div>
-            </div>
-
+        <>    
             {/** Main content */}
-            <div className="flex flex-col">
+            <div className="flex flex-col justify-center w-full min-h-screen">
                 
                 {/** Header */}
                 <div className="flex flex-row justify-end w-full py-8">
@@ -73,7 +68,7 @@ export default function Commerces({commerces}){
                 </div>
 
                 {/** Categories list */}
-                <div className="grid w-full grid-flow-row grid-cols-5 gap-4">
+                <div className="grid justify-center w-full grid-rows-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                     {commerces.map((commerce) => {
                         return (
                             <CommerceCard
@@ -85,6 +80,9 @@ export default function Commerces({commerces}){
                 </div>
 
             </div>
-        </div>
+        </>
     );
 }
+
+
+//grid w-full grid-flow-col grid-cols-1 sm:grid-flow-row sm:grid-cols-2 md:grid-cols-4 md:gap-3 lg:grid-cols-5 lg:gap-4
