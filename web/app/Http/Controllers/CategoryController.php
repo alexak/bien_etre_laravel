@@ -9,6 +9,10 @@ use App\Models\Category;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use MatanYadaev\EloquentSpatial\Objects\Point;
+use Illuminate\Support\Facades\DB;
+use GeoIp2\WebService\Client;
+use Illuminate\Support\Facades\Log;
+
 
 
 class CategoryController extends Controller
@@ -23,41 +27,19 @@ class CategoryController extends Controller
 
     public function index($categoryname, Request $request) 
     {
-
-        // test from url
-        if ($request->has('lat') && $request->has('long')) {
-            $latitude = $request->input('lat');
-            $longitude = $request->input('long');
-        }
-
-
-        // test from session
-        // test from ip to geo
+        $location = $this->getLocation($request);
 
         $commerces = Commerce::with('mainCategory')
-            ->withDistanceSphere('location', new Point($latitude, $longitude))
-            ->first();
-            //->get();
+            ->select('*', DB::raw('NULL AS distance'));
 
-        //$commerces = Commerce::select('name', 'image', 'slug', 'rating', 'isAtHome', 'isAtStore', 'maincategory_id')
-            //->with('mainCategory')
-            //->selectRaw("ST_Distance_Sphere(position, POINT($longitude, $latitude)) AS distance")
-            //->get();
+        if (!empty($location)) {
+            $commerces->withDistanceSphere('location', new Point($location['latitude'], $location['longitude']));
+        }
+          
+        $commerces = $commerces->get();
 
-
-        // Query the commerces with pagination and eager loading of mainCategory
-        //$commerces =  Commerce::select('name', 'image', 'slug', 'rating', 'isAtHome', 'isAtStore', 'maincategory_id')
-        //    ->with('mainCategory')
-        //    ->get();
-        
         $userFavorites = Auth::check() ? Auth::user()->favoriteCommerceIds->pluck('favorite_commerce_id', 'favorite_commerce_id')->toArray() : [];
         foreach($commerces as $commerce) {
-
-            var_dump($commerce->location->latitude);
-            var_dump($commerce->location->longitude);
-            var_dump($commerce->distance/1000);
-            die();
-
             $commerce->isFavorite = isset($userFavorites[$commerce->id]) ? true : false;
         }
  
@@ -84,4 +66,48 @@ class CategoryController extends Controller
             'commerces' => $commerces
         ]);
     }
+
+    /**
+     * Function that gets user position
+     *
+     * @param Request $request
+     * @return array
+     */
+    private function getLocation(Request $request): array {
+
+        // get location from url provided by client
+        $latitude = $request->has('lat') ? $request->input('lat') : null;
+        $longitude = $request->has('long') ? $request->input('long') : null;
+
+        // get Ip from session
+        $latitude = $latitude==null ? session('latitude') : $latitude;
+        $longitude = $longitude==null ? session('longitude') : $longitude;
+
+        // get location by ip address
+        if ($latitude == null || $longitude == null) {
+            try{
+                $maxmindClient = new Client(env('MAXMIND_ACCOUNTID'), env('MAXMIND_LICENSEKEY'), ['en'], ['host' => 'geolite.info']);
+                $maxminResponse = $maxmindClient->city($request->ip());
+                
+                $latitude=$maxminResponse->location->latitude;
+                $longitude=$maxminResponse->location->longitude;
+                
+                session(['latitude'=>$latitude]);
+                session(['longitude'=>$longitude]);
+            } catch (\Throwable $e) {
+                log::warning('MaxMind API Error: ' . $e->getMessage());
+            }
+        }
+
+        $location=[];
+        if (($latitude !== null) && ($longitude !== null )) {
+            $location = [
+                'latitude' => $latitude,
+                'longitude' => $longitude
+            ];
+        }
+
+        return $location;
+    }
+
 }

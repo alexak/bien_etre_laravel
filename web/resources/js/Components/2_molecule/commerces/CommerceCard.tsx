@@ -1,21 +1,15 @@
 
 import React, { useState } from 'react';
-import FormInput from '@/components/2-atoms/FormInput/FormInput';
 import { 
     faStar as faStarSolid,
     faArrowsLeftRight,
     faHouse,
     faShop,
 } from '@fortawesome/free-solid-svg-icons';
-import {
-    faStar as faStarRegular,
-  } from '@fortawesome/free-regular-svg-icons';
-
+import {faStar as faStarRegular,} from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tooltip } from "@material-tailwind/react";
-
 import Card, { CardBody, CardFooter, CardHeader } from '@material-tailwind/react/components/Card';
-import { IconButton, Typography } from '@material-tailwind/react';
 import { Link, usePage } from '@inertiajs/react';
 import FavIcon from '@/Components/1_atom/FavIcon';
 import SocialmediaShare from '@/Components/1_atom/SocialmediaShare';
@@ -76,25 +70,26 @@ const CommerceCard = ({ commerce } ) => {
                     </div>
                 </div>
 
-                <div className="w-full text-lg">
+                <div className="w-full text-lg font-bold">
                     <Link href={route('commerce', commerce.slug)} >
                         {commerce.name}
                     </Link>
                 </div>
              
 
-                <div className='absolute left-0 z-10 flex flex-row content-end w-full h-4 bottom-2'>
+                <div className='absolute left-0 z-10 flex flex-row content-center w-full h-6 bottom-2'>
                     { commerce.isAtHome == true && (
                         <div className="pr-4">
                             <Tooltip 
-                                className="text-gray-800 bg-white border-2 border-solid drop-shadow-lg"
-                                content="Prestation en centre"
-                                placement="bottom-start"
-                            >
-                                <FontAwesomeIcon 
-                                    className="w-4 h-4 text-gray-400"
-                                    icon={faHouse}
-                                />
+                                    className="text-gray-800 bg-white border-2 border-solid drop-shadow-lg"
+                                    content="Prestation en centre"
+                                    placement="bottom-start"
+                                >
+                                    <FontAwesomeIcon 
+                                        className="text-gray-400 "
+                                        icon={faHouse}
+                                        size="sm"
+                                    />
                             </Tooltip>
                         </div>
                     )}
@@ -106,15 +101,37 @@ const CommerceCard = ({ commerce } ) => {
                                 placement="bottom-start"
                             >
                                 <FontAwesomeIcon 
-                                    className="w-4 h-4 text-gray-400"
+                                    className="text-gray-400 "
                                     icon={faShop}
+                                    size="sm"
                                 />
                             </Tooltip>
                         </div>
                     )}
                     <div className="pr-4">
-                        <SocialmediaShare commerce={commerce} className="flex-grow"/>
+                        <SocialmediaShare 
+                            commerce={commerce} 
+                            className="flex-grow"
+                        />
                     </div>
+                   { commerce.distance !== null && (
+                        <div className="pr-4">
+                            <Tooltip 
+                                className="text-gray-800 bg-white border-2 border-solid drop-shadow-lg"
+                                content="Distance par rapport votre position"
+                                placement="bottom-start"
+                            >
+                                <div className="flex flex-row items-center h-6">
+                                    <FontAwesomeIcon 
+                                        className="pr-2 text-gray-400"
+                                        icon={faArrowsLeftRight}
+                                        size="sm"
+                                    />
+                                    <span className="text-sm">{(commerce.distance/1000).toFixed(1)} km</span>
+                                </div>
+                            </Tooltip>
+                        </div>
+                   )}
                 </div>
             </CardBody>
         </Card>

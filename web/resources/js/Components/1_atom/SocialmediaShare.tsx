@@ -31,8 +31,9 @@ export default function SocialmediaShare ({commerce, ...props}) {
         >
             <SpeedDialHandler>
                 <FontAwesomeIcon
-                    className="w-4 h-4 pr-4 text-gray-400 cursor-pointer hover:text-gray-700"
+                    className="text-gray-400 cursor-pointer hover:text-gray-700"
                     icon={faShareNodes}
+                    size="sm"
                 />
             </SpeedDialHandler>
             <SpeedDialContent className="flex flex-row text-gray-800">
