@@ -5,6 +5,7 @@ import { Button, Collapse, Menu, MenuHandler, MenuItem, MenuList } from "@materi
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faBars, faXmark, faC} from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
+import { useGeolocated } from "react-geolocated";
 
 export default function TopMenu() {
 
@@ -15,6 +16,14 @@ export default function TopMenu() {
     const { props } = usePage();
     const categories = props.categories;
     const user = props.auth?.user;
+
+    const geoLocation = useGeolocated({
+      positionOptions: {
+          enableHighAccuracy: false,
+      },
+      userDecisionTimeout: 5000,
+    });
+    const geoParameter = geoLocation.coords !== undefined ? `lat=${geoLocation.coords?.latitude}&long=${geoLocation.coords?.longitude}` : "";
 
     const userMenu = (
         <div className="flex flex-col md:flex-row">
@@ -138,8 +147,8 @@ export default function TopMenu() {
                 {categories.map((category) => (
                   <Link
                     className="flex flex-row w-full pb-8"
-                    key={category.slug} // Key for efficient rendering
-                    href={`/category/${category.slug}`}
+                    key={category.slug} 
+                    href={`/category/${category.slug}?${geoParameter}`}
                   >
                     <div className="w-[50px]">
                       <img src={category.image} className="max-w-[50px] max-h-[30px] pr-4" />
@@ -199,7 +208,7 @@ export default function TopMenu() {
                                 <MenuItem key={category.id}>
                                     <Link
                                         className="flex flex-row w-full pb-8 text-gray-500 hover:text-gray-700" 
-                                        href={`/category/${category.slug}`}
+                                        href={`/category/${category.slug}?${geoParameter}`}
                                     >
                                         <img src={category.image} className='max-w-[50px] max-h-[30px] pr-4'/>
                                         <div className="flex flex-col">

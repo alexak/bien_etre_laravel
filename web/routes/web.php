@@ -22,8 +22,12 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 |
 */
 Route::get('/', [HomeController::class, 'index']);
+
+/** categories  */
 Route::get('/category/{categoryname}', [CategoryController::class, 'index'])
     ->name('category');
+Route::get('/menucategories', [CategoryController::class, 'menuCategories'])
+    ->name('menucategories');
 
 /** Favorites routes */
 Route::get('/favorites', [FavoriteController::class, 'index'])

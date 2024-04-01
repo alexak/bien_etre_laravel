@@ -77,7 +77,9 @@ const CommerceCard = ({ commerce } ) => {
                 </div>
 
                 <div className="w-full text-lg">
-                    {commerce.name}
+                    <Link href={route('commerce', commerce.slug)} >
+                        {commerce.name}
+                    </Link>
                 </div>
              
 

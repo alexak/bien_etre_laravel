@@ -33,7 +33,7 @@ return new class extends Migration
             //    ->nullable()
             //    ->constrained('cities')
             //    ->onDelete('set null');
-            //$table->geometry('position');
+            $table->geometry('location', 'point');
             $table->foreignId('manager_user_id')
                 ->nullable() 
                 ->constrained('users')
@@ -46,9 +46,10 @@ return new class extends Migration
                 ->nullable() 
                 ->constrained('categories')
                 ->onDelete('set null');
+            $table->timestamps();
    
             $table->index(['maincategory_id']);
-            //$table->spatialIndex(['position']);
+            $table->spatialIndex(['location']);
         });
     }
 
