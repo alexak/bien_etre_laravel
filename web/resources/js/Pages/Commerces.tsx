@@ -1,4 +1,5 @@
 
+import React from "react";
 import CommerceCard from "@/Components/2_molecule/commerces/CommerceCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
