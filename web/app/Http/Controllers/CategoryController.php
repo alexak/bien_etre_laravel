@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Commerce;
 use App\Models\Category;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use Illuminate\Support\Facades\DB;
@@ -33,19 +32,23 @@ class CategoryController extends Controller
             ->select('*', DB::raw('NULL AS distance'));
 
         if (!empty($location)) {
-            $commerces->withDistanceSphere('location', new Point($location['latitude'], $location['longitude']));
+            $point = new Point($location['latitude'], $location['longitude']);
+            $commerces->withDistanceSphere('location', $point);
         }
           
+        $sortBy = $request->has('sortBy') ? $request->input('sortBy') : null;
+        $sortDirection = $request->has('sortDirection') ? $request->input('sortDirection') : 'asc';
+        if ($sortBy !== null) {
+            ($sortBy == 'distance' && !empty($location)) ? $commerces->orderByDistance('location', $point, $sortDirection) : $commerces->orderBy($sortBy, $sortDirection);
+        }
+
         $commerces = $commerces->get();
 
         $userFavorites = Auth::check() ? Auth::user()->favoriteCommerceIds->pluck('favorite_commerce_id', 'favorite_commerce_id')->toArray() : [];
         foreach($commerces as $commerce) {
             $commerce->isFavorite = isset($userFavorites[$commerce->id]) ? true : false;
         }
- 
-
-        
-        
+         
         //$commerces = Commerce::with('mainCategory')
             //->whereHas('mainCategory', function ($query) use ($categoryname) {
             //    $query->where('name', $categoryname); // Assuming you have 'name' column in your categories table
@@ -53,19 +56,11 @@ class CategoryController extends Controller
             //->orderBy('name');
             //->paginate(10); // Change the number as per your requirement
 
-        // Loop through each commerce to set the additional attributes
-        //$commerces->each(function ($commerce) {
-            // This will automatically use the getFavoritesAttribute accessor from the Commerce model
-            // Remove or adjust the dummy data as per your actual implementation
-            //$commerce->distance = rand(1, 10);
-            //$commerce->price = rand(10, 100);
-            // Since $commerce->id and other properties are actual model attributes, you shouldn't randomly change them here
-        //});
-
         return Inertia::render('Commerces', [
             'commerces' => $commerces
         ]);
     }
+
 
     /**
      * Function that gets user position

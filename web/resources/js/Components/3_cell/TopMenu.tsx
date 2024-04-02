@@ -3,7 +3,7 @@ import React from 'react';
 import { Link, usePage } from "@inertiajs/react";
 import { Button, Collapse, Menu, MenuHandler, MenuItem, MenuList } from "@material-tailwind/react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faBars, faXmark, faC} from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import { useGeolocated } from "react-geolocated";
 

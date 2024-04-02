@@ -32,8 +32,6 @@ interface ServiceProvider {
 
 const CommerceCard = ({ commerce } ) => {
 
-    console.log(commerce);
-
     return (
         <Card className="w-full max-w-[26rem] shadow-lg p-4 rounded-lg">
             <CardHeader 
@@ -139,64 +137,3 @@ const CommerceCard = ({ commerce } ) => {
 }
 
 export default CommerceCard;
-
-
-/*
-        <Card className="w-full max-w-[26rem] shadow-lg">
-            <CardHeader 
-                floated={false} 
-                color="blue-gray"
-            >
-                <img src={commerce.image} />
-                <FontAwesomeIcon 
-                    icon={favIcon} 
-                    className={`w-5 h-5 pl-2 absolute top-2 right-2 ${commerce.isFavorite ? 'text-red-500' : 'text-white'} `} 
-                />
-            </CardHeader>
-            <CardBody>
-                <div className="flex justify-between">
-                    <div className='text-sm font-semibold text-gray-400'>{commerce.category}</div>
-                    <div className="flex">
-                        <FontAwesomeIcon 
-                            icon={faStarSolid} 
-                            className="w-5 h-5 pl-2 pr-2 text-gray-800 top-2 right-2" 
-                        />
-                        {commerce.rating}
-                    </div>
-                </div>
-                <div className="pb-4">
-                    {commerce.name}
-                </div>
-                <div className="flex flex-row">
-                    {commerce.isAtStore && (
-                        <Tooltip content="Prestation en centre">
-                            <FontAwesomeIcon 
-                                icon={faShop} 
-                                className="w-5 h-5 p-2 mr-2 text-gray-600 bg-orange-100 rounded-full cursor-pointer hover:bg-orange-200" 
-                            />
-                        </Tooltip>
-                    )}
-                    {commerce.isAtHome && (
-                        <Tooltip content="Prestation au domicile du client">
-                            <FontAwesomeIcon 
-                                icon={faHouse} 
-                                className="w-5 h-5 p-2 mr-2 text-gray-600 bg-orange-100 rounded-full cursor-pointer hover:bg-orange-200" 
-                            />
-                        </Tooltip>
-                    )}
-                    <div className="flex flex-row items-center h-[40px]">
-                        <Tooltip content="Distance">
-                            <FontAwesomeIcon 
-                                icon={faArrowsLeftRight} 
-                                className="w-5 h-5 p-2 mr-2 text-gray-600 bg-orange-100 rounded-full hover:bg-orange-200" 
-                            />
-                        </Tooltip>
-                        <div className="leading-none">
-                            {commerce.distance} km
-                        </div>
-                    </div>
-                </div>
-            </CardBody>
-        </Card>
-
-        */

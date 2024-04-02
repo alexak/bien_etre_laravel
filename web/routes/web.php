@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CommerceController;
+use App\Http\Controllers\CommercesController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
@@ -45,6 +46,7 @@ Route::get('/commerce/edit/{id}', [CommerceController::class, 'commerceEdit'])
     ->middleware(['auth', 'verified'])
     ->name('commerce.edit');
 Route::post('/commerce/add', [CommerceController::class, 'commerceSave'])
+    ->middleware(['auth', 'verified'])
     ->name('commerce.add');
 Route::post('/commerce/{slug}/contact', [CommerceController::class, 'commerceContact'])
     ->name('commerce.contact');
