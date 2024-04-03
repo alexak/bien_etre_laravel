@@ -39,7 +39,7 @@ class CategoryController extends Controller
         $sortBy = $request->has('sortBy') ? $request->input('sortBy') : null;
         $sortDirection = $request->has('sortDirection') ? $request->input('sortDirection') : 'asc';
         if ($sortBy !== null) {
-            ($sortBy == 'distance' && !empty($location)) ? $commerces->orderByDistance('location', $point, $sortDirection) : $commerces->orderBy($sortBy, $sortDirection);
+            ($sortBy == 'distance' && !empty($location)) ? $commerces->orderByDistanceSphere('location', $point, $sortDirection) : $commerces->orderBy($sortBy, $sortDirection);
         }
 
         $commerces = $commerces->get();
