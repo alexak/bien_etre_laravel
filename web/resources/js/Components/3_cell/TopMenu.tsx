@@ -15,7 +15,7 @@ export default function TopMenu() {
 
     const { props } = usePage();
     const categories = props.categories;
-    const user = props.auth?.user;
+    const user = props.user;
 
     const geoLocation = useGeolocated({
       positionOptions: {
@@ -24,6 +24,9 @@ export default function TopMenu() {
       userDecisionTimeout: 5000,
     });
     const geoParameter = geoLocation.coords !== undefined ? `lat=${geoLocation.coords?.latitude}&long=${geoLocation.coords?.longitude}` : "";
+
+    console.log(geoLocation);
+
 
     const userMenu = (
         <div className="flex flex-col md:flex-row">

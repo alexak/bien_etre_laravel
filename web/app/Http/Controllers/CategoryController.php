@@ -29,7 +29,10 @@ class CategoryController extends Controller
         $location = $this->getLocation($request);
 
         $commerces = Commerce::with('mainCategory')
-            ->select('*', DB::raw('NULL AS distance'));
+            ->select([
+                '*',
+                DB::raw('NULL AS distance')
+            ]);
 
         if (!empty($location)) {
             $point = new Point($location['latitude'], $location['longitude']);
@@ -40,6 +43,8 @@ class CategoryController extends Controller
         $sortDirection = $request->has('sortDirection') ? $request->input('sortDirection') : 'asc';
         if ($sortBy !== null) {
             ($sortBy == 'distance' && !empty($location)) ? $commerces->orderByDistanceSphere('location', $point, $sortDirection) : $commerces->orderBy($sortBy, $sortDirection);
+        } else {
+            !empty($location) ? $commerces->orderByDistanceSphere('location', $point, 'asc') : $commerces->orderBy('name', 'asc');
         }
 
         $commerces = $commerces->get();
@@ -56,8 +61,12 @@ class CategoryController extends Controller
             //->orderBy('name');
             //->paginate(10); // Change the number as per your requirement
 
+        //$hasGeoJSON = $request->has('type') && $request->input('type') === 'geojson';
+
         return Inertia::render('Commerces', [
-            'commerces' => $commerces
+            'commerces' => $commerces,
+            'location' => empty($location) ? null : $location,
+          //  'geoJson' => $hasGeoJSON ? $this->formatGeoDat($commerces) : null,
         ]);
     }
 
@@ -104,5 +113,26 @@ class CategoryController extends Controller
 
         return $location;
     }
+
+    /*
+    private function formatGeoDat($commerces) {
+        $formattedData = $commerces->map(function ($commerce) {
+            return [
+                'type' => 'Feature',
+                'geometry' => [
+                    'type' => 'Point',
+                    'coordinates' => [$commerce->longitude, $commerce->latitude],
+                ],
+                'properties' => [
+                    'id' => $commerce->id,
+                    'name' => $commerce->name,
+                    // Add other relevant properties for your GeoJSON
+                ],
+            ];
+        });
+
+        return $formattedData;
+    }
+    */
 
 }

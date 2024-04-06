@@ -25,11 +25,8 @@ class AppServiceProvider extends ServiceProvider
             'categories' => function () {
                 return Category::all(); 
             },
-            'auth' => [
-                'user' => function () {
-                    return optional(auth()->user()); 
-                },
-            ],
+            'user' => auth()->user(),
+            'mapbox' => env('MAPBOX')
         ]);
     }
 }
