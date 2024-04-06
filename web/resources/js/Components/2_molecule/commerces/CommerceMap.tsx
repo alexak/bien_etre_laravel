@@ -2,19 +2,25 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, usePage } from "@inertiajs/react";
 import CommerceList from './CommerceList';
+import CommerceCardSmall from './CommerceCardSmall';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import ReactDOMServer from 'react-dom/server';
 
 export default function CommerceMap({commerces}){
 
     const { props } = usePage();
-    const initialLong = props.location ? props.location.longitude : 7.72;
-    const initialLat = props.location ? props.location.latitude : 48.5;
-
+    const [centerpoint, setCenterPoint] = useState(
+        {
+          lat: props.location ? props.location.latitude : 48.5,
+          long: props.location ? props.location.longitude : 7.72,
+        },
+    );
+    
     const mapContainer = useRef(null);
     const map = useRef(null);
-    const [lng, setLng] = useState(initialLong);
-    const [lat, setLat] = useState(initialLat);
+    const [lng, setLng] = useState(centerpoint.long);
+    const [lat, setLat] = useState(centerpoint.lat);
     const [zoom, setZoom] = useState(10);
 
     mapboxgl.accessToken = props.mapbox;
@@ -39,6 +45,7 @@ export default function CommerceMap({commerces}){
           properties: {
             id: commerce.id,
             name: commerce.name,
+            commerce: commerce
             // Add other relevant properties for your GeoJSON
           },
         }));
@@ -63,12 +70,17 @@ export default function CommerceMap({commerces}){
             setLng(map.current.getCenter().lng.toFixed(4));
             setLat(map.current.getCenter().lat.toFixed(4));
             setZoom(map.current.getZoom().toFixed(2));
+
+            //TODO: RECALCULATE COMMERCES OF THE NEW BOUNDING BOX
+
         });
 
         console.log(formatGeoData(commerces));
 
         map.current.on('load', () => {
             map.current.addControl(new mapboxgl.NavigationControl());
+            map.current.addControl(new mapboxgl.ScaleControl());
+
 
             map.current.addSource('commerces', {
                 'type': 'geojson',
@@ -145,6 +157,26 @@ export default function CommerceMap({commerces}){
                 }
             });
 
+            map.current.on('click', 'unclustered-point', (e) => {
+                const coordinates = e.features[0].geometry.coordinates.slice();
+                const name = e.features[0].properties.name
+    
+                // Ensure that if the map is zoomed out such that
+                // multiple copies of the feature are visible, the
+                // popup appears over the copy being pointed to.
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                    coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+
+                const tooltipRenedered= <CommerceCardSmall commerce={JSON.parse(e.features[0].properties.commerce)} />
+                const html = ReactDOMServer.renderToString(tooltipRenedered);
+                new mapboxgl.Popup()
+                    .setLngLat(coordinates)
+                    .setHTML(html)
+                    .addTo(map.current);
+            });
+    
+
             map.current.on('click', 'clusters', (e) => {
                 const features = map.current.queryRenderedFeatures(e.point, {
                     layers: ['clusters']
@@ -171,11 +203,29 @@ export default function CommerceMap({commerces}){
                 map.current.getCanvas().style.cursor = '';
             });
     
-    
-      
-            new mapboxgl.Marker()
-                .setLngLat([lng,lat])
-                .addTo(map.current);
+            if (props.location) {
+                map.current.addLayer({
+                    id: 'user-location',
+                    type: 'circle',
+                    source: {
+                        type: 'geojson',
+                        data: {    
+                            type: 'Feature',
+                            properties: {},
+                            geometry: {
+                                type: 'Point',
+                                coordinates: [props.location.longitude, props.location.latitude]
+                            }
+                        }
+                    },
+                    paint: {
+                        'circle-radius': 10, // Size of the circle
+                        'circle-color': '#007cbf', // Blue color
+                        'circle-stroke-width': 2,
+                        'circle-stroke-color': '#ffffff' // White border
+                    }
+                });
+            }
 
         });
     });
@@ -187,6 +237,11 @@ export default function CommerceMap({commerces}){
           center: commerce.location.coordinates,
           zoom: 17
         });
+        const features = map.current.queryRenderedFeatures(commerce.location.coordinates, {
+            layers: ['unclustered-point'] // replace with your layer name
+          });
+      
+        console.log(features);
     }
       
     return (
