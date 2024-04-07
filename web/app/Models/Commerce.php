@@ -14,10 +14,18 @@ class Commerce extends Model
     use HasFactory;
     use HasSpatial;
 
+    protected $appends = ['coordinates'];
+
     protected $casts = [
         'location' => Point::class,
     ];
 
+    public function getCoordinatesAttribute() {
+        return [
+            'latitude' => $this->location->latitude,
+            'longitude' => $this->location->longitude,
+        ];
+    }
 
     public function mainCategory(): BelongsTo
     {

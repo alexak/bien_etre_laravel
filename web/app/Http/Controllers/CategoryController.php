@@ -66,7 +66,6 @@ class CategoryController extends Controller
         return Inertia::render('Commerces', [
             'commerces' => $commerces,
             'location' => empty($location) ? null : $location,
-          //  'geoJson' => $hasGeoJSON ? $this->formatGeoDat($commerces) : null,
         ]);
     }
 
@@ -106,33 +105,12 @@ class CategoryController extends Controller
         $location=[];
         if (($latitude !== null) && ($longitude !== null )) {
             $location = [
-                'latitude' => $latitude,
-                'longitude' => $longitude
+                'latitude' => (float)$latitude,
+                'longitude' => (float)$longitude
             ];
         }
 
         return $location;
     }
-
-    /*
-    private function formatGeoDat($commerces) {
-        $formattedData = $commerces->map(function ($commerce) {
-            return [
-                'type' => 'Feature',
-                'geometry' => [
-                    'type' => 'Point',
-                    'coordinates' => [$commerce->longitude, $commerce->latitude],
-                ],
-                'properties' => [
-                    'id' => $commerce->id,
-                    'name' => $commerce->name,
-                    // Add other relevant properties for your GeoJSON
-                ],
-            ];
-        });
-
-        return $formattedData;
-    }
-    */
 
 }

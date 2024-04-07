@@ -52,29 +52,6 @@ class CommercesSeeder extends Seeder
             $commerce->maincategory_id = 4;
 
             $commerce->save();
-
-            /*
-            $commerceData = [
-                'name' => array_key_exists('name', $tags) ? $tags['name'] : null,
-                'slug' => $this->createUniqueSlug($tags['name']),
-                'description' => $faker->paragraph(2), 
-                'image' => "https://picsum.photos/300?random=" . uniqid(),
-                'rating' => rand(0, 5) <= 1 ? null : rand(1, 5), 
-                'isAtHome' => false,
-                'isAtStore' => true,
-                'address_1' => $address_1, // Can be populated from address components if available in JSON
-                'address_2' => null, 
-                'location' => new Point(51.5032973, -0.1217424),
-                'manager_user_id' => null,
-                'contact_mail' => null,
-                'contact_phone' => (array_key_exists('phone', $tags) ? $tags['phone'] : null) 
-                    ?? (array_key_exists('contact:phone', $tags) ? $tags['contact:phone'] : null),
-                'maincategory_id' => 4,
-            ];
-
-            // Insert data into the commerces table
-            DB::table('commerces')->insert($commerceData);
-            */
         }
     }
 

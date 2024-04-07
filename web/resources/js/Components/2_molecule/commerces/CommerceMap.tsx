@@ -6,14 +6,17 @@ import CommerceCardSmall from './CommerceCardSmall';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import ReactDOMServer from 'react-dom/server';
+import axios from 'axios';
+import RoutesDirections from '@/Components/3_cell/RoutesDirections';
+
 
 export default function CommerceMap({commerces}){
 
     const { props } = usePage();
     const [centerpoint, setCenterPoint] = useState(
         {
-          lat: props.location ? props.location.latitude : 48.5,
-          long: props.location ? props.location.longitude : 7.72,
+            long: props.location ? props.location.longitude : 7.72,
+            lat: props.location ? props.location.latitude : 48.5,
         },
     );
     
@@ -22,6 +25,9 @@ export default function CommerceMap({commerces}){
     const [lng, setLng] = useState(centerpoint.long);
     const [lat, setLat] = useState(centerpoint.lat);
     const [zoom, setZoom] = useState(10);
+    const [routes, setRoutes] = useState(null);
+    const [activeRoute, setAvtiveRoute] = useState(0);
+    const [mode, setMode] = useState('driving'); // values : driving-traffic, driving, cycling, walking
 
     mapboxgl.accessToken = props.mapbox;
 
@@ -37,9 +43,10 @@ export default function CommerceMap({commerces}){
           type: 'Feature',
           geometry: {
             type: 'Point',
-            coordinates: [
-                commerce.location.coordinates[0],
-                commerce.location.coordinates[1] 
+            coordinates: 
+            [
+                commerce.coordinates.longitude,
+                commerce.coordinates.latitude
             ],
           },
           properties: {
@@ -74,8 +81,6 @@ export default function CommerceMap({commerces}){
             //TODO: RECALCULATE COMMERCES OF THE NEW BOUNDING BOX
 
         });
-
-        console.log(formatGeoData(commerces));
 
         map.current.on('load', () => {
             map.current.addControl(new mapboxgl.NavigationControl());
@@ -243,7 +248,82 @@ export default function CommerceMap({commerces}){
       
         console.log(features);
     }
+    
+    async function getDirections(start, end) {
+
+        const url = `https://api.mapbox.com/directions/v5/mapbox/${mode}/${start.longitude},${start.latitude};${end.longitude},${end.latitude}`;
+        const params = {
+          overview: 'full',
+          steps: true,
+          geometries: 'geojson',
+          access_token: mapboxgl.accessToken,
+          alternatives: true,
+          language: 'fr',
+          annotations:'distance,duration'
+          // arrive_by: YYYY-MM-DDThh:mm:ssZ // The desired arrival time, formatted in one of three ISO 8601 usagbe if driving and rdv pris.
+        };
       
+        await axios.get(url, { params })
+            .then(response => {
+                if (response.data.routes.length == 0) return;
+      
+                setRoutes(response.data.routes);
+            })
+            .catch(error => {
+                // Handle any errors here
+                console.error('Error fetching data: ', error);
+            });
+    }
+
+    useEffect(() => {
+        if (!routes || routes.length == 0) return;
+
+        const geojson = {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+                type: 'LineString',
+                coordinates: routes[activeRoute].geometry.coordinates
+            }
+        };
+
+        if (map.current.getSource('route')) {
+            // if the route already exists on the map, we'll reset it using setData
+            map.current.getSource('route').setData(geojson);
+            map.current.setLayoutProperty('route', 'visibility', 'visible');
+        } else {
+            // otherwise, we'll make a new request
+            map.current.addLayer({
+                id: 'route',
+                type: 'line',
+                source: {
+                    type: 'geojson',
+                    data: geojson
+                },
+                layout: {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                paint: {
+                    'line-color': '#ec4899',
+                    'line-width': 5,
+                    'line-opacity': 0.75
+                }
+            });
+        }
+    }, [routes, activeRoute]);
+
+    const unsetRoute = () => {
+        setRoutes(null);
+        map.current.setLayoutProperty('route', 'visibility', 'none');
+    }
+
+
+    useEffect(() => {
+        console.log('mode changed');
+        //TODO: reget routes 
+    }, [mode]);
+
     return (
         <div className="relative flex flex-row w-full min-h-screen">
             <div className="relative w-2/3 h-screen rounded-lg">
@@ -253,18 +333,30 @@ export default function CommerceMap({commerces}){
                 </div>
             </div>
             <div className="w-1/3">
-                <div className='relative h-screen pt-16 overflow-y-auto'>
-                    <h1 className="absolute top-0 left-0 z-10 p-2 m-2 text-xl uppercase font-bolder">
-                        Vos commerces proche de vous:
-                    </h1>
-                    {commerces.map((commerce) => (
-                        <CommerceList 
-                            key={commerce.id} 
-                            commerce={commerce}
-                            onClick={()=>flyToStore(commerce)}
-                        />
-                    ))}
-                </div>
+                {routes ? (  
+                    <RoutesDirections 
+                        routes={routes}
+                        unsetRoute={()=>unsetRoute()}
+                        parentActiveRoute={activeRoute}
+                        setParentActiveRoute={setAvtiveRoute}
+                        mode={mode}
+                        setParentMode={setMode}
+                    />
+                ) : (
+                    <div className='relative h-screen pt-16 overflow-y-auto'>
+                        <h1 className="absolute top-0 left-0 z-10 p-2 m-2 text-xl uppercase font-bolder">
+                            Vos commerces proche de vous:
+                        </h1>
+                        {commerces.map((commerce) => (
+                            <CommerceList 
+                                key={commerce.id} 
+                                commerce={commerce}
+                                onClickName={()=>flyToStore(commerce)}
+                                onClickDirection={()=>getDirections( props.location, commerce.coordinates )}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     )

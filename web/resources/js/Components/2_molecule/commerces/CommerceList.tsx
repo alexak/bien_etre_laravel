@@ -5,6 +5,7 @@ import {
     faArrowsLeftRight,
     faHouse,
     faShop,
+    faRoute,
 } from '@fortawesome/free-solid-svg-icons';
 import {faStar as faStarRegular,} from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,7 +15,8 @@ import { Button, Tooltip } from "@material-tailwind/react";
 
 
 
-export default function CommerceList({commerce, onClick}){
+export default function CommerceList({commerce, onClickName, onClickDirection}){
+
     return (
         <div className="flex flex-row items-center justify-between p-2 m-2 border-2 border-solid rounded-lg">
             <div className="flex flex-row w-full">
@@ -40,7 +42,7 @@ export default function CommerceList({commerce, onClick}){
                     </div>
                     <div 
                         className="w-full text-lg font-bold cursor-pointer"
-                        onClick={() => onClick(commerce)}
+                        onClick={() => onClickName(commerce)}
                     >
                         {commerce.name}
                     </div>
@@ -81,6 +83,24 @@ export default function CommerceList({commerce, onClick}){
                                 className="flex-grow"
                             />
                         </div>
+                        { commerce.distance !== null && (
+                            <div 
+                                className="pr-4"
+                                onClick={() => onClickDirection()}
+                            >
+                                <Tooltip 
+                                    className="text-gray-800 bg-white border-2 border-solid drop-shadow-lg"
+                                    content="Direction"
+                                    placement="bottom-start"
+                                >
+                                    <FontAwesomeIcon 
+                                        className="pr-2 text-gray-400"
+                                        icon={faRoute}
+                                        size="sm"
+                                    />
+                                </Tooltip>
+                            </div>
+                        )}
                         { commerce.distance !== null && (
                             <div className="pr-4">
                                 <Tooltip 
