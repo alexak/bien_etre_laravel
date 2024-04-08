@@ -7,8 +7,6 @@ export default function DirectionStep({
     flyToCoordinates
 }){
 
-    console.log(step.maneuver.location);
-
     const getManeuverIcon = (maneuver) => {
         let image = "";
         let className = "";
@@ -17,12 +15,12 @@ export default function DirectionStep({
             case('arrive') : image = 'arrival.png'; break;
             case('merge') : image = 'merge_3.png'; break;
             case('end of road') : image = 'dead-end-street.png'; break;
-            case('continue') : image = 'straigt.png'; break;
             case('roundabout') : image = 'roundabout.png'; break;
             case('rotary') : image = 'roundabout.png'; break;
             case('roundabout turn') : image = 'roundabout.png'; break;
             case('turn') :
             case('new name'):
+            case('continue'):
                 switch(maneuver.modifier){
                     case('uturn'): image = 'uturn.png'; break;
                     case('sharp right'): 
