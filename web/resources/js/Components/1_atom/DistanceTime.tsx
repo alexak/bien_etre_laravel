@@ -41,7 +41,7 @@ export default function DistanceTime({distance, duration}) {
                     <div className="pr-2">
                         <Tooltip 
                             className="text-gray-800 bg-white border-2 border-solid drop-shadow-lg"
-                            content="Distance par rapport votre position"
+                            content="Distance du trajet"
                             placement="bottom-start"
                         >
                             <div className="flex flex-row items-center h-6 pr-2 border-r-2 border-gray-400">
@@ -61,7 +61,7 @@ export default function DistanceTime({distance, duration}) {
             <div className="">
                 <Tooltip 
                     className="text-gray-800 bg-white border-2 border-solid drop-shadow-lg"
-                    content="Distance par rapport votre position"
+                    content="Temps à parcourir pour ce trajet"
                     placement="bottom-start"
                 >
                     <div className="flex flex-row items-center h-6">
