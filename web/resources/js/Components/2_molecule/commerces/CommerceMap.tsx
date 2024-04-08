@@ -315,14 +315,14 @@ export default function CommerceMap({commerces}){
     }
 
     return (
-        <div className="relative flex flex-row w-full min-h-screen">
-            <div className="relative w-2/3 h-screen rounded-lg">
-                <div ref={mapContainer} className='w-full h-screen'/>
+        <div className="flex flex-col w-full min-h-screen overflow-y-auto md:flex-row">
+            <div className="relative w-full rounded-lg md:w-2/3">
+                <div ref={mapContainer} className='w-full h-[400px] md:h-screen'/>
                 <div className="absolute p-2 text-sm text-white top-2 left-2 bg-slate-600/70">
                     Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
                 </div>
             </div>
-            <div className="w-1/3">
+            <div className="w-full md:w-1/3">
                 {routes ? (  
                     <RoutesDirections 
                         routes={routes}
@@ -334,10 +334,11 @@ export default function CommerceMap({commerces}){
                         flyToCoordinates={flyToCoordinates}
                     />
                 ) : (
-                    <div className='relative h-screen pt-16 overflow-y-auto'>
-                        <h1 className="absolute top-0 left-0 z-10 p-2 m-2 text-xl uppercase font-bolder">
+                    <div className='h-screen overflow-y-auto'>
+                        <h1 className="p-2 m-2 text-xl uppercase font-bolder">
                             Vos commerces proche de vous:
                         </h1>
+                        <div className="flex flex-row w-full overflow-x-auto overflow-y-hidden md:overflow-x-hidden md:overflow-y-auto md:flex-col">
                         {commerces.map((commerce) => (
                             <CommerceList 
                                 key={commerce.id} 
@@ -348,6 +349,7 @@ export default function CommerceMap({commerces}){
                                 }
                             />
                         ))}
+                        </div>
                     </div>
                 )}
             </div>

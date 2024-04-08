@@ -20,7 +20,7 @@ export default function CommerceList({commerce, onClickName, onClickDirection}){
     return (
         <div className="flex flex-row items-center justify-between p-2 m-2 border-2 border-solid rounded-lg">
             <div className="flex flex-row w-full">
-                <div className="h-[80px] w-[80px] mr-4 relative">
+                <div className="h-[80px] w-[80px] mr-4 relative hidden lg:block">
                     <img
                         className="w-full h-full rounded-lg"
                         src={commerce.image}
@@ -32,6 +32,19 @@ export default function CommerceList({commerce, onClickName, onClickDirection}){
                     />
                 </div>
                 <div className="flex flex-col">
+                    <div className="relative flex justify-center w-full mr-4 lg:hidden">
+                        <img
+                            className="h-[150px] w-[150px] rounded-lg"
+                            src={commerce.image}
+                            alt={commerce.name}
+                        />
+                        <FavIcon 
+                            className='absolute flex items-center justify-center w-6 h-6 rounded-full cursor-pointer -top-2 -right-2 bg-white/75 align-center'
+                            commerce={commerce}
+                        />
+                    </div>
+
+
                     <div>
                         <Link
                             href={route('category', commerce.main_category.slug)} 
@@ -41,7 +54,7 @@ export default function CommerceList({commerce, onClickName, onClickDirection}){
                         </Link>
                     </div>
                     <div 
-                        className="w-full text-lg font-bold cursor-pointer"
+                        className="w-full text-lg font-bold cursor-pointer h-[60px] 2xl:h-[28px] "
                         onClick={() => onClickName(commerce)}
                     >
                         {commerce.name}
@@ -121,9 +134,17 @@ export default function CommerceList({commerce, onClickName, onClickDirection}){
                         )}
                     </div>
 
+                    <div className="flex justify-center w-full pt-2 xl:hidden">
+                        <Link href={route('commerce', commerce.slug)} >
+                            <Button className="w-full px-6 text-lg text-center text-white capitalize bg-pink-500 rounded-full">
+                                Détails
+                            </Button>
+                        </Link>
+                    </div>
+
                 </div>
             </div>
-            <div className="flex h-full">
+            <div className="hidden h-full xl:flex">
                 <Link href={route('commerce', commerce.slug)} >
                     <Button className="w-full p-2 px-4 text-lg text-center text-white capitalize bg-pink-500 rounded-full">
                         Détails
