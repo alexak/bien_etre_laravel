@@ -27,16 +27,13 @@ export default function CommerceMap({commerces}){
     const [zoom, setZoom] = useState(10);
     const [routes, setRoutes] = useState(null);
     const [activeRoute, setAvtiveRoute] = useState(0);
-    const [mode, setMode] = useState('driving'); // values : driving-traffic, driving, cycling, walking
+    const [routeFromTo, setRouteFromTo] = useState({
+        mode: 'driving',
+        start: props.location,
+        end: null
+    });
 
     mapboxgl.accessToken = props.mapbox;
-
-    const createCustomMarker = () => {
-        const markerDiv = document.createElement('div');
-        markerDiv.className = "marker";
-        markerDiv.innerHTML = `<img src="/images/icons/location.png" class="h-[30px] w-[30px]"/>`;
-        return markerDiv;
-    };
         
     function formatGeoData(commerces) {
         const formattedData = commerces.map(commerce => ({
@@ -249,9 +246,11 @@ export default function CommerceMap({commerces}){
         console.log(features);
     }
     
-    async function getDirections(start, end) {
+    useEffect(() => {
+        console.log(routeFromTo);
+        if(!routeFromTo.end) return;
 
-        const url = `https://api.mapbox.com/directions/v5/mapbox/${mode}/${start.longitude},${start.latitude};${end.longitude},${end.latitude}`;
+        const url = `https://api.mapbox.com/directions/v5/mapbox/${routeFromTo.mode}/${routeFromTo.start.longitude},${routeFromTo.start.latitude};${routeFromTo.end.longitude},${routeFromTo.end.latitude}`;
         const params = {
           overview: 'full',
           steps: true,
@@ -263,7 +262,7 @@ export default function CommerceMap({commerces}){
           // arrive_by: YYYY-MM-DDThh:mm:ssZ // The desired arrival time, formatted in one of three ISO 8601 usagbe if driving and rdv pris.
         };
       
-        await axios.get(url, { params })
+        axios.get(url, { params })
             .then(response => {
                 if (response.data.routes.length == 0) return;
       
@@ -273,7 +272,7 @@ export default function CommerceMap({commerces}){
                 // Handle any errors here
                 console.error('Error fetching data: ', error);
             });
-    }
+    },[routeFromTo])
 
     useEffect(() => {
         if (!routes || routes.length == 0) return;
@@ -318,12 +317,6 @@ export default function CommerceMap({commerces}){
         map.current.setLayoutProperty('route', 'visibility', 'none');
     }
 
-
-    useEffect(() => {
-        console.log('mode changed');
-        //TODO: reget routes 
-    }, [mode]);
-
     return (
         <div className="relative flex flex-row w-full min-h-screen">
             <div className="relative w-2/3 h-screen rounded-lg">
@@ -339,8 +332,8 @@ export default function CommerceMap({commerces}){
                         unsetRoute={()=>unsetRoute()}
                         parentActiveRoute={activeRoute}
                         setParentActiveRoute={setAvtiveRoute}
-                        mode={mode}
-                        setParentMode={setMode}
+                        parentRouteFromTo={routeFromTo}
+                        setParentRouteFromTo={setRouteFromTo}
                     />
                 ) : (
                     <div className='relative h-screen pt-16 overflow-y-auto'>
@@ -352,7 +345,9 @@ export default function CommerceMap({commerces}){
                                 key={commerce.id} 
                                 commerce={commerce}
                                 onClickName={()=>flyToStore(commerce)}
-                                onClickDirection={()=>getDirections( props.location, commerce.coordinates )}
+                                onClickDirection={
+                                    ()=>(setRouteFromTo((prevRoute) => ({ ...prevRoute, end:commerce.coordinates})) ) 
+                                }
                             />
                         ))}
                     </div>

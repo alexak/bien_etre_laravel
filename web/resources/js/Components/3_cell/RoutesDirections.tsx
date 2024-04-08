@@ -23,13 +23,13 @@ export default function RoutesDirections({
     unsetRoute,
     parentActiveRoute, 
     setParentActiveRoute,
-    mode,
-    setParentMode
+    parentRouteFromTo,
+    setParentRouteFromTo
 }){
 
     const [activeRoute, setActiveRoute] = useState(parentActiveRoute);
     const [openModeSelect, setOpenModeSelect] = useState(false);
-    const [currentMode, setCurrentmode] = useState(mode);
+    const [routeFromTo, setRouteFromTo] = useState(parentRouteFromTo);
     const [modes , setModes] = useState(
         {
             'driving':faCar,
@@ -39,12 +39,11 @@ export default function RoutesDirections({
     );
 
     const changeMode = (mode) => {
-        setCurrentmode(mode);
-        setParentMode(mode);
+        setRouteFromTo((prevRoute) => ({ ...prevRoute, mode:mode}));
+        setParentRouteFromTo((prevRoute) => ({ ...prevRoute, mode:mode}));
     }
 
     const changeActiveRoute = (routeNo) => {
-        console.log(routes[activeRoute].distance);
         setActiveRoute(routeNo);
         setParentActiveRoute(routeNo);
     }
@@ -82,12 +81,12 @@ export default function RoutesDirections({
                             <Button 
                                 variant="text"
                                 ripple={false}
-                                className="flex flex-row text-base focus-visible:border-none focus-visible:border-0"
+                                className="flex flex-row px-0 text-base focus-visible:border-none focus-visible:border-0"
                             >   
                                 <div className="">
                                     <FontAwesomeIcon
-                                        className="w-10 h-10 text-gray-500 hover:text-gray-700"
-                                        icon={modes[currentMode]}
+                                        className="w-[25px] h-[25px] text-gray-500 hover:text-gray-700"
+                                        icon={modes[routeFromTo.mode]}
                                     />
                                 </div>
                                 <FontAwesomeIcon
@@ -96,13 +95,13 @@ export default function RoutesDirections({
                                 />  
                             </Button>
                         </MenuHandler>
-                        <MenuList className="p-2">
+                        <MenuList className="p-2 rounded-b-md">
                             {Object.entries(modes).map(([arrayKey, icon]) => (
-                                arrayKey !== currentMode && ( 
+                                arrayKey !== routeFromTo.mode && ( 
                                     <MenuItem key={arrayKey}>
                                         <div onClick={() => changeMode(arrayKey)}>
                                             <FontAwesomeIcon
-                                                className="w-10 h-10 text-gray-500 hover:text-gray-700"
+                                                className="w-[25px] h-[25px] text-gray-500 hover:text-gray-700"
                                                 icon={icon}
                                             />
                                         </div>
