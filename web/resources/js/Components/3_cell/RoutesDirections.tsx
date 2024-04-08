@@ -24,7 +24,8 @@ export default function RoutesDirections({
     parentActiveRoute, 
     setParentActiveRoute,
     parentRouteFromTo,
-    setParentRouteFromTo
+    setParentRouteFromTo,
+    flyToCoordinates
 }){
 
     const [activeRoute, setActiveRoute] = useState(parentActiveRoute);
@@ -145,6 +146,7 @@ export default function RoutesDirections({
                 <DirectionStep
                     key={index} 
                     step={step}
+                    flyToCoordinates={flyToCoordinates}
                 />
             )
             )}

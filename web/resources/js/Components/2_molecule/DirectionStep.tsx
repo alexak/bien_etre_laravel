@@ -2,7 +2,12 @@
 import DistanceTime from "@/Components/1_atom/DistanceTime";
 
 
-export default function DirectionStep({step}){
+export default function DirectionStep({
+    step,
+    flyToCoordinates
+}){
+
+    console.log(step.maneuver.location);
 
     const getManeuverIcon = (maneuver) => {
         let image = "";
@@ -17,6 +22,7 @@ export default function DirectionStep({step}){
             case('rotary') : image = 'roundabout.png'; break;
             case('roundabout turn') : image = 'roundabout.png'; break;
             case('turn') :
+            case('new name'):
                 switch(maneuver.modifier){
                     case('uturn'): image = 'uturn.png'; break;
                     case('sharp right'): 
@@ -74,7 +80,7 @@ export default function DirectionStep({step}){
                 height="30"
             />
         ) : (
-            <></>
+            <>{maneuver.type} - {maneuver.modifier}</>
         )
     }
 
@@ -83,8 +89,10 @@ export default function DirectionStep({step}){
             <div className="">
                 {getManeuverIcon(step.maneuver)}
             </div>
-            <div className="flex flex-col w-full">
-                <div>{step.maneuver.instruction}</div>
+            <div className="flex flex-col w-full cursor-pointer">
+                <div onClick={()=>(flyToCoordinates(step.maneuver.location))} >
+                    {step.maneuver.instruction}
+                </div>
                 <div>
                     <DistanceTime 
                         distance={step.distance}

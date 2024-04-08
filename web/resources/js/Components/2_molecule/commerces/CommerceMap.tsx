@@ -233,21 +233,18 @@ export default function CommerceMap({commerces}){
     });
 
 
-    const flyToStore = (commerce) => {
+    const flyToCoordinates = (coordinates) => {
         if (!map.current) return;
         map.current.flyTo({
-          center: commerce.location.coordinates,
+          center: coordinates,
           zoom: 17
         });
-        const features = map.current.queryRenderedFeatures(commerce.location.coordinates, {
-            layers: ['unclustered-point'] // replace with your layer name
+        const features = map.current.queryRenderedFeatures(coordinates, {
+            layers: ['unclustered-point']
           });
-      
-        console.log(features);
     }
     
     useEffect(() => {
-        console.log(routeFromTo);
         if(!routeFromTo.end) return;
 
         const url = `https://api.mapbox.com/directions/v5/mapbox/${routeFromTo.mode}/${routeFromTo.start.longitude},${routeFromTo.start.latitude};${routeFromTo.end.longitude},${routeFromTo.end.latitude}`;
@@ -334,6 +331,7 @@ export default function CommerceMap({commerces}){
                         setParentActiveRoute={setAvtiveRoute}
                         parentRouteFromTo={routeFromTo}
                         setParentRouteFromTo={setRouteFromTo}
+                        flyToCoordinates={flyToCoordinates}
                     />
                 ) : (
                     <div className='relative h-screen pt-16 overflow-y-auto'>
@@ -344,7 +342,7 @@ export default function CommerceMap({commerces}){
                             <CommerceList 
                                 key={commerce.id} 
                                 commerce={commerce}
-                                onClickName={()=>flyToStore(commerce)}
+                                onClickName={()=>flyToCoordinates(commerce.location.coordinates)}
                                 onClickDirection={
                                     ()=>(setRouteFromTo((prevRoute) => ({ ...prevRoute, end:commerce.coordinates})) ) 
                                 }

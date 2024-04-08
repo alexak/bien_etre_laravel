@@ -38,7 +38,7 @@ export default function DistanceTime({distance, duration}) {
     return (
         <div className="flex flex-row">
             { 0<distance ? (
-                    <div className="pr-4">
+                    <div className="pr-2">
                         <Tooltip 
                             className="text-gray-800 bg-white border-2 border-solid drop-shadow-lg"
                             content="Distance par rapport votre position"
