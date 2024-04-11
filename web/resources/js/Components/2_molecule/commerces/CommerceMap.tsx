@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, usePage } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import CommerceList from './CommerceList';
 import CommerceCardSmall from './CommerceCardSmall';
 import mapboxgl from 'mapbox-gl';
@@ -8,9 +8,13 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import ReactDOMServer from 'react-dom/server';
 import axios from 'axios';
 import RoutesDirections from '@/Components/3_cell/RoutesDirections';
+import EmptyResults from '@/Components/1_atom/EmptyResults';
 
 
-export default function CommerceMap({commerces}){
+export default function CommerceMap({
+    commerces, 
+    setParentCommerce
+}){
 
     const { props } = usePage();
     const [centerpoint, setCenterPoint] = useState(
@@ -22,11 +26,9 @@ export default function CommerceMap({commerces}){
     
     const mapContainer = useRef(null);
     const map = useRef(null);
-    const [lng, setLng] = useState(centerpoint.long);
-    const [lat, setLat] = useState(centerpoint.lat);
     const [zoom, setZoom] = useState(10);
     const [routes, setRoutes] = useState(null);
-    const [activeRoute, setAvtiveRoute] = useState(0);
+    const [activeRoute, setActiveRoute] = useState(0);
     const [routeFromTo, setRouteFromTo] = useState({
         mode: 'driving',
         start: props.location,
@@ -66,24 +68,21 @@ export default function CommerceMap({commerces}){
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
             style: 'mapbox://styles/mapbox/streets-v12',
-            center: [lng, lat],
+            center: [centerpoint.long, centerpoint.lat],
             zoom: zoom
         });        
 
         map.current.on('move', () => {
-            setLng(map.current.getCenter().lng.toFixed(4));
-            setLat(map.current.getCenter().lat.toFixed(4));
             setZoom(map.current.getZoom().toFixed(2));
 
             //TODO: RECALCULATE COMMERCES OF THE NEW BOUNDING BOX
-
+            getCommercesOnVisibleMap()
         });
-
+        
         map.current.on('load', () => {
             map.current.addControl(new mapboxgl.NavigationControl());
             map.current.addControl(new mapboxgl.ScaleControl());
-
-
+               
             map.current.addSource('commerces', {
                 'type': 'geojson',
                 'data': formatGeoData(commerces),
@@ -232,6 +231,35 @@ export default function CommerceMap({commerces}){
         });
     });
 
+    const getCommercesOnVisibleMap = () => {
+        if (!map.current) return;
+
+        // get boudings of current map
+        const bounds = map.current.getBounds().toArray();
+        console.log(bounds);
+        
+        // create url
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.delete('bounds');
+      
+        // Add a new parameter
+        currentUrl.searchParams.append('bounds', bounds);
+
+        console.log(currentUrl);
+
+        router.visit(currentUrl, {
+            only: ['commerces'],
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: (page) => {
+                setParentCommerce(page.props.commerces);
+            }
+        })
+        // fetch commerces in visible map
+        // fetch the commerce layer on the map
+        // replace the data source
+    } 
+
 
     const flyToCoordinates = (coordinates) => {
         if (!map.current) return;
@@ -319,7 +347,7 @@ export default function CommerceMap({commerces}){
             <div className="relative w-full rounded-lg md:w-2/3">
                 <div ref={mapContainer} className='w-full h-[400px] md:h-screen'/>
                 <div className="absolute p-2 text-sm text-white top-2 left-2 bg-slate-600/70">
-                    Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
+                    Longitude: {centerpoint.long} | Latitude: {centerpoint.lat} | Zoom: {zoom}
                 </div>
             </div>
             <div className="w-full md:w-1/3">
@@ -328,29 +356,33 @@ export default function CommerceMap({commerces}){
                         routes={routes}
                         unsetRoute={()=>unsetRoute()}
                         parentActiveRoute={activeRoute}
-                        setParentActiveRoute={setAvtiveRoute}
+                        setParentActiveRoute={setActiveRoute}
                         parentRouteFromTo={routeFromTo}
                         setParentRouteFromTo={setRouteFromTo}
                         flyToCoordinates={flyToCoordinates}
                     />
-                ) : (
-                    <div className='h-screen overflow-y-auto'>
-                        <h1 className="p-2 m-2 text-xl uppercase font-bolder">
-                            Vos commerces proche de vous:
-                        </h1>
-                        <div className="flex flex-row w-full overflow-x-auto overflow-y-hidden md:overflow-x-hidden md:overflow-y-auto md:flex-col">
-                        {commerces.map((commerce) => (
-                            <CommerceList 
-                                key={commerce.id} 
-                                commerce={commerce}
-                                onClickName={()=>flyToCoordinates(commerce.location.coordinates)}
-                                onClickDirection={
-                                    ()=>(setRouteFromTo((prevRoute) => ({ ...prevRoute, end:commerce.coordinates})) ) 
-                                }
-                            />
-                        ))}
+                ):(
+                    commerces?.length > 0 ? (
+                        <div className='h-screen overflow-y-auto'>
+                            <h1 className="p-2 m-2 text-xl uppercase font-bolder">
+                                Vos commerces proche de vous:
+                            </h1>
+                            <div className="flex flex-row w-full overflow-x-auto overflow-y-hidden md:overflow-x-hidden md:overflow-y-auto md:flex-col">
+                                {commerces.map((commerce) => (
+                                    <CommerceList 
+                                        key={commerce.id} 
+                                        commerce={commerce}
+                                        onClickName={()=>flyToCoordinates(commerce.location.coordinates)}
+                                        onClickDirection={
+                                            ()=>(setRouteFromTo((prevRoute) => ({ ...prevRoute, end:commerce.coordinates})) ) 
+                                        }
+                                    />
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    ):(
+                        <EmptyResults />
+                    )
                 )}
             </div>
         </div>

@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Models\Commerce;
 use App\Models\Category;
-use Illuminate\Support\Facades\Auth;
-use MatanYadaev\EloquentSpatial\Objects\Point;
-use Illuminate\Support\Facades\DB;
 use GeoIp2\WebService\Client;
+use Inertia\Inertia;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\DB;
+use MatanYadaev\EloquentSpatial\Objects\Point;
+use MatanYadaev\EloquentSpatial\Objects\Polygon;
+use MatanYadaev\EloquentSpatial\Objects\LineString;
 
 
 class CategoryController extends Controller
@@ -28,7 +29,7 @@ class CategoryController extends Controller
     {
         $location = $this->getLocation($request);
 
-        $commerces = Commerce::with('mainCategory')
+        $commercesQuery = Commerce::with('mainCategory')
             ->select([
                 '*',
                 DB::raw('NULL AS distance')
@@ -36,18 +37,42 @@ class CategoryController extends Controller
 
         if (!empty($location)) {
             $point = new Point($location['latitude'], $location['longitude']);
-            $commerces->withDistanceSphere('location', $point);
+            $commercesQuery->withDistanceSphere('location', $point);
+        }
+        
+
+        $bounds =  $request->has('bounds') ? explode(',', $request->input('bounds')) : null;
+        if ($bounds) {
+            $keys = ['nwLong', 'nwLat', 'seLong', 'seLat'];
+            $coordinates = array_combine($keys, $bounds);
+
+            // Define the four corners of the rectangle
+            $polygon = new Polygon([
+                new LineString([
+                    new Point($coordinates['nwLat'], $coordinates['nwLong']), // Northwest corner
+                    new Point($coordinates['seLat'], $coordinates['nwLong']), // Northeast corner
+                    new Point($coordinates['seLat'], $coordinates['seLong']), // Southeast corner
+                    new Point($coordinates['nwLat'], $coordinates['seLong']), // Southwest corner
+                    new Point($coordinates['nwLat'], $coordinates['nwLong'])  // Closing at Northwest corner to complete the loop
+                ])
+            ]);
+
+            $commercesQuery
+                ->whereWithin('location', $polygon)
+                ->exists();
         }
           
         $sortBy = $request->has('sortBy') ? $request->input('sortBy') : null;
         $sortDirection = $request->has('sortDirection') ? $request->input('sortDirection') : 'asc';
         if ($sortBy !== null) {
-            ($sortBy == 'distance' && !empty($location)) ? $commerces->orderByDistanceSphere('location', $point, $sortDirection) : $commerces->orderBy($sortBy, $sortDirection);
+            ($sortBy == 'distance' && !empty($location)) ? $commercesQuery->orderByDistanceSphere('location', $point, $sortDirection) : $commercesQuery->orderBy($sortBy, $sortDirection);
         } else {
-            !empty($location) ? $commerces->orderByDistanceSphere('location', $point, 'asc') : $commerces->orderBy('name', 'asc');
+            !empty($location) ? $commercesQuery->orderByDistanceSphere('location', $point, 'asc') : $commercesQuery->orderBy('name', 'asc');
         }
 
-        $commerces = $commerces->get();
+        $commerces = $commercesQuery->get();
+
+        //var_dump($commerces);
 
         $userFavorites = Auth::check() ? Auth::user()->favoriteCommerceIds->pluck('favorite_commerce_id', 'favorite_commerce_id')->toArray() : [];
         foreach($commerces as $commerce) {
