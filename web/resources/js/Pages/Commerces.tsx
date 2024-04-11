@@ -1,11 +1,6 @@
 
 import React from "react";
 import CommerceCard from "@/Components/2_molecule/commerces/CommerceCard";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
-import { Button, Menu, MenuHandler, MenuItem, MenuList } from "@material-tailwind/react";
-import { router } from '@inertiajs/react'
-import CommerceList from "@/Components/2_molecule/commerces/CommerceList";
 import CommerceMap from "@/Components/2_molecule/commerces/CommerceMap";
 import Sort from "@/Components/1_atom/Sort";
 
@@ -70,7 +65,12 @@ export default function Commerces({commerces}){
                     </div>
                     )}
 
-                {displayMode === 'map' && <CommerceMap commerces={commerces} />}
+                {displayMode === 'map' && 
+                    <CommerceMap 
+                        commerces={commerces} 
+                        setParentCommerce={setPageCommerces} 
+                    />
+                }
         
             </div>
         </>
