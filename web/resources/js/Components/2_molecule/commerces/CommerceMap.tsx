@@ -73,9 +73,7 @@ export default function CommerceMap({
         });        
 
         map.current.on('move', () => {
-            setZoom(map.current.getZoom().toFixed(2));
-
-            //TODO: RECALCULATE COMMERCES OF THE NEW BOUNDING BOX
+            //setZoom(map.current.getZoom().toFixed(2));
             getCommercesOnVisibleMap()
         });
         
@@ -236,7 +234,6 @@ export default function CommerceMap({
 
         // get boudings of current map
         const bounds = map.current.getBounds().toArray();
-        console.log(bounds);
         
         // create url
         const currentUrl = new URL(window.location.href);
@@ -245,19 +242,16 @@ export default function CommerceMap({
         // Add a new parameter
         currentUrl.searchParams.append('bounds', bounds);
 
-        console.log(currentUrl);
-
         router.visit(currentUrl, {
             only: ['commerces'],
             preserveState: true,
             preserveScroll: true,
             onSuccess: (page) => {
                 setParentCommerce(page.props.commerces);
+                const geojson = formatGeoData(page.props.commerces);
+                map.current.getSource('commerces').setData(geojson);
             }
         })
-        // fetch commerces in visible map
-        // fetch the commerce layer on the map
-        // replace the data source
     } 
 
 
@@ -342,6 +336,14 @@ export default function CommerceMap({
         map.current.setLayoutProperty('route', 'visibility', 'none');
     }
 
+    const zoomOut=() => {
+        if (zoom > 5) {
+            setZoom((prevZoom) => prevZoom - 1);
+            console.log(zoom);
+            map.current.setZoom(zoom);
+        }
+    }
+
     return (
         <div className="flex flex-col w-full min-h-screen overflow-y-auto md:flex-row">
             <div className="relative w-full rounded-lg md:w-2/3">
@@ -381,7 +383,7 @@ export default function CommerceMap({
                             </div>
                         </div>
                     ):(
-                        <EmptyResults />
+                        <EmptyResults parentZoomOut={()=>zoomOut()}/>
                     )
                 )}
             </div>

@@ -1,18 +1,13 @@
 
-import React, { useState } from 'react';
 import { 
-    faStar as faStarSolid,
     faArrowsLeftRight,
     faHouse,
     faShop,
 } from '@fortawesome/free-solid-svg-icons';
-import {faStar as faStarRegular,} from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Tooltip } from "@material-tailwind/react";
-import Card, { CardBody, CardFooter, CardHeader } from '@material-tailwind/react/components/Card';
-import { Link, usePage } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import FavIcon from '@/Components/1_atom/FavIcon';
-import SocialmediaShare from '@/Components/1_atom/SocialmediaShare';
 
 
 export default function CommerceCardSmall({commerce}){
