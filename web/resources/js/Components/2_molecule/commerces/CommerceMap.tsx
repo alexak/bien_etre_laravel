@@ -73,7 +73,7 @@ export default function CommerceMap({
         });        
 
         map.current.on('move', () => {
-            //setZoom(map.current.getZoom().toFixed(2));
+            setZoom(map.current.getZoom().toFixed(2));
             getCommercesOnVisibleMap()
         });
         
@@ -338,9 +338,7 @@ export default function CommerceMap({
 
     const zoomOut=() => {
         if (zoom > 5) {
-            setZoom((prevZoom) => prevZoom - 1);
-            console.log(zoom);
-            map.current.setZoom(zoom);
+            map.current.setZoom(zoom-1);
         }
     }
 
