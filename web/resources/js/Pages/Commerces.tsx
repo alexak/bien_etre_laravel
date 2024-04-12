@@ -18,7 +18,7 @@ export default function Commerces({commerces}){
     return (
         <>    
             {/** Main content */}
-            <div className="flex flex-col justify-center w-full min-h-screen py-8">
+            <div className="flex flex-col justify-start w-full min-h-screen py-8">
                 
                 {/** Header */}
                 <div className="flex flex-row justify-between">
@@ -30,7 +30,7 @@ export default function Commerces({commerces}){
                     {/** Header right */}
                     <div className="flex flex-row justify-end">
                         <div 
-                            className={`cursor-pointer flex justify-center items-center rounded-md hover:bg-gray-200 p-2 mr-4 ${displayMode=='card' ? "bg-gray-200" : ""} `}
+                            className={`cursor-pointer flex items-center rounded-md hover:bg-gray-200 p-2 mr-4 ${displayMode=='card' ? "bg-gray-200" : ""} `}
                             onClick={()=>setDisplayMode('card')}
                         >
                             <img
@@ -42,7 +42,7 @@ export default function Commerces({commerces}){
                             />
                         </div>
                         <div 
-                            className={`cursor-pointer flex justify-center items-center rounded-md hover:bg-gray-200 p-2 mr-4 ${displayMode=='map' ? "bg-gray-200" : ""} `}    
+                            className={`cursor-pointer flex items-center rounded-md hover:bg-gray-200 p-2 mr-4 ${displayMode=='map' ? "bg-gray-200" : ""} `}    
                             onClick={()=>setDisplayMode('map')}
                         >
                             <img
@@ -58,7 +58,7 @@ export default function Commerces({commerces}){
 
                 {/** Commerces as cards */}
                 {displayMode === 'card' && (
-                    <div className="grid justify-center w-full grid-rows-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+                    <div className="grid justify-start w-full grid-rows-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                         {pageCommerces.map((commerce) => (
                             <CommerceCard key={commerce.id} commerce={commerce} />
                         ))}
