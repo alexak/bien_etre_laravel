@@ -33,7 +33,10 @@ class CategoryController extends Controller
             ->select([
                 '*',
                 DB::raw('NULL AS distance')
-            ]);
+            ])
+            ->whereHas('mainCategory', function ($query) use ($categoryname) {
+                $query->where('slug', $categoryname); 
+            });
 
         if (!empty($location)) {
             $point = new Point($location['latitude'], $location['longitude']);
@@ -71,8 +74,6 @@ class CategoryController extends Controller
         }
 
         $commerces = $commercesQuery->get();
-
-        //var_dump($commerces);
 
         $userFavorites = Auth::check() ? Auth::user()->favoriteCommerceIds->pluck('favorite_commerce_id', 'favorite_commerce_id')->toArray() : [];
         foreach($commerces as $commerce) {
