@@ -1,14 +1,15 @@
 
-import React from 'react';
+import React  from 'react';
 import { Link, usePage } from "@inertiajs/react";
-import { Button, Collapse, Menu, MenuHandler, MenuItem, MenuList } from "@material-tailwind/react";
+import { Collapse } from "@material-tailwind/react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useGeolocated } from "react-geolocated";
 import CategoriesMenuLarge from '@/Components/2_molecule/menu/CategoriesMenuLarge';
 import UserMenu from '@/Components/2_molecule/menu/UserMenu';
 import GuestMenu from '@/Components/2_molecule/menu/GuestMenu';
 import CategoriesMenuSmall from '../2_molecule/menu/CategoriesMenuSmall';
+
 
 export default function TopMenu() {
 
@@ -49,10 +50,14 @@ export default function TopMenu() {
       
             {/** menu small body */}
             <Collapse open={openMenuSmall} className="w-full flex flex-col text-gray-800 z-20 absolute top-[50px] left-0 px-8 bg-white overflow-y-auto">
-              <CategoriesMenuSmall 
-                categories={categories} 
-                geoParameter={geoParameter}
-              />
+              {categories ? (
+                <CategoriesMenuSmall 
+                  categories={categories} 
+                  geoParameter={geoParameter}
+                />
+              ):(
+                <></>
+              )}
 
               {/** user menu */}
               {user ? (
@@ -76,10 +81,14 @@ export default function TopMenu() {
               </Link>
 
               {/** categories mega menu */}
-              <CategoriesMenuLarge 
-                categories={categories}
-                geoParameter={geoParameter}
-              />
+              {categories ? (
+                <CategoriesMenuLarge 
+                  categories={categories}
+                  geoParameter={geoParameter}
+                />
+              ):(
+                <></>
+              )}
               
             </div>
 
