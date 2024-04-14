@@ -69,7 +69,8 @@ export default function CommerceMap({
             container: mapContainer.current,
             style: 'mapbox://styles/mapbox/streets-v12',
             center: [centerpoint.long, centerpoint.lat],
-            zoom: zoom
+            zoom: zoom,
+            cooperativeGestures: true
         });        
 
         map.current.on('move', () => {
