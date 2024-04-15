@@ -82,6 +82,7 @@ export default function CommerceMap({
             map.current.addControl(new mapboxgl.NavigationControl());
             map.current.addControl(new mapboxgl.ScaleControl());
                
+            /** layer including the commerces */
             map.current.addSource('commerces', {
                 'type': 'geojson',
                 'data': formatGeoData(commerces),
@@ -91,6 +92,7 @@ export default function CommerceMap({
               }
             );
 
+            /** layer including clusters */
             map.current.addLayer({
                 id: 'clusters',
                 type: 'circle',
@@ -123,6 +125,7 @@ export default function CommerceMap({
                 }
             });
 
+            /** layer including the clusters count */
             map.current.addLayer({
                 id: 'cluster-count',
                 type: 'symbol',
@@ -138,6 +141,7 @@ export default function CommerceMap({
                 }
             });
 
+            /** preparation custom location icon */
             map.current.loadImage('/images/icons/location.png', (error, image) => {
                 if (error) throw error;
                 // Add the image to the map using a unique name, e.g., 'custom-icon'
@@ -145,6 +149,7 @@ export default function CommerceMap({
                 // Now you can reference 'custom-icon' in your layer configuration
             });
 
+            /** layer including unclustering points */
             map.current.addLayer({
                 id: 'unclustered-point',
                 type: 'symbol',
@@ -203,28 +208,27 @@ export default function CommerceMap({
                 map.current.getCanvas().style.cursor = '';
             });
     
-            if (props.location) {
-                map.current.addLayer({
-                    id: 'user-location',
-                    type: 'circle',
-                    source: {
-                        type: 'geojson',
-                        data: {    
-                            type: 'Feature',
-                            properties: {},
-                            geometry: {
-                                type: 'Point',
-                                coordinates: [props.location.longitude, props.location.latitude]
-                            }
-                        }
-                    },
-                    paint: {
-                        'circle-radius': 10, // Size of the circle
-                        'circle-color': '#007cbf', // Blue color
-                        'circle-stroke-width': 2,
-                        'circle-stroke-color': '#ffffff' // White border
-                    }
-                });
+            /** layer showing the user position */
+            if (props.location && map.current) {
+                const markerContainer = document.createElement('div');
+                markerContainer.className = 'absolute top-0 left-0 '; // Ensures the marker is positioned correctly without animation effects
+                
+                const el = document.createElement('div');
+                el.className = 'w-4 h-4 animate-ping bg-sky-400 rounded-full absolute top-0 left-0';
+                el.style.transformOrigin = 'center';
+                markerContainer.appendChild(el);
+
+                const elfixed = document.createElement('div');
+                elfixed.className = 'w-4 h-4 bg-sky-500 rounded-full absolute top-0 left-0';
+                markerContainer.appendChild(elfixed);
+              
+                // make a marker for each feature and add to the map
+                new mapboxgl.Marker(markerContainer)
+                    .setLngLat({
+                        lat: props.location.latitude,
+                        lng: props.location.longitude
+                    })
+                    .addTo(map.current);
             }
 
         });
