@@ -69,7 +69,7 @@ export default function RoutesDirections({
                 </div>
             </div>
 
-            <div className="h-[80px] flex flex-row items-center p-2 border-2 border-solid rounded-lg mb-2">
+            <div className="h-[80px] md:h-max flex flex-row items-center p-2 border-2 border-solid rounded-lg mb-2">
                 <div className="">
                     <Menu 
                         open={openModeSelect}
@@ -113,10 +113,10 @@ export default function RoutesDirections({
                     </Menu> 
                 </div>
                 <div className="flex flex-col justify-start w-full">
-                    <div className="flex flex-row">
+                    <div className="">
                         <ButtonGroup 
                             variant="text"
-                            className="pb-2"
+                            className="pb-2 flex flex-row md:flex-col xl:flex-row"
                         >
                             {routes.map((route, index) => (
                                 <Button

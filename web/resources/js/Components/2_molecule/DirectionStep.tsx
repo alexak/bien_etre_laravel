@@ -83,12 +83,14 @@ export default function DirectionStep({
     }
 
     return (
-        <div className="h-[100px] flex flex-row items-center p-2 border-2 border-solid rounded-lg mb-2">
+        <div className="h-[180px] flex flex-row items-center p-2 border-2 border-solid rounded-lg mb-2">
             <div className="">
                 {getManeuverIcon(step.maneuver)}
             </div>
             <div className="flex flex-col w-full cursor-pointer">
-                <div onClick={()=>(flyToCoordinates(step.maneuver.location))} >
+                <div
+                    className="pb-4" 
+                    onClick={()=>(flyToCoordinates(step.maneuver.location))} >
                     {step.maneuver.instruction}
                 </div>
                 <div>

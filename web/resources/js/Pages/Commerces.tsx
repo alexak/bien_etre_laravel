@@ -18,10 +18,10 @@ export default function Commerces({commerces}){
     return (
         <>    
             {/** Main content */}
-            <div className="flex flex-col justify-start w-full min-h-screen py-8">
+            <div className="flex flex-col justify-start w-full min-h-screen">
                 
                 {/** Header */}
-                <div className="flex flex-row justify-between">
+                <div className="flex flex-row justify-between py-4">
                     {/** Header left */}
                     <div>
                         <Sort setPageCommerces={setPageCommerces} /> 
@@ -30,24 +30,24 @@ export default function Commerces({commerces}){
                     {/** Header right */}
                     <div className="flex flex-row justify-end">
                         <div 
-                            className={`cursor-pointer flex items-center rounded-md hover:bg-gray-200 p-2 mr-4 ${displayMode=='card' ? "bg-gray-200" : ""} `}
+                            className={`cursor-pointer flex items-center rounded-md hover:bg-gray-200 p-2 mr-4 ${displayMode=='card' ? 'bg-pink-500' : 'bg-gray-100'} `}
                             onClick={()=>setDisplayMode('card')}
                         >
                             <img
-                                className="w-[20px] h-[20px]" 
-                                src="/images/icons/cards.png" 
+                                className={`w-[20px] h-[20px] ${displayMode=='card' ? 'invert' : ''} hover:invert-0`}
+                                src="/images/icons/cards.png"
                                 alt="" 
                                 width="20" 
                                 height="20"
                             />
                         </div>
                         <div 
-                            className={`cursor-pointer flex items-center rounded-md hover:bg-gray-200 p-2 mr-4 ${displayMode=='map' ? "bg-gray-200" : ""} `}    
+                            className={`cursor-pointer flex items-center rounded-md hover:bg-gray-200 p-2 mr-4 ${displayMode=='map' ? 'bg-pink-500' : 'bg-gray-100'} `}    
                             onClick={()=>setDisplayMode('map')}
                         >
                             <img
-                                className="w-[20px] h-[20px]" 
-                                src="/images/icons/map.png" 
+                                className={`w-[20px] h-[20px] ${displayMode=='map' ? 'invert' : '' } hover:invert-0`}
+                                src="/images/icons/map.png"
                                 alt="" 
                                 width="20" 
                                 height="20"

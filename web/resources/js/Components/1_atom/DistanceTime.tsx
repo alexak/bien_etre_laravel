@@ -36,7 +36,7 @@ export default function DistanceTime({distance, duration}) {
 
 
     return (
-        <div className="flex flex-row">
+        <div className="flex flex-row md:flex-col lg:flex-row">
             { 0<distance ? (
                     <div className="pr-2">
                         <Tooltip 
@@ -44,7 +44,7 @@ export default function DistanceTime({distance, duration}) {
                             content="Distance du trajet"
                             placement="bottom-start"
                         >
-                            <div className="flex flex-row items-center h-6 pr-2 border-r-2 border-gray-400">
+                            <div className="flex flex-row items-center h-6 pr-2 border-r-2 md:border-r-0 lg:border-r-2 border-gray-400">
                                 <FontAwesomeIcon 
                                     className="pr-2 text-gray-400"
                                     icon={faArrowsLeftRight}

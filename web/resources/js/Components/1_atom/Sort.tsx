@@ -41,19 +41,19 @@ export default function Sort({setPageCommerces}){
             allowHover
         >
             <MenuHandler>
-            <Button 
-                variant="text"
-                ripple={false}
-                className="text-base text-gray-500 hover:text-gray-700 focus-visible:border-none focus-visible:border-0"
-            >
-                <span className="pr-4">
-                    Tri
-                </span>
-                <FontAwesomeIcon
-                    className={`h-3.5 w-3.5 transition-transform ${openSort ? "rotate-180" : ""}`} 
-                    icon={faChevronDown}
-                />  
-            </Button>
+                <Button 
+                    variant="text"
+                    ripple={false}
+                    className="text-base text-gray-500 hover:text-gray-700 focus-visible:border-none focus-visible:border-0 px-0"
+                >
+                    <span className="pr-4">
+                        Tri
+                    </span>
+                    <FontAwesomeIcon
+                        className={`h-3.5 w-3.5 transition-transform ${openSort ? "rotate-180" : ""}`} 
+                        icon={faChevronDown}
+                    />  
+                </Button>
             </MenuHandler>
             <MenuList className="p-6">
                 <MenuItem>
