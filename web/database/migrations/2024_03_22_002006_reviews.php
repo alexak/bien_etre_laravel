@@ -11,16 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_reviews', function (Blueprint $table) {
+        Schema::create('reviews', function (Blueprint $table) {
             $table->id();
+            $table->smallInteger('rating'); 
             $table->text('comment');
-            $table->smallInteger('rating'); // Changed 'quote' to 'rating' for clarity
+            $table->smallInteger('rating_price'); 
+            $table->smallInteger('rating_professionalism'); 
+            $table->smallInteger('rating_cleanliness'); 
+            $table->smallInteger('rating_kindness'); 
+            $table->smallInteger('rating_quality'); 
+            $table->smallInteger('upvoting'); 
             $table->foreignId('user_id')
-                ->nullable() // Ensure this column is nullable
+                ->nullable() 
                 ->constrained('users')
                 ->onDelete('set null');
             $table->foreignId('commerce_id')
-                ->constrained('commerces') // Ensure the table name is correct
+                ->constrained('commerces')
                 ->onDelete('cascade');
             $table->timestamps();
         });

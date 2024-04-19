@@ -38,7 +38,6 @@ class CommercesSeeder extends Seeder
             $commerce->slug = $this->createUniqueSlug($commerce->name);
             $commerce->description = $faker->paragraph(2);
             $commerce->image = "https://picsum.photos/300?random=" . uniqid();
-            $commerce->rating = rand(0, 5) <= 1 ? null : rand(1, 5);
             $commerce->isAtHome = false;
             $commerce->isAtStore = true;
             $commerce->address_1 = $address1;

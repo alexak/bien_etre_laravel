@@ -19,8 +19,6 @@ return new class extends Migration
             $table->string('name');
             $table->longText('description');
             $table->string('image');
-            $table->tinyInteger('rating')
-                ->nullable();
             $table->boolean('isAtHome')
                 ->default(false);
             $table->boolean('isAtStore')
