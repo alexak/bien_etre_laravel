@@ -4,6 +4,7 @@ import RatingProgressLine from "@/Components/1_atom/RatingProgressLine";
 
 export default function RatingCounts({ratings}){
 
+
     return (
         <div className="flex flex-col w-full">
             <div className="w-full mb-2 font-semibold border-b-2">
@@ -11,14 +12,14 @@ export default function RatingCounts({ratings}){
             </div>
 
             {
-                ratings.countsByRatings.sort((a, b) => b.key - a.key).map((item, index) => (
-                    index == 0 ? (
+                [...ratings.countsByRatings].sort((a, b) => b.key - a.key).map((item, index) => (
+                    item.key == 0 ? (
                         <></>
                     ) : (
                         <RatingProgressLine
                             key = {index}
-                            stars = {index}
-                            value = {item*100/ratings.totalCount}
+                            stars = {item.key}
+                            value = {item.value*100/ratings.totalCount}
                             link = {null}
                         />
                     )
