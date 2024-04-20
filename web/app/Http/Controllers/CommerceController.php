@@ -23,8 +23,7 @@ class CommerceController extends Controller
             ->with('reviews')
             ->where('slug', $slug)
             ->first();
-        
-            
+                  
         if (!$commerce) {
             return Inertia::share('error', [
                 'status' => '404',

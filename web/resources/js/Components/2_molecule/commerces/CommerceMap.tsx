@@ -34,6 +34,7 @@ export default function CommerceMap({
         start: props.location,
         end: null
     });
+    const [destinationMarker, setDestinationMarker] = useState(null);
 
     mapboxgl.accessToken = props.mapbox;
         
@@ -210,20 +211,9 @@ export default function CommerceMap({
     
             /** layer showing the user position */
             if (props.location && map.current) {
-                const markerContainer = document.createElement('div');
-                markerContainer.className = 'absolute top-0 left-0 '; // Ensures the marker is positioned correctly without animation effects
-                
-                const el = document.createElement('div');
-                el.className = 'w-4 h-4 animate-ping bg-sky-400 rounded-full absolute top-0 left-0';
-                el.style.transformOrigin = 'center';
-                markerContainer.appendChild(el);
-
-                const elfixed = document.createElement('div');
-                elfixed.className = 'w-4 h-4 bg-sky-500 rounded-full absolute top-0 left-0';
-                markerContainer.appendChild(elfixed);
-              
+             
                 // make a marker for each feature and add to the map
-                new mapboxgl.Marker(markerContainer)
+                new mapboxgl.Marker(getHtmlMarker('bg-sky-400'))
                     .setLngLat({
                         lat: props.location.latitude,
                         lng: props.location.longitude
@@ -260,16 +250,48 @@ export default function CommerceMap({
     } 
 
 
+    const getHtmlMarker = (color) => {
+        const markerContainer = document.createElement('div');
+        markerContainer.className = 'absolute top-0 left-0 ';
+        
+        const el = document.createElement('div');
+        el.className = `w-4 h-4 animate-ping ${color} rounded-full absolute top-0 left-0`;
+        el.style.transformOrigin = 'center';
+        markerContainer.appendChild(el);
+
+        const elfixed = document.createElement('div');
+        elfixed.className = `w-4 h-4 ${color} rounded-full absolute top-0 left-0`;
+        markerContainer.appendChild(elfixed);
+        
+        return markerContainer;
+    }
+
+
     const flyToCoordinates = (coordinates) => {
+
+        console.log(coordinates);
+        
         if (!map.current) return;
+      
+        // make a marker for each feature and add to the map
+        //const constCurrentDestinationMarker = destinationMarker ? destinationMarker :  new mapboxgl.Marker(getHtmlMarker('bg-pink-500')).addTo(map.current);
+        //if (!destinationMarker) {
+        //    setDestinationMarker(constCurrentDestinationMarker);
+        //}
+        //constCurrentDestinationMarker.setLngLat(coordinates);
+       
+
         map.current.flyTo({
           center: coordinates,
           zoom: 17
         });
         const features = map.current.queryRenderedFeatures(coordinates, {
             layers: ['unclustered-point']
-          });
+        });
+
+        console.log(features);
     }
+
     
     useEffect(() => {
         if(!routeFromTo.end) return;
@@ -297,6 +319,7 @@ export default function CommerceMap({
                 console.error('Error fetching data: ', error);
             });
     },[routeFromTo])
+
 
     useEffect(() => {
         if (!routes || routes.length == 0) return;

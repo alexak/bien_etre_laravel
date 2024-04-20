@@ -37,7 +37,7 @@ const CommerceCard = ({ commerce } ) => {
             <CardHeader 
                 floated={false} 
                 color="blue-gray"
-                className="relative"
+                className="relative mx-0 mt-0"
             >
                 <img
                     className="w-full h-full rounded-lg"

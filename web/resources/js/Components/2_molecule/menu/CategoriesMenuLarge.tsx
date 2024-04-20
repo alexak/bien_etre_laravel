@@ -23,7 +23,7 @@ export default function CategoriesMenuLarge({categories, geoParameter}){
                 <Button 
                     variant="text"
                     ripple={false}
-                    className="text-base text-gray-500 normal-case hover:text-gray-700 focus-visible:border-none focus-visible:border-0"
+                    className="text-base text-gray-500 normal-case hover:text-gray-700 focus-visible:border-white"
                 >
                     <span className="pr-4">
                         Categories

@@ -136,7 +136,7 @@ export default function CommerceList({commerce, onClickName, onClickDirection}){
 
                     <div className="flex justify-center w-full pt-2 xl:hidden">
                         <Link href={route('commerce', commerce.slug)} >
-                            <Button className="w-full px-6 text-lg text-center text-white capitalize bg-pink-500 rounded-full">
+                            <Button className="w-full px-6 text-lg text-center text-white uppercase bg-pink-500 rounded-lg hover:shadow-none">
                                 Détails
                             </Button>
                         </Link>
@@ -146,7 +146,7 @@ export default function CommerceList({commerce, onClickName, onClickDirection}){
             </div>
             <div className="hidden h-full xl:flex">
                 <Link href={route('commerce', commerce.slug)} >
-                    <Button className="w-full p-2 px-4 text-lg text-center text-white capitalize bg-pink-500 rounded-full">
+                    <Button className="w-full p-2 px-4 text-lg text-center text-white uppercase bg-pink-500 rounded-lg hover:shadow-none">
                         Détails
                     </Button>
                 </Link>
