@@ -80,7 +80,10 @@ class CommerceController extends Controller
 
         $counts = [];
         for($i=0; $i<6; $i++) {
-            $counts[$i] = $countsTmp[$i] ?? 0;
+            $counts[$i] = [
+                'key'=>$i,
+                'value'=>$countsTmp[$i] ?? 0
+            ];
         }
 
         return $counts;
