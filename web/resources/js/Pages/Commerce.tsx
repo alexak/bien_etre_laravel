@@ -2,17 +2,58 @@
 
 // import isMobile from 'react-device-detect';
 
-export default function Commerce() {
+import React from 'react'
+import ReactDOM from 'react-dom'
+import AnchorLink from 'react-anchor-link-smooth-scroll'
+import ImagesSlider from "@/Components/1_atom/ImagesSlider";
+import Rating from "@/Components/1_atom/Rating";
+import { Link } from "@inertiajs/react";
+import { Carousel } from "@material-tailwind/react";
+import Reviews from '@/Components/4_organism/Reviews';
+
+
+export default function Commerce({commerce, ratings}) {
+
+    console.log(commerce);
+
     return (
-        <div>
-            <div className="flex flex-row">
-                <div classname="w-1/3"> Foto goes here .. / Slider</div>
-                <div className="flex flex-col">
-                    Category
-                    Name
+        <div className="p-20">
+            <div className="flex flex-row w-full pb-6">
+                <div className="flex flex-col w-1/2">
+                    <div className="w-full">
+                        <ImagesSlider images={commerce.images} />
+                    </div>
+                    <div>Slider preview</div>
+                </div>
+                <div className="flex flex-col pt-40">
+                    <div className="pb-2">
+                        <Link
+                            href={route('category', commerce.main_category.slug)} 
+                            className="font-medium text-gray-500 uppercase hover:text-gray-700"
+                        >
+                            {commerce.main_category.title}
+                        </Link>
+                    </div>
+                    <div className="text-5xl font-bold">
+                        <h1>{commerce.name}</h1>
+                    </div>
+                    <div>
+                        <AnchorLink
+                            className="text-gray-500 uppercase pointer hover:text-gray-700" 
+                            href="#reviews"
+                        >
+                            <Rating 
+                                readonly
+                                value={ratings.totalAvg}
+                                count={ratings.totalCount}
+                            />
+                        </AnchorLink>
+                    </div>
                 </div>
             </div>
-            <div>
+
+
+            <div>        
                 maincontent including
                 <ul>
                     <li>description</li>
@@ -43,6 +84,15 @@ export default function Commerce() {
                 </ul>
                 
             </div>
+
+
+            <div>
+                <section id="reviews">
+                    <Reviews ratings={ratings} />
+                </section>
+            </div>
+
+
         </div>
     );
 }
