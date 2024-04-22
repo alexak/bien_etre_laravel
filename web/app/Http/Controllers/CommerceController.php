@@ -51,11 +51,11 @@ class CommerceController extends Controller
     private function getRatingDetailedAvg($id) {
         $ratingDetailedAvgCollection = DB::table('reviews')
             ->where('commerce_id', $id)
-            ->select(DB::raw('avg(rating_price) as avg_price_rating'),
-                DB::raw('avg(rating_professionalism) as avg_professionalism_rating'),
-                DB::raw('avg(rating_cleanliness) as avg_cleanliness_rating'),
-                DB::raw('avg(rating_kindness) as avg_kindness_rating'),
-                DB::raw('avg(rating_quality) as avg_quality_rating'))
+            ->select(DB::raw('avg(rating_price) as avgPriceRating'),
+                DB::raw('avg(rating_professionalism) as avgProfessionalismRating'),
+                DB::raw('avg(rating_cleanliness) as avgCleanlinessRating'),
+                DB::raw('avg(rating_kindness) as avgKindnessRating'),
+                DB::raw('avg(rating_quality) as avgQualityRating'))
             ->first();
 
         $ratingDetailedAvg = [];
@@ -91,11 +91,11 @@ class CommerceController extends Controller
 
     private function getRatingAvg($id) {
         $ratingTotalAvg = DB::table('reviews')
-            ->select(DB::raw('avg(rating) as rating_total_avg'))
+            ->select(DB::raw('avg(rating) as ratingTotalAvg'))
             ->where('commerce_id', $id)
             ->first();
 
-        return round((float)$ratingTotalAvg->rating_total_avg);
+        return round((float)$ratingTotalAvg->ratingTotalAvg);
     }
 
 
@@ -112,7 +112,8 @@ class CommerceController extends Controller
      *
      * @return void
      */
-    public function commerceSave() {
+    public function commerceSave(Request $request) {
+        var_dump($request);
     }
 
     /**
@@ -127,6 +128,8 @@ class CommerceController extends Controller
      *
      * @return void
      */
-    public function addReview(){
+    public function reviewAdd(Request $request){
+        var_dump($request);
+        die();
     }
 }

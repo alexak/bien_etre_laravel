@@ -1,9 +1,22 @@
 import Rating from "@/Components/1_atom/Rating";
 import ReviewDetails from "@/Components/2_molecule/reviews/ReviewDetails";
-import { Button, Card, CardBody, CardHeader } from "@material-tailwind/react";
+import { Button, Card, CardBody } from "@material-tailwind/react";
+import { useState } from "react";
+import { router } from '@inertiajs/react';
 
 
-export default function NewReviewForm({ parentSetDisplay }) {
+export default function NewReviewForm({
+    commerce,
+    parentSetDisplay 
+}) {
+
+
+    const [formData, setFormData] = useState({});
+
+    const handleInput = (event) => {
+        handleResize(event);
+        setFormData({ ...formData, ['comment']: event.target.value })
+    }
 
     const handleResize = (event) => {
         const textarea = event.target;
@@ -12,6 +25,15 @@ export default function NewReviewForm({ parentSetDisplay }) {
         // Set the height to scrollHeight to expand as the text increases
         textarea.style.height = `${textarea.scrollHeight}px`;
     };
+
+    const saveReview = async () => {
+        const reviewUrl = "/commerce/"+commerce.slug+"/review";
+        const response = await router.post(reviewUrl, {
+            data: formData,
+            preserveScroll: true,
+            onError: errors => {console.error("An error occurred:", errors);},
+        });
+    }
 
     return (
         <div className="flex flex-col w-ful">
@@ -42,12 +64,15 @@ export default function NewReviewForm({ parentSetDisplay }) {
                         <div className="flex flex-col w-2/3 mr-6">
                             <textarea
                                 className="w-full h-auto min-h-full overflow-hidden border-gray-300 rounded-lg resize-none focus:border-gray-400 focus:ring-0"
-                                onInput={handleResize}
+                                onInput={(event)=>handleInput(event)}
                             />
                         </div>
                         {/** Ratingdetails */}
                         <div className="flex flex-col w-1/3 h-full">
-                            <ReviewDetails readonly={false} />
+                            <ReviewDetails 
+                                readonly={false}
+                                setData={(value)=>setFormData(value)}
+                            />
                         </div>
                     </div>
 
@@ -56,7 +81,10 @@ export default function NewReviewForm({ parentSetDisplay }) {
                             <span className="pr-2">
                                 Votre note:
                             </span>
-                            <Rating />
+                            <Rating
+                                name="rating" 
+                                setData={(value) => setFormData(value)}
+                            />
                         </div>
 
                         <div className="flex flex-row">
@@ -66,7 +94,7 @@ export default function NewReviewForm({ parentSetDisplay }) {
                                 Annuler
                             </Button>
                             <Button
-                                onClick={()=>{}} 
+                                onClick={()=>saveReview()} 
                                 className="w-[200px] h-[40px] hover:shadow-none text-white cursor-pointer bg-pink-500 rounded-lg flex justify-center items-center uppercase">
                                 Donner son avis
                             </Button>

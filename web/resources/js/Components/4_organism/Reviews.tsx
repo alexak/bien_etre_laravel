@@ -6,7 +6,10 @@ import NewReviewForm from "@/Components/3_cell/reviews/NewReviewForm"
 import ReviewSummary from "@/Components/3_cell/reviews/ReviewSummary"
 import ReviewSummaryEmpty from "../3_cell/reviews/ReviewSummaryEmpty";
 
-export default function Reviews({ratings}) {
+export default function Reviews({
+    commerce,
+    ratings
+}) {
 
     const [display, setDisplay] = useState('summary')
 
@@ -25,7 +28,10 @@ export default function Reviews({ratings}) {
             </div>
 
             { display == 'new' ? (
-                    <NewReviewForm parentSetDisplay={setDisplay} />
+                    <NewReviewForm 
+                        commerce={commerce}
+                        parentSetDisplay={setDisplay}
+                    />
                 ):( ratings.totalCount == 0 ? (
                         <ReviewSummaryEmpty parentSetDisplay={setDisplay} />
                     ):( 

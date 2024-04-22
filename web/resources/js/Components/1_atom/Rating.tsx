@@ -5,7 +5,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Rating as MaterialRating } from "@material-tailwind/react";
 
 export default function Rating({
-    count, 
+    count = null,
+    setData = () => {}, 
+    name = '',
     ...props
 }) {
     
@@ -34,6 +36,7 @@ export default function Rating({
                 value={props.value ? Math.round(props.value) : 5}
                 ratedIcon={<RatedIcon />}
                 unratedIcon={<UnratedIcon />}
+                onChange={(value) => setData({ ...props, [name]: value })}
             />
                 {props.value ? (
                     <span className="">

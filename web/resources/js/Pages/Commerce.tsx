@@ -86,7 +86,10 @@ export default function Commerce({commerce, ratings}) {
 
             <div>
                 <section id="reviews">
-                    <Reviews ratings={ratings} />
+                    <Reviews 
+                        commerce={commerce}
+                        ratings={ratings}
+                    />
                 </section>
             </div>
 
