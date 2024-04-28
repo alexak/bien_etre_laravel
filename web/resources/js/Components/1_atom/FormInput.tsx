@@ -71,12 +71,12 @@ export default function FormInput({
 
   
   return (
-    <div className={`w-full border-2 rounded-full flex flex-row items-center relative px-2 ${className}`}>
+    <div className={`w-full border rounded-lg flex flex-row items-center relative px-2 ${className}`}>
       <input
         type={type}
         value={value}
         name={name}
-        className="flex-1 mr-3 text-lg bg-transparent border-none rounded-full outline-none focus:ring-0 placeholder:text-inherit"
+        className="flex-1 mr-3 text-lg bg-transparent border-none rounded-md outline-none focus:ring-0 placeholder:text-inherit"
         placeholder={placeholderText}
         onFocus={() => setPlaceholderText('')}
         onBlur={(e) => handleOnBlur(e.target.value)}

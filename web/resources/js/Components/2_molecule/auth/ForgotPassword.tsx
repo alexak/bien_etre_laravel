@@ -32,13 +32,16 @@ export default function ForgotPassword() {
             onSubmit={submit}
             className="w-full"
         >
-            <div className="text-white text-center text-3xl font-bold uppercase pb-8">
+            <div className="pb-2 text-3xl font-bold text-center text-gray-600 uppercase">
                 mot de passe
             </div>
-            <div className="mx-8 pb-4">
+            <div className="pb-8 mx-8 text-center text-gray-600">
+                Mot de passe oublié? Evoyez-vous un lien de reinitialisation sur votre boite mail.
+            </div>
+            <div className="pb-4 mx-8">
                 <FormInput 
                     name="email"
-                    className='text-white border-white'
+                    className='text-gray-600 border-gray-300 focus:border-gray-400'
                     placeholder='E-mail / nom utilisateur'
                     icon={faUser}
                     error={errors.email}
@@ -50,13 +53,10 @@ export default function ForgotPassword() {
             <div className="mx-8 mb-12">
                 <Button
                     type="submit" 
-                    className="p-2 bg-pink-500 text-white normal-case rounded-full text-center text-lg w-full"
+                    className="w-full p-2 text-lg text-center text-white normal-case bg-pink-500 rounded-lg"
                 >
                     Envoyer
                 </Button>
-            </div>
-            <div className="text-gray-800 mx-8">
-                Mot de passe oublié? Evoyez-vous un lien de reinitialisation sur votre boite mail.
             </div>
         </form>
     );

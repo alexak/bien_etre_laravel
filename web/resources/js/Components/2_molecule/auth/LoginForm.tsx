@@ -41,13 +41,13 @@ export default function LoginForm({ setActiveForm }) {
             onSubmit={submit}
             className="w-full"
         >
-            <div className="pb-8 text-3xl font-bold text-center text-white uppercase">
+            <div className="pb-8 text-3xl font-bold text-center text-gray-600 uppercase">
                 CONNEXION
             </div>
             <div className="pb-4 mx-8">
                 <FormInput 
                     name="email"
-                    className='text-white border-white'
+                    className='text-gray-600 border-gray-300 focus:border-gray-400'
                     placeholder='E-mail / nom utilisateur'
                     icon={faUser}
                     error={errors.email}
@@ -58,7 +58,7 @@ export default function LoginForm({ setActiveForm }) {
             </div>
             <div className='pb-2 mx-8'>
                 <FormInput 
-                    className='text-white border-white'
+                    className='text-gray-600 border-gray-300 focus:border-gray-400'
                     placeholder='Mot de passe'
                     name="password"
                     inputType='password'
@@ -81,7 +81,7 @@ export default function LoginForm({ setActiveForm }) {
             <div className="mx-8 mb-2">
                 <Button
                     type="submit" 
-                    className="w-full p-2 text-lg text-center text-white capitalize bg-pink-500 rounded-full"
+                    className="w-full p-2 text-lg text-center text-white capitalize bg-pink-500 rounded-lg"
                 >
                     Se connecter
                 </Button>
