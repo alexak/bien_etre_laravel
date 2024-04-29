@@ -12,19 +12,14 @@ export default function ReviewSummary({ratings}){
     return(
         <Card className="w-full mb-6 border border-gray-200">
             <CardBody>
-                <div className="flex flex-row w-full pb-6">
+                <div className="flex flex-col w-full lg:flex-row">
                     {/** Quotes */}
-                    <div className="flex flex-col w-1/3 h-full mr-4">
+                    <div className="flex flex-col w-full h-full pb-6 mr-4 lg:w-1/2">
                         <RatingCounts ratings={ratings} />
                     </div>
 
-                    {/* Slider with most upvoded and latest */}
-                    <div className="flex flex-col w-1/3 h-full mr-4">
-                        <ReviewSlider />
-                    </div>
-
                     {/** Ratingdetails */}
-                    <div className="w-1/3 h-full">
+                    <div className="w-full h-full pb-6 lg:w-1/2">
                         <ReviewDetails 
                             readonly={true}
                             ratings={ratings}
@@ -32,17 +27,15 @@ export default function ReviewSummary({ratings}){
                     </div>
                 </div>
 
-                <div className="flex flex-row justify-between">
-                    <div className="flex flex-row items-center uppercase">
-                        <span className="pr-2 font-semibold">
-                            Note globale:
-                        </span>
-                            <Rating 
-                                readonly
-                                value={ratings.totalAvg}
-                                count={ratings.totalCount}
-                            />
+                <div className="flex flex-col items-start uppercase sm:flex-row">
+                    <div className="pr-2 font-semibold">
+                        Note globale:
                     </div>
+                    <Rating 
+                        readonly
+                        value={ratings.totalAvg}
+                        count={ratings.totalCount}
+                    />
                 </div>
             </CardBody>
         </Card>
