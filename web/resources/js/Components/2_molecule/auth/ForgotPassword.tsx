@@ -53,7 +53,7 @@ export default function ForgotPassword() {
             <div className="mx-8 mb-12">
                 <Button
                     type="submit" 
-                    className="w-full p-2 text-lg text-center text-white normal-case bg-pink-500 rounded-lg"
+                    className="w-full p-2 text-lg text-center text-white uppercase bg-pink-500 rounded-lg"
                 >
                     Envoyer
                 </Button>

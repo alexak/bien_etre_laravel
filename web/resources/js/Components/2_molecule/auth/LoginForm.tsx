@@ -44,6 +44,22 @@ export default function LoginForm({ setActiveForm }) {
             <div className="pb-8 text-3xl font-bold text-center text-gray-600 uppercase">
                 CONNEXION
             </div>
+
+            {/** Information */}
+            <div className="flex flex-row items-center px-8 pb-10">
+                <img
+                    className="h-[30px] w-[30px] mr-4"
+                    src="/images/icons/info.png"
+                    alt="" 
+                    width="30" 
+                    height="30"
+                />
+                <div className="text-gray-600">
+                    <span className="mr-4 text-3xl font-bold text-pink-500">Hopla!</span>
+                    <span className="font-bolder">Vous devrez être connecté(e) pour utiliser cette fonctionalité</span>
+                </div>
+            </div>
+
             <div className="pb-4 mx-8">
                 <FormInput 
                     name="email"
@@ -81,7 +97,7 @@ export default function LoginForm({ setActiveForm }) {
             <div className="mx-8 mb-2">
                 <Button
                     type="submit" 
-                    className="w-full p-2 text-lg text-center text-white capitalize bg-pink-500 rounded-lg"
+                    className="w-full p-2 text-lg text-center text-white uppercase bg-pink-500 rounded-lg"
                 >
                     Se connecter
                 </Button>

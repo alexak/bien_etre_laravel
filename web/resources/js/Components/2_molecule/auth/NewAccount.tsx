@@ -97,7 +97,7 @@ export default function NewAccount({ setActiveForm }) {
             <div className="mx-8 mb-2">
                 <Button
                     type="submit" 
-                    className="w-full p-2 text-lg text-center text-white capitalize bg-pink-500 rounded-lg"
+                    className="w-full p-2 text-lg text-center text-white uppercase bg-pink-500 rounded-lg"
                 >
                     S'enregistrer
                 </Button>
