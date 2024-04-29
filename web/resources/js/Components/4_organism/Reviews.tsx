@@ -16,7 +16,7 @@ export default function Reviews({
     return (
         <div className="flex flex-col">
 
-            <div className="flex flex-row items-center justify-between w-full py-4 mb-6 border-b-2">
+            <div className="flex flex-row items-center justify-between w-full py-4">
                 <div className="text-2xl uppercase">
                     <h2>L'avis des clients</h2>
                 </div>
