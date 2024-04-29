@@ -73,7 +73,6 @@ Route::get('/example/welcome', function () {
 
 Route::get('/debug', function () {
     dd( session()->token(), Auth::hasUser());
-
 });
 
 Route::get('/example/dashboard', function () {
