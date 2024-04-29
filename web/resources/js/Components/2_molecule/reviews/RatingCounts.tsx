@@ -19,7 +19,8 @@ export default function RatingCounts({ratings}){
                         <RatingProgressLine
                             key = {index}
                             stars = {item.key}
-                            value = {item.value*100/ratings.totalCount}
+                            value = {item.value}
+                            totalCount={ratings.totalCount}
                             link = {null}
                         />
                     )

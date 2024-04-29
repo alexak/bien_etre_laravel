@@ -8,24 +8,25 @@ export default function RatingProgressLine({
     stars,
     value,
     link,
+    totalCount
 }) {
 
     return (
-        <div className="flex flex-row items-center">
+        <div className="flex flex-row items-center" >
             <span className="w-[20px]">{stars}</span>
             <FontAwesomeIcon 
                 icon={faStarSolid} 
                 className="w-4 h-4 pr-4 text-amber-400" 
             />
-            <div className="flex-grow pr-4">
+            <div className="flex-grow w-full pr-4">
                 <Progress
-                    className="bg-gray-100" 
+                    className="w-full bg-gray-100" 
                     color="amber"
-                    value={value} 
+                    value={value*100/totalCount}
                     size="lg"
                 />
             </div>
-            <span className="pr-2">({value} avis)</span>
+            <div className="w-[100px] flex flex-row justify-end">{value} avis</div>
         </div>
     )
 
