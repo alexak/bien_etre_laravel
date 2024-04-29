@@ -15,7 +15,7 @@ import Reviews from '@/Components/4_organism/Reviews';
 export default function Commerce({commerce, ratings}) {
 
     return (
-        <div className="p-20">
+        <div className="p-4 lg:p-20">
             <div className="flex flex-row w-full pb-6">
                 <div className="flex flex-col w-1/2">
                     <div className="w-full">
