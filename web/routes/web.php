@@ -11,6 +11,7 @@ use App\Http\Controllers\CommerceController;
 use App\Http\Controllers\CommercesController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,8 +36,10 @@ Route::get('/favorites', [FavoriteController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('favorites');
 Route::post('/favorites', [FavoriteController::class, 'addFavoriteToUser'])
+    ->middleware(['auth', 'verified'])
     ->name('favorites.add');
 Route::delete('/favorites/{commerceId}', [FavoriteController::class, 'deleteFavoriteFromUser'])
+    ->middleware(['auth', 'verified'])
     ->name('favorites.delete');
 
 /** commerce detail page */
@@ -51,6 +54,7 @@ Route::post('/commerce/add', [CommerceController::class, 'commerceSave'])
 Route::post('/commerce/{slug}/contact', [CommerceController::class, 'commerceContact'])
     ->name('commerce.contact');
 Route::post('/commerce/{slug}/review', [CommerceController::class, 'reviewAdd'])
+    ->middleware(['auth', 'verified'])
     ->name('commerce.review.add');    
 
 
@@ -65,6 +69,11 @@ Route::get('/example/welcome', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
+});
+
+Route::get('/debug', function () {
+    dd( session()->token(), Auth::hasUser());
+
 });
 
 Route::get('/example/dashboard', function () {

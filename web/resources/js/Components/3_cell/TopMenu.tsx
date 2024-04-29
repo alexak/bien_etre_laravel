@@ -14,11 +14,7 @@ import CategoriesMenuSmall from '../2_molecule/menu/CategoriesMenuSmall';
 export default function TopMenu() {
 
     const [openMenuSmall, setOpenMenuSmall] = React.useState(false);
-
-    const { props } = usePage();
-    const categories = props.categories;
-    const user = props.user;
-
+    const { categories, user } = usePage().props;
     const geoLocation = useGeolocated({
       positionOptions: {
           enableHighAccuracy: false,

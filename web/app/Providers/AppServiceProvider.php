@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Category;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,8 +26,22 @@ class AppServiceProvider extends ServiceProvider
             'categories' => function () {
                 return Category::all(); 
             },
-            'user' => auth()->user(),
+            'user' => function() {
+                return $this->getUserAttributes();
+            },
             'mapbox' => env('MAPBOX')
         ]);
+    }
+
+    private function getUserAttributes() {
+        $user = null;
+        if (Auth::hasUser()) {
+            $authUser = Auth::user();
+            $user = [
+                'id' => $authUser->id,
+                'name' => $authUser->name
+            ];
+        }
+        return $user;
     }
 }
