@@ -6,7 +6,7 @@ import { Rating as MaterialRating } from "@material-tailwind/react";
 
 export default function Rating({
     count = null,
-    setData = () => {}, 
+    setData = (name, value) => {}, 
     name = '',
     ...props
 }) {
@@ -30,21 +30,27 @@ export default function Rating({
     }
 
     return (
-        <div className="flex flex-row">
+        <div className="flex flex-row justify-between">
+            <div>
+
             <MaterialRating
                 {...props} 
                 value={props.value ? Math.round(props.value) : 5}
                 ratedIcon={<RatedIcon />}
                 unratedIcon={<UnratedIcon />}
-                onChange={(value) => setData({ ...props, [name]: value })}
-            />
+                onChange={(value) => setData(name, value)}
+                className={`${props.readonly? 'max-[450px]:hidden' : ''}`}
+                />
+            </div>
                 {props.value ? (
-                    <span className="">
+                    <div className={`${count? 'w-[200px]' : 'w-[75px]'} flex justify-end`}>
                         {props.value} sur 5 {count ? `(${count} avis)` : ''}
-                    </span>
+                    </div>
             ):(
                 props.readonly ? (
-                    <span>Pas d'avis</span>
+                    <div className='w-[75px] flex justify-end'>
+                        Pas d'avis
+                    </div>
                 ) : (
                     <></>
                 )
