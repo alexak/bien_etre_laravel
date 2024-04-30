@@ -13,13 +13,13 @@ export default function RatingCounts({ratings}){
 
             {
                 [...ratings.countsByRatings].sort((a, b) => b.key - a.key).map((item, index) => (
-                    item.key == 0 ? (
+                    index == 0 ? (
                         <></>
                     ) : (
                         <RatingProgressLine
                             key = {index}
-                            stars = {item.key}
-                            value = {item.value}
+                            stars = {index}
+                            value = {item}
                             totalCount={ratings.totalCount}
                             link = {null}
                         />

@@ -9,6 +9,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CommerceController;
 use App\Http\Controllers\CommercesController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Auth;
@@ -53,7 +54,7 @@ Route::post('/commerce/add', [CommerceController::class, 'commerceSave'])
     ->name('commerce.add');
 Route::post('/commerce/{slug}/contact', [CommerceController::class, 'commerceContact'])
     ->name('commerce.contact');
-Route::post('/commerce/{slug}/review', [CommerceController::class, 'reviewAdd'])
+Route::post('/commerce/{slug}/review', [ReviewController::class, 'addReview'])
     ->middleware(['auth', 'verified'])
     ->name('commerce.review.add');    
 

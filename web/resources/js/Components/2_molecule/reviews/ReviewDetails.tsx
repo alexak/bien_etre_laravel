@@ -5,7 +5,7 @@ import Rating from "@/Components/1_atom/Rating";
 export default function ReviewDetails({ 
     readonly, 
     ratings = {},
-    setData = () => {}
+    handleRatingChange = (name, value) => {}
 }){
     return(
         <div className="flex flex-col w-full">
@@ -21,10 +21,7 @@ export default function ReviewDetails({
                             value = {ratings.detailedAvg.avgPriceRating}
                         /> 
                     ):( 
-                        <Rating 
-                            setData={(value) => setData(value) }
-                            name='avgPriceRating'
-                        />
+                        <Rating setData={(name, value) => handleRatingChange('priceRating', value)} />
                     )
                 }
             </div>
@@ -37,10 +34,7 @@ export default function ReviewDetails({
                             value = {ratings.detailedAvg.avgProfessionalismRating}
                         /> 
                     ): ( 
-                        <Rating 
-                            setData={(value)=>setData(value)}
-                            name='avgProfessionalismRating'
-                        />
+                        <Rating setData={(name, value) => handleRatingChange('professionalismRating', value)} />
                     )
                 }
             </div>
@@ -53,10 +47,7 @@ export default function ReviewDetails({
                             value = {ratings.detailedAvg.avgCleanlinessRating}
                         /> 
                     ): ( 
-                        <Rating 
-                            setData={(value)=>setData(value)}
-                            name='avgCleanlinessRating'
-                        />
+                        <Rating setData={(name, value) => handleRatingChange('cleanlinessRating', value)} />
                     )
                 }
             </div>
@@ -69,10 +60,7 @@ export default function ReviewDetails({
                             value = {ratings.detailedAvg.avgKindnessRating}
                         /> 
                     ): ( 
-                        <Rating 
-                            setData={(value)=>setData(value)}
-                            name='avgKindnessRating'
-                        />
+                        <Rating setData={(name, value) => handleRatingChange('kindnessRating', value)} />
                     )
                 }
             </div>
@@ -85,10 +73,7 @@ export default function ReviewDetails({
                             value = {ratings.detailedAvg.avgQualityRating}
                         /> 
                     ): ( 
-                        <Rating 
-                            setData={(value)=>setData(value)}
-                            name='avgQualityRating'
-                        />
+                        <Rating setData={(name, value) => handleRatingChange('qualityRating', value)} />
                     )
                 }
             </div>
