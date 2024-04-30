@@ -39,10 +39,7 @@ class ReviewController extends Controller
             'countsByRatings' => $commerce->getRatingsCount(),
         ];
 
-        return Inertia::render('Commerce', [
-            'commerce' => $commerce,
-            'ratings' => $ratings
-        ]);
+        return redirect()->back()->with('success', 'Review added successfully');
     }
 
     public function upVote(){
