@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use MatanYadaev\EloquentSpatial\Traits\HasSpatial;
+use Illuminate\Support\Facades\DB;
+
 
 class Commerce extends Model
 {
@@ -44,5 +46,50 @@ class Commerce extends Model
 
     public function reviews() {
         return $this->hasMany(Review::class, 'commerce_id');
+    }
+
+    public function getAverageRatingAttribute()
+    {
+        return round($this->reviews()->avg('rating'));
+    }
+
+    public function getDetailedAverageRatings()
+    {
+        $ratings = $this->reviews()
+            ->select(
+                DB::raw('avg(rating_price) as avgPriceRating'),
+                DB::raw('avg(rating_professionalism) as avgProfessionalismRating'),
+                DB::raw('avg(rating_cleanliness) as avgCleanlinessRating'),
+                DB::raw('avg(rating_kindness) as avgKindnessRating'),
+                DB::raw('avg(rating_quality) as avgQualityRating')
+            )
+            ->first();
+
+        $detailedAvg = [];
+        foreach ($ratings->attributes as $key => $value) {
+            $detailedAvg[$key] = round(floatval($value), 1);
+        }
+        
+        return $detailedAvg;
+    }
+
+    public function getRatingsCount()
+    {
+        $ratingCounts = $this->reviews()
+            ->select(DB::raw('rating,count(rating) as count'))
+            ->orderBy('rating')
+            ->groupBy('rating')
+            ->get();
+
+        $counts = $ratingCounts->mapWithKeys(function ($item) {
+            return [$item->rating => $item->count];
+        })->toArray();
+
+        for ($i = 0; $i < 6; $i++) {
+            $counts[$i] = $counts[$i] ?? 0;
+        }
+        ksort($counts);
+
+        return $counts;
     }
 }

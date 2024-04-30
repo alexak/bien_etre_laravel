@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Commerce;
+use App\Models\Review;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -35,10 +36,10 @@ class CommerceController extends Controller
         $commerce->isFavorite = isset($userFavorites[$commerce->id]) ? true : false;
 
         $ratings=[
-            'totalAvg' => $this->getRatingAvg($commerce->id),
+            'totalAvg' => $commerce->average_rating,
             'totalCount' => count($commerce->reviews),
-            'detailedAvg' => $this->getRatingDetailedAvg($commerce->id),
-            'countsByRatings' => $this->getRatingsCount($commerce->id),
+            'detailedAvg' => $commerce->getDetailedAverageRatings(),
+            'countsByRatings' => $commerce->getRatingsCount(),
         ];
 
         return Inertia::render('Commerce', [
@@ -46,58 +47,6 @@ class CommerceController extends Controller
             'ratings' => $ratings
         ]);
     }
-
-
-    private function getRatingDetailedAvg($id) {
-        $ratingDetailedAvgCollection = DB::table('reviews')
-            ->where('commerce_id', $id)
-            ->select(DB::raw('avg(rating_price) as avgPriceRating'),
-                DB::raw('avg(rating_professionalism) as avgProfessionalismRating'),
-                DB::raw('avg(rating_cleanliness) as avgCleanlinessRating'),
-                DB::raw('avg(rating_kindness) as avgKindnessRating'),
-                DB::raw('avg(rating_quality) as avgQualityRating'))
-            ->first();
-
-        $ratingDetailedAvg = [];
-        foreach((array)$ratingDetailedAvgCollection as $key => $value) {
-            $ratingDetailedAvg[$key] = round(floatval($value), 1);
-        }
-
-        return $ratingDetailedAvg;
-    }
-
-    private function getRatingsCount($id){
-        $ratingCountsCollection = DB::table('reviews')
-            ->select(DB::raw('rating,count(rating) as count'))
-            ->where('commerce_id', $id)
-            ->orderBy('rating')
-            ->groupBy('rating')
-            ->get();
-
-        $countsTmp = $ratingCountsCollection->mapWithKeys(function ($item) {
-                return [$item->rating => $item->count];
-            })->toArray();
-
-        $counts = [];
-        for($i=0; $i<6; $i++) {
-            $counts[$i] = [
-                'key'=>$i,
-                'value'=>$countsTmp[$i] ?? 0
-            ];
-        }
-
-        return $counts;
-    }
-
-    private function getRatingAvg($id) {
-        $ratingTotalAvg = DB::table('reviews')
-            ->select(DB::raw('avg(rating) as ratingTotalAvg'))
-            ->where('commerce_id', $id)
-            ->first();
-
-        return round((float)$ratingTotalAvg->ratingTotalAvg);
-    }
-
 
     /**
      * function that renders the edit form in order to create a new commerce or edit an existing one
@@ -123,13 +72,4 @@ class CommerceController extends Controller
      */
     public function commerceContact(){}
 
-    /**
-     * Function that creates a new review for the commerce
-     *
-     * @return void
-     */
-    public function reviewAdd(Request $request){
-        var_dump($request);
-        die();
-    }
 }
