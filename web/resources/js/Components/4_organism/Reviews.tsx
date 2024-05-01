@@ -4,14 +4,18 @@ import { useState } from "react"
 import { Button } from "@material-tailwind/react"
 import NewReviewForm from "@/Components/3_cell/reviews/NewReviewForm"
 import ReviewSummary from "@/Components/3_cell/reviews/ReviewSummary"
-import ReviewSummaryEmpty from "../3_cell/reviews/ReviewSummaryEmpty";
+import ReviewSummaryEmpty from "@/Components/3_cell/reviews/ReviewSummaryEmpty";
+import ReviewLine from "@/Components/2_molecule/reviews/ReviewLine";
+import SortReview from "@/Components/1_atom/SortReview";
 
 export default function Reviews({
     commerce,
+    reviews,
     ratings
 }) {
 
-    const [display, setDisplay] = useState('summary')
+    const [display, setDisplay] = useState('summary');
+    const [pageReviews, setPageReviews] = useState(reviews);
 
     return (
         <div className="flex flex-col">
@@ -40,27 +44,17 @@ export default function Reviews({
                 )
             }
 
+            <div className="mb-6 border-b-2">
+                <SortReview
+                    commerce={commerce}
+                    onSortChange={setPageReviews}
+                />
+            </div>
+
+            {pageReviews.map((review) => (
+                <ReviewLine key={review.id} review={review} />
+            ))}
+
         </div>
     )
 }
-
-/*
-
-        <>
-        
-        <div className="w-full my-4 text-2xl uppercase border-b-2">
-                        <h2>L'avis des clients</h2>
-                    </div>
-                    <div>
-
-                    2. Dynamic Rating System
-Create a rating system that adapts the questions or prompts based on the star rating given. For instance:
-
-If a user gives a 1 or 2-star rating, prompt them to provide feedback on what disappointed them and suggestions for improvement.
-If a user gives a 5-star rating, the prompt could encourage them to highlight what particularly impressed them.
-
-                    </div>
-        
-        
-        </>
-        */

@@ -2,9 +2,9 @@
 
 // import isMobile from 'react-device-detect';
 
-import React from 'react'
-import ReactDOM from 'react-dom'
-import AnchorLink from 'react-anchor-link-smooth-scroll'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import AnchorLink from 'react-anchor-link-smooth-scroll';
 import ImagesSlider from "@/Components/1_atom/ImagesSlider";
 import Rating from "@/Components/1_atom/Rating";
 import { Link } from "@inertiajs/react";
@@ -12,7 +12,7 @@ import { Carousel } from "@material-tailwind/react";
 import Reviews from '@/Components/4_organism/Reviews';
 
 
-export default function Commerce({commerce, ratings}) {
+export default function Commerce({commerce, reviews, ratings}) {
 
     return (
         <div className="p-4 lg:p-20">
@@ -88,6 +88,7 @@ export default function Commerce({commerce, ratings}) {
                 <section id="reviews">
                     <Reviews 
                         commerce={commerce}
+                        reviews={reviews}
                         ratings={ratings}
                     />
                 </section>

@@ -17,11 +17,15 @@ class CommerceController extends Controller
      * @param [type] $slug
      * @return void
      */
-    public function index($slug){
+    public function index($slug, Request $request){
 
-        $commerce = Commerce::with('mainCategory')
-            ->with('images')
-            ->with('reviews')
+        $commerce = Commerce::with([
+                'mainCategory',
+                'images',
+                'reviews' => function ($query){
+                    $query->orderBy('created_at', 'desc');
+                }
+            ])
             ->where('slug', $slug)
             ->first();
                   
@@ -44,6 +48,7 @@ class CommerceController extends Controller
 
         return Inertia::render('Commerce', [
             'commerce' => $commerce,
+            'reviews' => $commerce->reviews,
             'ratings' => $ratings
         ]);
     }

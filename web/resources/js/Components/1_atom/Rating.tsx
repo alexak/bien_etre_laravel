@@ -8,6 +8,7 @@ export default function Rating({
     count = null,
     setData = (name, value) => {}, 
     name = '',
+    showNumbers = true,
     ...props
 }) {
     
@@ -42,12 +43,12 @@ export default function Rating({
                 className={`${props.readonly? 'max-[450px]:hidden' : ''}`}
                 />
             </div>
-                {props.value ? (
+            {showNumbers && props.value ? (
                     <div className={`${count? 'w-[200px]' : 'w-[75px]'} flex justify-end`}>
                         {props.value} sur 5 {count ? `(${count} avis)` : ''}
                     </div>
             ):(
-                props.readonly ? (
+                showNumbers && props.readonly ? (
                     <div className='w-[75px] flex justify-end'>
                         Pas d'avis
                     </div>

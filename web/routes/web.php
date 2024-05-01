@@ -54,6 +54,8 @@ Route::post('/commerce/add', [CommerceController::class, 'commerceSave'])
     ->name('commerce.add');
 Route::post('/commerce/{slug}/contact', [CommerceController::class, 'commerceContact'])
     ->name('commerce.contact');
+Route::get('/commerce/{id}/review', [ReviewController::class, 'getReviews'])
+    ->name('commerce.review.get');
 Route::post('/commerce/{slug}/review', [ReviewController::class, 'addReview'])
     ->middleware(['auth', 'verified'])
     ->name('commerce.review.add');    

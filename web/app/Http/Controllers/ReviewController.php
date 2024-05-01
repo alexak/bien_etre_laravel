@@ -9,6 +9,23 @@ use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
+    /** 
+     * Function that fetches the reviews related to a commerce
+     */
+    public function getReviews($commerceId, Request $request){
+        $sortBy = $request->has('sortBy') ? $request->input('sortBy') : 'created_at';
+        $sortDirection = $request->has('sortDirection') ? $request->input('sortDirection') : 'desc';
+
+        $reviews = Review::where('commerce_id', $request->input('id'))
+            ->orderBy($sortBy, $sortDirection)
+            ->get();
+
+        return Inertia::render('Commerce', [
+            'reviews' => $reviews,
+        ]);
+    }
+    
+    
     /**
      * Function that creates a new review for the commerce
      *
@@ -29,15 +46,6 @@ class ReviewController extends Controller
             'upvoting' => 0
         ]);
         $review->save();
-
-        $commerce = $review->commerce; 
-
-        $ratings = [
-            'totalAvg' => $commerce->average_rating,
-            'totalCount' => $commerce->reviews->count(),
-            'detailedAvg' => $commerce->getDetailedAverageRatings(),
-            'countsByRatings' => $commerce->getRatingsCount(),
-        ];
 
         return redirect()->back()->with('success', 'Review added successfully');
     }
