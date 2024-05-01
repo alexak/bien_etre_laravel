@@ -51,7 +51,6 @@ export default function Reviews({
     };
 
     useEffect(() => {
-        console.log(sortAndFilter);
         if (sortAndFilter.updated){
             const url = '/commerce/' +commerce.slug +'/review';
             router.visit(url, {
@@ -63,7 +62,6 @@ export default function Reviews({
                 preserveScroll: true,
                 onSuccess: (page) => {
                     setPageReviews(page.props.reviews);
-                    console.log(page.props.reviews);
                 }
             })
         }
@@ -71,7 +69,6 @@ export default function Reviews({
 
     return (
         <div className="flex flex-col">
-
             <div className="flex flex-row items-center justify-between w-full py-4">
                 <div className="text-2xl uppercase">
                     <h2>L'avis des clients</h2>
