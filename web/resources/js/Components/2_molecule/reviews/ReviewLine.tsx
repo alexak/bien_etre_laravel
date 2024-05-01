@@ -5,8 +5,9 @@ import { DateTime } from "luxon";
 
 export default function ReviewLine({review}){
 
+    console.log(review);
+
     const getTimePeriod = (timestamp) => {
-        //return DateTime.fromISO(timestamp).toRelativeCalendar({ locale: "fr" });
         return DateTime.fromISO(timestamp).toRelative({ locale: "fr" });
     }
 
@@ -20,7 +21,7 @@ export default function ReviewLine({review}){
                         value={review.rating}
                     />
                     <div>
-                        publié {getTimePeriod(review.created_at)}
+                        publié par <span className="font-bold capitalize">{review.user.name}</span> {getTimePeriod(review.created_at)}
                     </div>
                 </div>
                 <div>{review.comment}</div>

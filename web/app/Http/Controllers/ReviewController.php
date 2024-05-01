@@ -17,6 +17,7 @@ class ReviewController extends Controller
         $sortDirection = $request->has('sortDirection') ? $request->input('sortDirection') : 'desc';
 
         $reviews = Review::where('commerce_id', $request->input('id'))
+            ->with('user')
             ->orderBy($sortBy, $sortDirection)
             ->get();
 

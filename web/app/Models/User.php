@@ -59,4 +59,8 @@ class User extends Authenticatable
         return $this->belongsToMany(Commerce::class, 'users_commerces', 'user_id', 'commerces_id')
             ->select('commerces.id AS favorite_commerce_id');
     }
+
+    public function reviews() {
+        return $this->hasMany(Review::class, 'user_id');
+    }
 }

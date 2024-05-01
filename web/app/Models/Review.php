@@ -24,14 +24,21 @@ class Review extends Model
         'upvoting'
     ];
 
-
     /**
-     * Define the relationship between Commerce and Category.
-     * An Image belongs to one Commerce.
+     * Define the relationship between Commerce and Review.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function commerce(): BelongsTo {
         return $this->belongsTo(Commerce::class, 'commerce_id');
+    }
+
+    /**
+     * Define the relationship between User and Review.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

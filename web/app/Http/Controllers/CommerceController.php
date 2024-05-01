@@ -23,7 +23,8 @@ class CommerceController extends Controller
                 'mainCategory',
                 'images',
                 'reviews' => function ($query){
-                    $query->orderBy('created_at', 'desc');
+                    $query->with('user')
+                        ->orderBy('created_at', 'desc');
                 }
             ])
             ->where('slug', $slug)
