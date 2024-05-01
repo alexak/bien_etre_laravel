@@ -15,8 +15,17 @@ class ReviewController extends Controller
     public function getReviews($commerceId, Request $request){
         $sortBy = $request->has('sortBy') ? $request->input('sortBy') : 'created_at';
         $sortDirection = $request->has('sortDirection') ? $request->input('sortDirection') : 'desc';
+        $filters = $request->input('filter');
 
+        $includingRatings=[];
+        foreach($request->input('filter') as $key => $value) {
+            if($value==='true') {
+                $includingRatings[] = $key;
+            }
+        }
+        
         $reviews = Review::where('commerce_id', $request->input('id'))
+            ->whereIn('rating', $includingRatings)
             ->with('user')
             ->orderBy($sortBy, $sortDirection)
             ->get();

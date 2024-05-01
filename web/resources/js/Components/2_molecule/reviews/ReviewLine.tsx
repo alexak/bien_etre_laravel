@@ -5,8 +5,6 @@ import { DateTime } from "luxon";
 
 export default function ReviewLine({review}){
 
-    console.log(review);
-
     const getTimePeriod = (timestamp) => {
         return DateTime.fromISO(timestamp).toRelative({ locale: "fr" });
     }

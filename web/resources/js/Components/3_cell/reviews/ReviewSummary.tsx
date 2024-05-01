@@ -2,7 +2,6 @@
 
 import RatingCounts from "@/Components/2_molecule/reviews/RatingCounts"
 import ReviewDetails from "@/Components/2_molecule/reviews/ReviewDetails"
-import ReviewSlider from "@/Components/2_molecule/reviews/ReviewSlider"
 import Rating from "@/Components/1_atom/Rating";
 import { Card, CardBody } from "@material-tailwind/react"
 

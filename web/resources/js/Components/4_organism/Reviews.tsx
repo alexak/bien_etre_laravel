@@ -1,12 +1,14 @@
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { Button } from "@material-tailwind/react"
 import NewReviewForm from "@/Components/3_cell/reviews/NewReviewForm"
 import ReviewSummary from "@/Components/3_cell/reviews/ReviewSummary"
 import ReviewSummaryEmpty from "@/Components/3_cell/reviews/ReviewSummaryEmpty";
 import ReviewLine from "@/Components/2_molecule/reviews/ReviewLine";
-import SortReview from "@/Components/1_atom/SortReview";
+import SortReview from "@/Components/2_molecule/reviews/SortReview";
+import { router } from "@inertiajs/react";
+import FilterReview from "@/Components/2_molecule/reviews/FilterReview";
 
 export default function Reviews({
     commerce,
@@ -16,6 +18,56 @@ export default function Reviews({
 
     const [display, setDisplay] = useState('summary');
     const [pageReviews, setPageReviews] = useState(reviews);
+    const [sortAndFilter, setSortAndFilter] = useState({
+        id: commerce.id,
+        sortBy: 'created_at',
+        sortDirection: 'desc',
+        filter: {
+            1: true,
+            2: true,
+            3: true,
+            4: true,
+            5: true
+        },
+        updated:false
+    })
+    
+
+    const handleFilterChange = (newFilters) => {
+        setSortAndFilter(prev => ({
+            ...prev,
+            filter: newFilters,
+            updated:true
+        }));
+    };
+
+    const handleSort = (attribute, direction) => {
+        setSortAndFilter(prev => ({
+            ...prev,
+            sortBy: attribute,
+            sortDirection: direction,
+            updated:true
+        }));
+    };
+
+    useEffect(() => {
+        console.log(sortAndFilter);
+        if (sortAndFilter.updated){
+            const url = '/commerce/' +commerce.slug +'/review';
+            router.visit(url, {
+                method: 'get',
+                data: sortAndFilter,
+                only: ['reviews'],
+                replace: true,
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: (page) => {
+                    setPageReviews(page.props.reviews);
+                    console.log(page.props.reviews);
+                }
+            })
+        }
+    }, [sortAndFilter]);
 
     return (
         <div className="flex flex-col">
@@ -44,11 +96,19 @@ export default function Reviews({
                 )
             }
 
-            <div className="mb-6 border-b-2">
-                <SortReview
-                    commerce={commerce}
-                    onSortChange={setPageReviews}
-                />
+            <div className="flex flex-row mb-6 border-b-2">
+                <div className="mr-8">
+                    <SortReview
+                        commerce={commerce}
+                        sort={handleSort}
+                    />
+                </div>
+                <div>
+                    <FilterReview
+                        parentFilterRates={sortAndFilter.filter} 
+                        setParentFilterRates={handleFilterChange}
+                    />
+                </div>
             </div>
 
             {pageReviews.map((review) => (
