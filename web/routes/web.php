@@ -13,6 +13,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Auth\VerifyEmailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,6 +60,10 @@ Route::get('/commerce/{id}/review', [ReviewController::class, 'getReviews'])
 Route::post('/commerce/{slug}/review', [ReviewController::class, 'addReview'])
     ->middleware(['auth', 'verified'])
     ->name('commerce.review.add');    
+
+/** Email verifications */
+Route::get('/email/verification/{hash}', VerifyEmailController::class, 'verifyMail')
+->name('verification.verify');
 
 
 require __DIR__.'/auth.php';

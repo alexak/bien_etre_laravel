@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Mail\WelcomeEmail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+
 
 class RegisteredUserController extends Controller
 {
@@ -37,12 +41,21 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
 
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->email_token = Str::random(40); 
+        $user->save();
+
+        $mailData = [
+            'userFirstName' => $user->name,
+            'userMailToken' => $user->email_token
+        ];
+        Mail::to($user->email)->send(new WelcomeEmail($mailData));
+
+        dd('hello');
         event(new Registered($user));
 
         Auth::login($user);
