@@ -1,15 +1,12 @@
-
 "use client"
 
-import React, {useEffect, useState} from 'react';
-import { 
+import React, { useEffect, useState } from 'react';
+import {
     faEye,
     faEyeSlash,
     faUser
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { propTypesSelected } from '@material-tailwind/react/types/components/select';
-
 
 // Define a type for the component props
 /*
@@ -38,57 +35,77 @@ export default function FormInput({
     onBlur,
     parentOnChange,
     isSubmitted,
-    
-  }) {
-  const [placeholderText, setPlaceholderText] = useState(error || placeholder);
-  const [errorText, setErrorText] = useState(error);
-  const [shown, setShown] = inputType === 'password' ? useState(false) : useState(true);
+}) {
+    const [shown, setShown] = inputType === 'password' ? useState(false) : useState(true);
+    const [currentValue, setCurrentValue] = useState(value ?? '');
+    const [currentError, setCurrentError] = useState(error);
+    const [placeholderText, setPlaceholderText] = useState(error ?? placeholder);
+    const [isInitialized, setIsInitialized] = useState(false);
 
-  const type = inputType === 'text' || shown ? "text" : "password";
+    const type = inputType === 'text' || shown ? "text" : "password";
+
+    let fieldIcon = icon;
+    if (inputType === 'password') {
+        fieldIcon = shown ? faEye : faEyeSlash;
+    }
+
+    useEffect(() => {
+      console.log(isSubmitted);
+    }, [isSubmitted]);
+
+
+    useEffect(() => {
+      console.log('trigger');
+      if(isSubmitted && error){
+        setCurrentValue('');
+        setCurrentError(error);
+        setPlaceholderText(error);
+        if (inputType === 'password') {
+            setShown(true);
+        }
+      }
+    }, [isSubmitted, error]);
+
+    const handleOnBlur = (e) => {
+        setPlaceholderText(placeholder);
+        if (onBlur) {
+            onBlur(e);
+        }
+    };
+
+    const handleOnFocus = () => {
+      setCurrentError(null);
+      setPlaceholderText('');
+      if (inputType === 'password') {
+        setShown(false);
+      }
+    };
+
+    const handleChange = (e) => {
+        setCurrentValue(e.target.value);
+        parentOnChange(name, currentValue);
+    };
 
   
-  let fieldIcon = icon;
-  if (inputType === 'password') {
-      fieldIcon = shown ? faEye : faEyeSlash;
-  }
-
-  // Update placeholder and error state when error prop changes or form is submitted
-  useEffect(() => {
-    setPlaceholderText(error || placeholder);
-    setErrorText(error);
-    console.log(isSubmitted);
-  }, [error, isSubmitted]);
-
-  const handleOnBlur = (value: string) => {
-    setPlaceholderText(value === '' ? placeholder : '');
-    onBlur();
-  };
-
-  const handleChange = (attribute, value) => {
-    parentOnChange(attribute, value)
-  };
-
-
-  
-  return (
-    <div className={`w-full border rounded-lg flex flex-row items-center relative px-2 ${className}`}>
-      <input
-        type={type}
-        value={value}
-        name={name}
-        className="flex-1 mr-3 text-lg bg-transparent border-none rounded-md outline-none focus:ring-0 placeholder:text-inherit"
-        placeholder={placeholderText}
-        onFocus={() => setPlaceholderText('')}
-        onBlur={(e) => handleOnBlur(e.target.value)}
-        onChange={(e) => handleChange(name, e.target.value)}
-      />
-      {inputType === 'password' ? (
-        <button onClick={() => setShown(!shown)}>
-          <FontAwesomeIcon className="pr-2" icon={fieldIcon}/>
-        </button>
-      ):(
-          <FontAwesomeIcon className="pr-2" icon={fieldIcon}/>
-      )}
-    </div>
-  )
+    return (
+        <div className={`w-full border rounded-lg flex flex-row items-center relative px-2 ${currentError ? 'bg-red-100' : ''} ${className}`}>
+            <input
+                type={type}
+                value={currentValue}
+                name={name}
+                className="flex-1 mr-3 text-lg bg-transparent border-none rounded-md outline-none focus:ring-0 placeholder:text-inherit"
+                placeholder={placeholderText}
+                onFocus={handleOnFocus}
+                onBlur={handleOnBlur}
+                onChange={handleChange}
+            />
+            {inputType === 'password' ? (
+                <button type="button" onClick={() => setShown(!shown)}>
+                    <FontAwesomeIcon className="pr-2" icon={fieldIcon} />
+                </button>
+            ) : (
+                <FontAwesomeIcon className="pr-2" icon={fieldIcon} />
+            )}
+        </div>
+    );
 }
