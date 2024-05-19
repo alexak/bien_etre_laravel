@@ -13,14 +13,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_roles', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique(); // Ensure role names are unique
             $table->timestamps(); // Add created_at and updated_at columns
         });
 
         // Insert the initial roles directly
-        DB::table('user_roles')->insert([
+        DB::table('roles')->insert([
             ['name' => 'Admin'],
             ['name' => 'ShopOwner'],
             ['name' => 'User'],
@@ -32,6 +32,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_roles'); // Safer for rolling back migrations
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        Schema::dropIfExists('roles');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 };
