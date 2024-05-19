@@ -9,20 +9,16 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class WelcomeEmail extends Mailable
+class ResetPasswordMail extends Mailable
 {
     use Queueable, SerializesModels;
-
-    private $data;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($mailData)
+    public function __construct()
     {
-        $this->data = $mailData;
-        $this->data['siteName'] = config('app.name');
-        $this->data['appMail'] = config('app.mail');
+        //
     }
 
     /**
@@ -31,7 +27,7 @@ class WelcomeEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Bienvenue sur ' . $this->data['siteName'] . ' – Veuillez confirmer votre adresse e-mail'
+            subject: 'Reset Password',
         );
     }
 
@@ -41,8 +37,7 @@ class WelcomeEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.welcome',
-            with: $this->data
+            view: 'emails.passwordReset',
         );
     }
 

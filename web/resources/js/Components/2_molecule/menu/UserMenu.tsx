@@ -22,7 +22,7 @@ export default function UserMenu(){
             </div>
             </Link>
             <Link
-                href={route('logout')} 
+                href={route('session.logout')} 
                 method="post"
                 className="text-gray-800 md:text-gray-500 hover:text-gray-700 flex flex-row items-center h-[50px] pb-8md:pb-0"
             >  

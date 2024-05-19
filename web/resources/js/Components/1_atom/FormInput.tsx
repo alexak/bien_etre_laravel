@@ -40,7 +40,6 @@ export default function FormInput({
     const [currentValue, setCurrentValue] = useState(value ?? '');
     const [currentError, setCurrentError] = useState(error);
     const [placeholderText, setPlaceholderText] = useState(error ?? placeholder);
-    const [isInitialized, setIsInitialized] = useState(false);
 
     const type = inputType === 'text' || shown ? "text" : "password";
 
@@ -50,12 +49,10 @@ export default function FormInput({
     }
 
     useEffect(() => {
-      console.log(isSubmitted);
-    }, [isSubmitted]);
-
-
+        setCurrentValue(value);
+    }, [value]);
+  
     useEffect(() => {
-      console.log('trigger');
       if(isSubmitted && error){
         setCurrentValue('');
         setCurrentError(error);
@@ -83,7 +80,7 @@ export default function FormInput({
 
     const handleChange = (e) => {
         setCurrentValue(e.target.value);
-        parentOnChange(name, currentValue);
+        parentOnChange(name, e.target.value);
     };
 
   

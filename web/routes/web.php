@@ -9,9 +9,11 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CommerceController;
 use App\Http\Controllers\CommercesController;
+use App\Http\Controllers\SessionController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\VerifyEmailController;
 
@@ -61,9 +63,29 @@ Route::post('/commerce/{slug}/review', [ReviewController::class, 'addReview'])
     ->middleware(['auth', 'verified'])
     ->name('commerce.review.add');    
 
-/** Email verifications */
-Route::get('/email/verification/{hash}', VerifyEmailController::class, 'verifyMail')
-->name('verification.verify');
+/** User */
+Route::get('register', [UserController::class, 'showRegisterForm'])
+    ->middleware(['guest'])
+    ->name('user.register.form');
+Route::post('register', [UserController::class, 'register'])
+    ->name('user.register');
+Route::get('/user/confirm_mail/{hash}', [UserController::class, 'confirmMail'])
+    ->name('user.register.mail.confirm');
+
+/** Session */
+Route::get('login', [SessionController::class, 'showLoginForm'])
+    ->middleware(['guest'])
+    ->name('session.login.form');
+Route::post('login', [SessionController::class, 'login'])
+    ->middleware(['guest'])
+    ->name('session.login');
+Route::post('logout', [SessionController::class, 'logout'])
+    ->middleware(['auth'])
+    ->name('session.logout');
+
+/** Password */
+Route::post('forgot-password', [PasswordController::class, 'sendMail'])
+    ->name('password.email');
 
 
 require __DIR__.'/auth.php';

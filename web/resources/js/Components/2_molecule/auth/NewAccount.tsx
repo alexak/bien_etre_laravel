@@ -30,6 +30,8 @@ export default function NewAccount({ setActiveForm }) {
         e.preventDefault();
         setIsSubmitted(true);
 
+        console.log(data);
+
         router.visit(route('user.register'), {
             method: 'post',
             data: data,

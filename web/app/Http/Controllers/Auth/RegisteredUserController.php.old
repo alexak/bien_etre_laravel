@@ -25,7 +25,7 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Register');
+        return Inertia::render('Auth/Register', []);
     }
 
     /**
@@ -50,12 +50,10 @@ class RegisteredUserController extends Controller
         $user->save();
 
         $mailData = [
-            'userFirstName' => $user->name,
             'userMailToken' => $user->email_token
         ];
         Mail::to($user->email)->send(new WelcomeEmail($mailData));
 
-        dd('hello');
         event(new Registered($user));
 
         Auth::login($user);
