@@ -10,6 +10,7 @@ import Rating from "@/Components/1_atom/Rating";
 import { Link } from "@inertiajs/react";
 import { Carousel } from "@material-tailwind/react";
 import Reviews from '@/Components/4_organism/Reviews';
+import OpeningHours from '@/Components/4_organism/OpeningHours';
 
 
 export default function Commerce({commerce, reviews, ratings}) {
@@ -51,7 +52,7 @@ export default function Commerce({commerce, reviews, ratings}) {
             </div>
 
 
-            <div>        
+            <div className='pb-8'>        
                 maincontent including
                 <ul>
                     <li>description</li>
@@ -79,8 +80,13 @@ export default function Commerce({commerce, reviews, ratings}) {
                     </li>
                     <li>payment ?</li>
                     <li>button reserver</li>
-                </ul>
-                
+                </ul> 
+            </div>
+
+            <div>
+                <section id="opening hours">
+                    <OpeningHours openingHours={commerce.formatted_opening_hours} />
+                </section>
             </div>
 
 

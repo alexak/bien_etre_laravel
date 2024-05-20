@@ -11,13 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('commerce_opening_hours', function (Blueprint $table) {
+        Schema::create('opening_hours', function (Blueprint $table) {
             $table->id();
-            $table->text('comment')->nullable();
-            $table->smallInteger('day_of_week');
-            $table->time('opening_time');
-            $table->time('closing_time');
-            $table->date('special_date')->nullable();
+            $table->text('comment')
+                ->nullable();
+            $table->tinyInteger('day_of_week')
+                ->nullable();
+            $table->time('opening_time')
+                ->nullable();
+            $table->time('closing_time')
+                ->nullable();
+            $table->date('special_date')
+                ->nullable();
             $table->foreignId('commerce_id')
                 ->constrained('commerces')
                 ->onDelete('cascade');

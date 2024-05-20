@@ -25,7 +25,8 @@ class CommerceController extends Controller
                 'reviews' => function ($query){
                     $query->with('user')
                         ->orderBy('created_at', 'desc');
-                }
+                },
+                'openingHours'
             ])
             ->where('slug', $slug)
             ->first();

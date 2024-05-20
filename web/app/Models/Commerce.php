@@ -10,14 +10,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use MatanYadaev\EloquentSpatial\Objects\Point;
 use MatanYadaev\EloquentSpatial\Traits\HasSpatial;
 use Illuminate\Support\Facades\DB;
-
+use Carbon\Carbon;
 
 class Commerce extends Model
 {
     use HasFactory;
     use HasSpatial;
 
-    protected $appends = ['coordinates'];
+    protected $appends = ['coordinates', 'formatted_opening_hours'];
+    protected $hidden = ['openingHours'];
 
     protected $casts = [
         'location' => Point::class,
@@ -91,5 +92,54 @@ class Commerce extends Model
         ksort($counts);
 
         return $counts;
+    }
+
+    public function openingHours()
+    {
+        return $this->hasMany(OpeningHour::class);
+    }
+
+    public function getFormattedOpeningHoursAttribute()
+    {
+        $regularHours = array_fill(0, 7, []);
+        $specialHours = [];
+
+        foreach ($this->openingHours as $openingHour) {
+            if ($openingHour->special_date) {
+                $specialDate = Carbon::parse($openingHour->special_date)->format('d.m');
+                if (!isset($specialHours[$specialDate])) {
+                    $specialHours[$specialDate] = [];
+                }
+                $specialHours[$specialDate][] = [
+                    'opening_time' => $openingHour->opening_time,
+                    'closing_time' => $openingHour->closing_time
+                ];
+            } else {
+                $dayIndex = $openingHour->day_of_week - 1;
+                $regularHours[$dayIndex][] = [
+                    'opening_time' => $openingHour->opening_time,
+                    'closing_time' => $openingHour->closing_time
+                ];
+            }
+        }
+
+        // Sort the regular hours by opening_time
+        foreach ($regularHours as &$hours) {
+            usort($hours, function ($a, $b) {
+                return strcmp($a['opening_time'], $b['opening_time']);
+            });
+        }
+
+        // Sort the special hours by opening_time
+        foreach ($specialHours as &$hours) {
+            usort($hours, function ($a, $b) {
+                return strcmp($a['opening_time'], $b['opening_time']);
+            });
+        }
+
+        return [
+            'regular' => $regularHours,
+            'special' => $specialHours
+        ];
     }
 }
