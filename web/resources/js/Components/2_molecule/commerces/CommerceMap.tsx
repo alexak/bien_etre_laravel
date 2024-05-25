@@ -1,110 +1,93 @@
-
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, router, usePage } from "@inertiajs/react";
-import CommerceList from './CommerceList';
-import CommerceCardSmall from './CommerceCardSmall';
+import { router, usePage } from "@inertiajs/react";
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import ReactDOMServer from 'react-dom/server';
 import axios from 'axios';
-import RoutesDirections from '@/Components/3_cell/RoutesDirections';
-import EmptyResults from '@/Components/1_atom/EmptyResults';
-
+import CommerceCardSmall from '@/Components/2_molecule/commerces/CommerceCardSmall';
 
 export default function CommerceMap({
-    commerces, 
-    setParentCommerce
-}){
-
+    commercesProps,
+    routesProps,
+    mapconfigProps
+}) {
     const { props } = usePage();
-    const [centerpoint, setCenterPoint] = useState(
-        {
-            long: props.location ? props.location.longitude : 7.72,
-            lat: props.location ? props.location.latitude : 48.5,
-        },
-    );
-    
+    const { data:commerces, setCommerces } = commercesProps;
+    const { data:routes, setRoutes } = routesProps;
+    const { data:mapconfig, setMapconfig } = mapconfigProps;
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [zoom, setZoom] = useState(10);
-    const [routes, setRoutes] = useState(null);
-    const [activeRoute, setActiveRoute] = useState(0);
-    const [routeFromTo, setRouteFromTo] = useState({
-        mode: 'driving',
-        start: props.location,
-        end: null
+    const [centerpoint, setCenterPoint] = useState({
+        long: props.location ? props.location.longitude : 7.72,
+        lat: props.location ? props.location.latitude : 48.5,
     });
-    const [destinationMarker, setDestinationMarker] = useState(null);
 
-    mapboxgl.accessToken = props.mapbox;
-        
-    function formatGeoData(commerces) {
-        const formattedData = commerces.map(commerce => ({
-          type: 'Feature',
-          geometry: {
-            type: 'Point',
-            coordinates: 
-            [
-                commerce.coordinates.longitude,
-                commerce.coordinates.latitude
-            ],
-          },
-          properties: {
-            id: commerce.id,
-            name: commerce.name,
-            commerce: commerce
-            // Add other relevant properties for your GeoJSON
-          },
+    const setAttribute = (attribute, value) => {
+        setRoutes((prevRoutes) => ({
+            ...prevRoutes,
+            [attribute]: value,
         }));
-      
+    };
+
+    const formatGeoData = (commerces) => {
+        const formattedData = commerces.map(commerce => ({
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [
+                    commerce.coordinates.longitude,
+                    commerce.coordinates.latitude
+                ],
+            },
+            properties: {
+                id: commerce.id,
+                name: commerce.name,
+                commerce: commerce
+            },
+        }));
+
         return {
-            "type": "FeatureCollection",
-            "features": formattedData
+            type: 'FeatureCollection',
+            features: formattedData
         };
-    }
+    };
 
     useEffect(() => {
-        if (map.current) return; // initialize map only once
-
+        if (map.current) return; // Initialize map only once
+        mapboxgl.accessToken = props.mapbox;
+        
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
             style: 'mapbox://styles/mapbox/streets-v12',
             center: [centerpoint.long, centerpoint.lat],
             zoom: zoom,
             cooperativeGestures: true
-        });        
+        });
 
         map.current.on('move', () => {
             setZoom(map.current.getZoom().toFixed(2));
-            getCommercesOnVisibleMap()
+            getCommercesOnVisibleMap();
         });
-        
+
         map.current.on('load', () => {
             map.current.addControl(new mapboxgl.NavigationControl());
             map.current.addControl(new mapboxgl.ScaleControl());
-               
-            /** layer including the commerces */
+            getCommercesOnVisibleMap();
             map.current.addSource('commerces', {
-                'type': 'geojson',
-                'data': formatGeoData(commerces),
-                'cluster': true,
-                'clusterMaxZoom': 14, // Max zoom to cluster points on
-                'clusterRadius': 50 // Radius of each cluster when clustering points (defaults to 50)    
-              }
-            );
+                type: 'geojson',
+                data: formatGeoData(commerces),
+                cluster: true,
+                clusterMaxZoom: 14,
+                clusterRadius: 50
+            });
 
-            /** layer including clusters */
             map.current.addLayer({
                 id: 'clusters',
                 type: 'circle',
                 source: 'commerces',
                 filter: ['has', 'point_count'],
                 paint: {
-                    // Use step expressions (https://docs.mapbox.com/style-spec/reference/expressions/#step)
-                    // with three steps to implement three types of circles:
-                    //   * Blue, 20px circles when point count is less than 100
-                    //   * Yellow, 30px circles when point count is between 100 and 750
-                    //   * Pink, 40px circles when point count is greater than or equal to 750
                     'circle-color': [
                         'step',
                         ['get', 'point_count'],
@@ -126,7 +109,6 @@ export default function CommerceMap({
                 }
             });
 
-            /** layer including the clusters count */
             map.current.addLayer({
                 id: 'cluster-count',
                 type: 'symbol',
@@ -138,26 +120,21 @@ export default function CommerceMap({
                     'text-size': 12,
                 },
                 paint: {
-                    'text-color': '#fff', 
+                    'text-color': '#fff',
                 }
             });
 
-            /** preparation custom location icon */
             map.current.loadImage('/images/icons/location.png', (error, image) => {
                 if (error) throw error;
-                // Add the image to the map using a unique name, e.g., 'custom-icon'
                 map.current.addImage('custom-icon', image);
-                // Now you can reference 'custom-icon' in your layer configuration
             });
 
-            /** layer including unclustering points */
             map.current.addLayer({
                 id: 'unclustered-point',
                 type: 'symbol',
                 source: 'commerces',
                 filter: ['!', ['has', 'point_count']],
                 layout: {
-                    // Use the custom icon for each unclustered point
                     'icon-image': 'custom-icon',
                     'icon-size': 0.08
                 }
@@ -165,23 +142,19 @@ export default function CommerceMap({
 
             map.current.on('click', 'unclustered-point', (e) => {
                 const coordinates = e.features[0].geometry.coordinates.slice();
-                const name = e.features[0].properties.name
-    
-                // Ensure that if the map is zoomed out such that
-                // multiple copies of the feature are visible, the
-                // popup appears over the copy being pointed to.
+                const name = e.features[0].properties.name;
+
                 while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
                     coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
                 }
 
-                const tooltipRenedered= <CommerceCardSmall commerce={JSON.parse(e.features[0].properties.commerce)} />
-                const html = ReactDOMServer.renderToString(tooltipRenedered);
+                const tooltipRendered = <CommerceCardSmall commerce={JSON.parse(e.features[0].properties.commerce)} />;
+                const html = ReactDOMServer.renderToString(tooltipRendered);
                 new mapboxgl.Popup()
                     .setLngLat(coordinates)
                     .setHTML(html)
                     .addTo(map.current);
             });
-    
 
             map.current.on('click', 'clusters', (e) => {
                 const features = map.current.queryRenderedFeatures(e.point, {
@@ -192,7 +165,7 @@ export default function CommerceMap({
                     clusterId,
                     (err, zoom) => {
                         if (err) return;
-    
+
                         map.current.easeTo({
                             center: features[0].geometry.coordinates,
                             zoom: zoom
@@ -200,7 +173,7 @@ export default function CommerceMap({
                     }
                 );
             });
-    
+
             map.current.on('mouseenter', 'clusters', () => {
                 map.current.getCanvas().style.cursor = 'pointer';
             });
@@ -208,11 +181,8 @@ export default function CommerceMap({
             map.current.on('mouseleave', 'clusters', () => {
                 map.current.getCanvas().style.cursor = '';
             });
-    
-            /** layer showing the user position */
+
             if (props.location && map.current) {
-             
-                // make a marker for each feature and add to the map
                 new mapboxgl.Marker(getHtmlMarker('bg-sky-400'))
                     .setLngLat({
                         lat: props.location.latitude,
@@ -220,125 +190,117 @@ export default function CommerceMap({
                     })
                     .addTo(map.current);
             }
-
         });
-    });
 
-    const getCommercesOnVisibleMap = () => {
-        if (!map.current) return;
+        map.current.on('styledata', () => {
+            // Now we know the style is fully loaded, we can safely add layers
+            if (routes.alternatives && routes.alternatives.length > 0) {
+                const geojson = {
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: routes.alternatives[routes.activeRouteId].geometry.coordinates
+                    }
+                };
 
-        // get boudings of current map
-        const bounds = map.current.getBounds().toArray();
-        
-        // create url
-        const currentUrl = new URL(window.location.href);
-        currentUrl.searchParams.delete('bounds');
-      
-        // Add a new parameter
-        currentUrl.searchParams.append('bounds', bounds);
-
-        router.visit(currentUrl, {
-            only: ['commerces'],
-            preserveState: true,
-            preserveScroll: true,
-            onSuccess: (page) => {
-                setParentCommerce(page.props.commerces);
-                const geojson = formatGeoData(page.props.commerces);
-                map.current.getSource('commerces').setData(geojson);
+                if (map.current.getSource('route')) {
+                    map.current.getSource('route').setData(geojson);
+                    map.current.setLayoutProperty('route', 'visibility', 'visible');
+                } else {
+                    map.current.addLayer({
+                        id: 'route',
+                        type: 'line',
+                        source: {
+                            type: 'geojson',
+                            data: geojson
+                        },
+                        layout: {
+                            'line-join': 'round',
+                            'line-cap': 'round'
+                        },
+                        paint: {
+                            'line-color': '#ec4899',
+                            'line-width': 5,
+                            'line-opacity': 0.75
+                        }
+                    });
+                }
             }
-        })
-    } 
+        });
+    }, []);
 
 
-    const getHtmlMarker = (color) => {
-        const markerContainer = document.createElement('div');
-        markerContainer.className = 'absolute top-0 left-0 ';
-        
-        const el = document.createElement('div');
-        el.className = `w-4 h-4 animate-ping ${color} rounded-full absolute top-0 left-0`;
-        el.style.transformOrigin = 'center';
-        markerContainer.appendChild(el);
-
-        const elfixed = document.createElement('div');
-        elfixed.className = `w-4 h-4 ${color} rounded-full absolute top-0 left-0`;
-        markerContainer.appendChild(elfixed);
-        
-        return markerContainer;
-    }
+    useEffect(() => {
+        commercesProps.setCommerces(commerces);
+        if (map.current) {
+            const geojson = formatGeoData(commerces);
+            const source = map.current.getSource('commerces');
+            if (source) {
+                source.setData(geojson);
+            }
+        }
+    }, [commerces]);
 
 
-    const flyToCoordinates = (coordinates) => {
-
-        console.log(coordinates);
-        
-        if (!map.current) return;
-      
-        // make a marker for each feature and add to the map
-        //const constCurrentDestinationMarker = destinationMarker ? destinationMarker :  new mapboxgl.Marker(getHtmlMarker('bg-pink-500')).addTo(map.current);
-        //if (!destinationMarker) {
-        //    setDestinationMarker(constCurrentDestinationMarker);
-        //}
-        //constCurrentDestinationMarker.setLngLat(coordinates);
-       
+    useEffect(() => {
+        if (!map.current || mapconfig.flyTo.length === 0) return;
 
         map.current.flyTo({
-          center: coordinates,
-          zoom: 17
+            center: mapconfig.flyTo,
+            zoom: 17
         });
-        const features = map.current.queryRenderedFeatures(coordinates, {
-            layers: ['unclustered-point']
-        });
+        setMapconfig((prev) => ({
+            ...prev,
+            flyTo: [],
+        }));
+    }, [mapconfig.flyTo]);
 
-        console.log(features);
-    }
-
-    
     useEffect(() => {
-        if(!routeFromTo.end) return;
+        if (!routes.trip.destination) return;
 
-        const url = `https://api.mapbox.com/directions/v5/mapbox/${routeFromTo.mode}/${routeFromTo.start.longitude},${routeFromTo.start.latitude};${routeFromTo.end.longitude},${routeFromTo.end.latitude}`;
+        const url = `https://api.mapbox.com/directions/v5/mapbox/${routes.trip.mode}/${routes.trip.origin.longitude},${routes.trip.origin.latitude};${routes.trip.destination.longitude},${routes.trip.destination.latitude}`;
         const params = {
-          overview: 'full',
-          steps: true,
-          geometries: 'geojson',
-          access_token: mapboxgl.accessToken,
-          alternatives: true,
-          language: 'fr',
-          annotations:'distance,duration'
-          // arrive_by: YYYY-MM-DDThh:mm:ssZ // The desired arrival time, formatted in one of three ISO 8601 usagbe if driving and rdv pris.
+            overview: 'full',
+            steps: true,
+            geometries: 'geojson',
+            access_token: mapboxgl.accessToken,
+            alternatives: true,
+            language: 'fr',
+            annotations: 'distance,duration'
         };
-      
+
         axios.get(url, { params })
             .then(response => {
-                if (response.data.routes.length == 0) return;
-      
-                setRoutes(response.data.routes);
+                if (response.data.routes.length === 0) return;
+                setAttribute('alternatives', response.data.routes);
             })
             .catch(error => {
-                // Handle any errors here
                 console.error('Error fetching data: ', error);
             });
-    },[routeFromTo])
-
+    }, [routes.trip]);
 
     useEffect(() => {
-        if (!routes || routes.length == 0) return;
+        if (!routes.alternatives || routes.alternatives.length === 0) {
+            if (map.current.getLayer('route')) {
+                map.current.setLayoutProperty('route', 'visibility', 'none');
+            }
+            return;
+        }
 
         const geojson = {
             type: 'Feature',
             properties: {},
             geometry: {
                 type: 'LineString',
-                coordinates: routes[activeRoute].geometry.coordinates
+                coordinates: routes.alternatives[routes.activeRouteId].geometry.coordinates
             }
         };
 
         if (map.current.getSource('route')) {
-            // if the route already exists on the map, we'll reset it using setData
             map.current.getSource('route').setData(geojson);
             map.current.setLayoutProperty('route', 'visibility', 'visible');
         } else {
-            // otherwise, we'll make a new request
             map.current.addLayer({
                 id: 'route',
                 type: 'line',
@@ -357,62 +319,54 @@ export default function CommerceMap({
                 }
             });
         }
-    }, [routes, activeRoute]);
+    }, [routes.alternatives, routes.activeRouteId]);
 
-    const unsetRoute = () => {
-        setRoutes(null);
-        map.current.setLayoutProperty('route', 'visibility', 'none');
-    }
+    const getCommercesOnVisibleMap = () => {
+        if (!map.current) return;
 
-    const zoomOut=() => {
+        const bounds = map.current.getBounds().toArray();
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.delete('bounds');
+        currentUrl.searchParams.append('bounds', bounds);
+
+        router.visit(currentUrl, {
+            only: ['initialCommerces'],
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: (page) => {
+                setCommerces(page.props.initialCommerces);
+            }
+        });
+    };
+
+    const getHtmlMarker = (color) => {
+        const markerContainer = document.createElement('div');
+        markerContainer.className = 'absolute top-0 left-0 ';
+
+        const el = document.createElement('div');
+        el.className = `w-4 h-4 animate-ping ${color} rounded-full absolute top-0 left-0`;
+        el.style.transformOrigin = 'center';
+        markerContainer.appendChild(el);
+
+        const elfixed = document.createElement('div');
+        elfixed.className = `w-4 h-4 ${color} rounded-full absolute top-0 left-0`;
+        markerContainer.appendChild(elfixed);
+
+        return markerContainer;
+    };
+
+    const zoomOut = () => {
         if (zoom > 5) {
-            map.current.setZoom(zoom-1);
+            map.current.setZoom(zoom - 1);
         }
-    }
+    };
 
     return (
-        <div className="flex flex-col w-full min-h-screen overflow-y-auto md:flex-row">
-            <div className="relative w-full rounded-lg md:w-2/3">
-                <div ref={mapContainer} className='w-full h-[400px] md:h-screen'/>
-                <div className="absolute p-2 text-sm text-white top-2 left-2 bg-slate-600/70">
-                    Longitude: {centerpoint.long} | Latitude: {centerpoint.lat} | Zoom: {zoom}
-                </div>
-            </div>
-            <div className="w-full md:w-1/3">
-                {routes ? (  
-                    <RoutesDirections 
-                        routes={routes}
-                        unsetRoute={()=>unsetRoute()}
-                        parentActiveRoute={activeRoute}
-                        setParentActiveRoute={setActiveRoute}
-                        parentRouteFromTo={routeFromTo}
-                        setParentRouteFromTo={setRouteFromTo}
-                        flyToCoordinates={flyToCoordinates}
-                    />
-                ):(
-                    commerces?.length > 0 ? (
-                        <div className='h-screen overflow-y-auto'>
-                            <h1 className="p-2 m-2 text-xl uppercase font-bolder">
-                                Vos commerces proche de vous:
-                            </h1>
-                            <div className="flex flex-row w-full overflow-x-auto overflow-y-hidden md:overflow-x-hidden md:overflow-y-auto md:flex-col">
-                                {commerces.map((commerce) => (
-                                    <CommerceList 
-                                        key={commerce.id} 
-                                        commerce={commerce}
-                                        onClickName={()=>flyToCoordinates(commerce.location.coordinates)}
-                                        onClickDirection={
-                                            ()=>(setRouteFromTo((prevRoute) => ({ ...prevRoute, end:commerce.coordinates})) ) 
-                                        }
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    ):(
-                        <EmptyResults parentZoomOut={()=>zoomOut()}/>
-                    )
-                )}
+        <div className="relative w-full">
+            <div ref={mapContainer} className='w-full h-[400px] md:h-screen' />
+            <div className="absolute p-2 text-sm text-white top-2 left-2 bg-slate-600/70">
+                Longitude: {centerpoint.long} | Latitude: {centerpoint.lat} | Zoom: {zoom}
             </div>
         </div>
-    )
+    );
 }

@@ -1,7 +1,7 @@
 
 import React from "react";
 import CommerceCard from "@/Components/2_molecule/commerces/CommerceCard";
-import CommerceMap from "@/Components/2_molecule/commerces/CommerceMap";
+import CommerceMapList from "@/Components/4_organism/CommerceMapList";
 import Sort from "@/Components/1_atom/Sort";
 
 
@@ -10,10 +10,15 @@ import Sort from "@/Components/1_atom/Sort";
  * 
  * @returns 
  */
-export default function Commerces({commerces}){
+export default function Commerces({initialCommerces}){
 
     const [displayMode, setDisplayMode] = React.useState('card');
-    const [pageCommerces, setPageCommerces] = React.useState(commerces);
+    const [commerces, setCommerces] = React.useState(initialCommerces);
+
+    const commercesProps = {
+        data: commerces,
+        setCommerces: setCommerces,
+    };
     
     return (
         <>    
@@ -24,7 +29,7 @@ export default function Commerces({commerces}){
                 <div className="flex flex-row justify-between py-4">
                     {/** Header left */}
                     <div>
-                        <Sort setPageCommerces={setPageCommerces} /> 
+                        <Sort setPageCommerces={setCommerces} /> 
                     </div>
 
                     {/** Header right */}
@@ -59,17 +64,14 @@ export default function Commerces({commerces}){
                 {/** Commerces as cards */}
                 {displayMode === 'card' && (
                     <div className="grid justify-start w-full grid-rows-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-                        {pageCommerces.map((commerce) => (
+                        {commerces.map((commerce) => (
                             <CommerceCard key={commerce.id} commerce={commerce} />
                         ))}
                     </div>
                     )}
 
                 {displayMode === 'map' && 
-                    <CommerceMap 
-                        commerces={commerces} 
-                        setParentCommerce={setPageCommerces} 
-                    />
+                    <CommerceMapList commercesProps={commercesProps} />
                 }
         
             </div>

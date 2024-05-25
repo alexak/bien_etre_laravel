@@ -4,7 +4,7 @@ import DistanceTime from "@/Components/1_atom/DistanceTime";
 
 export default function DirectionStep({
     step,
-    flyToCoordinates
+    routesProps
 }){
 
     const getManeuverIcon = (maneuver) => {
@@ -82,6 +82,13 @@ export default function DirectionStep({
         )
     }
 
+    const setFlyToCoordinates = (coordinates) => {
+        routesProps.setRoutes((prevRoutes) => ({ 
+            ...prevRoutes, 
+            flyTo: coordinates, 
+        }));
+    }
+
     return (
         <div className="h-[180px] flex flex-row items-center p-2 border-2 border-solid rounded-lg mb-2">
             <div className="">
@@ -90,7 +97,7 @@ export default function DirectionStep({
             <div className="flex flex-col w-full cursor-pointer">
                 <div
                     className="pb-4" 
-                    onClick={()=>(flyToCoordinates(step.maneuver.location))} >
+                    onClick={()=>(setFlyToCoordinates(step.maneuver.location))} >
                     {step.maneuver.instruction}
                 </div>
                 <div>

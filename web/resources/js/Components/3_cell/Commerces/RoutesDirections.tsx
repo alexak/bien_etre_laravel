@@ -11,26 +11,16 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, ButtonGroup, Menu, MenuHandler, MenuItem, MenuList, Tooltip } from "@material-tailwind/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DirectionStep from "@/Components/2_molecule/DirectionStep";
 import DistanceTime from "@/Components/1_atom/DistanceTime";
 
 
-// driving-traffic, driving, cycling, walking
 
-export default function RoutesDirections({
-    routes,
-    unsetRoute,
-    parentActiveRoute, 
-    setParentActiveRoute,
-    parentRouteFromTo,
-    setParentRouteFromTo,
-    flyToCoordinates
-}){
+export default function RoutesDirections({ routesProps }){
 
-    const [activeRoute, setActiveRoute] = useState(parentActiveRoute);
     const [openModeSelect, setOpenModeSelect] = useState(false);
-    const [routeFromTo, setRouteFromTo] = useState(parentRouteFromTo);
+    const { data:routes, setRoutes } = routesProps;
     const [modes , setModes] = useState(
         {
             'driving':faCar,
@@ -39,15 +29,15 @@ export default function RoutesDirections({
         }
     );
 
-    const changeMode = (mode) => {
-        setRouteFromTo((prevRoute) => ({ ...prevRoute, mode:mode}));
-        setParentRouteFromTo((prevRoute) => ({ ...prevRoute, mode:mode}));
-    }
-
-    const changeActiveRoute = (routeNo) => {
-        setActiveRoute(routeNo);
-        setParentActiveRoute(routeNo);
-    }
+    const setAttribute = (attribute, value) => {
+        if (attribute=='mode'){
+            setModes(value);
+        }
+        setRoutes((prevRoutes) => ({
+          ...prevRoutes,
+          [attribute]: value,
+        }));
+    };
 
     return(
         <div className="flex flex-col w-full h-screen p-4 overflow-y-auto">
@@ -59,7 +49,7 @@ export default function RoutesDirections({
                 </div>
                 <div 
                     className="cursor-pointer"
-                    onClick={()=>unsetRoute()}
+                    onClick={()=>setAttribute('routes', null)}
                 >
                     <FontAwesomeIcon 
                         className="text-gray-400 "
@@ -87,7 +77,7 @@ export default function RoutesDirections({
                                 <div className="">
                                     <FontAwesomeIcon
                                         className="w-[25px] h-[25px] text-gray-500 hover:text-gray-700"
-                                        icon={modes[routeFromTo.mode]}
+                                        icon={modes[routes.trip.mode]}
                                     />
                                 </div>
                                 <FontAwesomeIcon
@@ -98,9 +88,9 @@ export default function RoutesDirections({
                         </MenuHandler>
                         <MenuList className="p-2 rounded-b-md">
                             {Object.entries(modes).map(([arrayKey, icon]) => (
-                                arrayKey !== routeFromTo.mode && ( 
+                                arrayKey !== routes.trip.mode && ( 
                                     <MenuItem key={arrayKey}>
-                                        <div onClick={() => changeMode(arrayKey)}>
+                                        <div onClick={() => setAttribute('trip.mode', arrayKey)}>
                                             <FontAwesomeIcon
                                                 className="w-[25px] h-[25px] text-gray-500 hover:text-gray-700"
                                                 icon={icon}
@@ -116,16 +106,16 @@ export default function RoutesDirections({
                     <div className="">
                         <ButtonGroup 
                             variant="text"
-                            className="pb-2 flex flex-row md:flex-col xl:flex-row"
+                            className="flex flex-row pb-2 md:flex-col xl:flex-row"
                         >
-                            {routes.map((route, index) => (
+                            {routes.alternatives.map((route, index) => (
                                 <Button
                                     key={index}
-                                    onClick={() => changeActiveRoute(index)}
-                                    className={`${index==activeRoute ? 'text-pink-500' : 'text-gray-500'} hover:text-gray-700 text-sm px-2`}
+                                    onClick={() => setAttribute('activeRouteIndex', index)}
+                                    className={`${index==routes.activeRouteIndex ? 'text-pink-500' : 'text-gray-500'} hover:text-gray-700 text-sm px-2`}
                                 >
-                                    { index==activeRoute ? (
-                                        <>Route par {routes[activeRoute].legs[0].summary}</>
+                                    { index==routes.activeRouteId ? (
+                                        <>Route par {routes.alternatives[routes.activeRouteIndex].legs[0].summary}</>
                                     ) : (
                                         <>Route {index + 1}</>
                                     )}
@@ -135,18 +125,18 @@ export default function RoutesDirections({
                     </div>
                     <div className="flex flex-row pl-2">
                         <DistanceTime 
-                          distance={routes[activeRoute].distance}
-                          duration={routes[activeRoute].duration}
+                          distance={routes.alternatives[routes.activeRouteIndex].distance}
+                          duration={routes.alternatives[routes.activeRouteIndex].duration}
                         />
                     </div> 
                 </div>
             </div>
 
-            { routes[activeRoute].legs[0].steps.map((step, index) => (
+            { routes.alternatives[routes.activeRouteIndex].legs[0].steps.map((step, index) => (
                 <DirectionStep
                     key={index} 
                     step={step}
-                    flyToCoordinates={flyToCoordinates}
+                    routesProps={routesProps}
                 />
             )
             )}

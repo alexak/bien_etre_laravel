@@ -1,21 +1,45 @@
 
 import FavIcon from "@/Components/1_atom/FavIcon";
 import { 
-    faStar as faStarSolid,
     faArrowsLeftRight,
     faHouse,
     faShop,
     faRoute,
 } from '@fortawesome/free-solid-svg-icons';
-import {faStar as faStarRegular,} from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, usePage } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import SocialmediaShare from "@/Components/1_atom/SocialmediaShare";
 import { Button, Tooltip } from "@material-tailwind/react";
 
 
 
-export default function CommerceList({commerce, onClickName, onClickDirection}){
+export default function CommerceList({
+    commerce,
+    routesProps,
+    mapconfigProps
+}){
+
+    const { data: routes, setRoutes } = routesProps;
+    const { data:mapconfig, setMapconfig } = mapconfigProps;
+
+    const setDestinationCoordinates = (coordinates) => {
+        let trip = routes.data.trip;
+        trip.destination =  coordinates;
+        setRoutes((prevRoutes) => ({ 
+            ...prevRoutes, 
+            trip: trip,
+        }));
+    }
+
+    const setFlyTo = (commerce) => {
+        setMapconfig((prevRoutes) => ({ 
+            ...prevRoutes, 
+            flyTo: [
+                commerce.coordinates.longitude,
+                commerce.coordinates.latitude
+            ], 
+        }));
+    }
 
     return (
         <div className="flex flex-row items-center justify-between p-2 m-2 border-2 border-solid rounded-lg">
@@ -44,7 +68,6 @@ export default function CommerceList({commerce, onClickName, onClickDirection}){
                         />
                     </div>
 
-
                     <div>
                         <Link
                             href={route('category', commerce.main_category.slug)} 
@@ -55,7 +78,7 @@ export default function CommerceList({commerce, onClickName, onClickDirection}){
                     </div>
                     <div 
                         className="w-full text-lg font-bold cursor-pointer h-[60px] 2xl:h-[28px] "
-                        onClick={() => onClickName(commerce)}
+                        onClick={() => setFlyTo(commerce)}
                     >
                         {commerce.name}
                     </div>
@@ -99,7 +122,7 @@ export default function CommerceList({commerce, onClickName, onClickDirection}){
                         { commerce.distance !== null && (
                             <div 
                                 className="pr-4"
-                                onClick={() => onClickDirection()}
+                                onClick={() => setDestinationCoordinates(commerce.coordinates)}
                             >
                                 <Tooltip 
                                     className="text-gray-800 bg-white border-2 border-solid drop-shadow-lg"

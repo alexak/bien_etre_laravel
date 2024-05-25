@@ -90,7 +90,7 @@ class CategoryController extends Controller
         //$hasGeoJSON = $request->has('type') && $request->input('type') === 'geojson';
 
         return Inertia::render('Commerces', [
-            'commerces' => $commerces,
+            'initialCommerces' => $commerces,
             'location' => empty($location) ? null : $location,
         ]);
     }
