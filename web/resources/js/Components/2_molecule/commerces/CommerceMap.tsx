@@ -18,10 +18,6 @@ export default function CommerceMap({
     const mapContainer = useRef(null);
     const map = useRef(null);
     const [zoom, setZoom] = useState(10);
-    const [centerpoint, setCenterPoint] = useState({
-        long: props.location ? props.location.longitude : 7.72,
-        lat: props.location ? props.location.latitude : 48.5,
-    });
 
     const setAttribute = (attribute, value) => {
         setRoutes((prevRoutes) => ({
@@ -60,7 +56,7 @@ export default function CommerceMap({
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
             style: 'mapbox://styles/mapbox/streets-v12',
-            center: [centerpoint.long, centerpoint.lat],
+            center: [mapconfig.center.longitude, mapconfig.center.latitude],
             zoom: zoom,
             cooperativeGestures: true
         });
@@ -365,7 +361,7 @@ export default function CommerceMap({
         <div className="relative w-full">
             <div ref={mapContainer} className='w-full h-[400px] md:h-screen' />
             <div className="absolute p-2 text-sm text-white top-2 left-2 bg-slate-600/70">
-                Longitude: {centerpoint.long} | Latitude: {centerpoint.lat} | Zoom: {zoom}
+                Longitude: {mapconfig.center.longitude} | Latitude: {mapconfig.center.latitude} | Zoom: {zoom}
             </div>
         </div>
     );

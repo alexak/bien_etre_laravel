@@ -36,7 +36,11 @@ export default function CommerceMapList({ commercesProps }){
     };
 
     const [mapconfig, setMapconfig] = useState({
-        flyTo: [] // coordinates for a smoth flying to animation
+        flyTo: [], // coordinates for a smoth flying to animation
+        center: {
+            longitude: props.location.longitude ? 7.72,
+            latitude: props.location.latitude ? 48.5
+        }
     });
     
     const mapConfigProps = {
