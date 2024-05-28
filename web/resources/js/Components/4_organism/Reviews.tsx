@@ -93,24 +93,33 @@ export default function Reviews({
                 )
             }
 
-            <div className="flex flex-row mb-6 border-b-2">
-                <div className="mr-8">
-                    <SortReview
-                        commerce={commerce}
-                        sort={handleSort}
-                    />
-                </div>
-                <div>
-                    <FilterReview
-                        parentFilterRates={sortAndFilter.filter} 
-                        setParentFilterRates={handleFilterChange}
-                    />
-                </div>
-            </div>
+            { pageReviews.length === 0 ? (
+                    <></>
+                ):(
+                    <>
+                        <div className="flex flex-row mb-6 border-b-2">
+                            <div className="mr-8">
+                                <SortReview
+                                    commerce={commerce}
+                                    sort={handleSort}
+                                />
+                            </div>
+                            <div>
+                                <FilterReview
+                                    parentFilterRates={sortAndFilter.filter}
+                                    setParentFilterRates={handleFilterChange}
+                                />
+                            </div>
+                        </div>
 
-            {pageReviews.map((review) => (
-                <ReviewLine key={review.id} review={review} />
-            ))}
+                        {
+                            pageReviews.map((review) => (
+                                <ReviewLine key={review.id} review={review} />
+                            ))
+                        }
+                    </>
+                )
+            }
 
         </div>
     )
