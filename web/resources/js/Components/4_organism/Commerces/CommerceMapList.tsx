@@ -25,24 +25,13 @@ export default function CommerceMapList({ commercesProps }){
         setRoutes: setRoutes
     };
 
-    const [commerces, setCommerces] = useState(commercesProps.data);
-    useEffect(() => {
-        commercesProps.setCommerces(commerces);
-    },[commerces])
-    
-    const childCommerceProps = {
-        data: commerces,
-        setCommerces: setCommerces
-    };
-
     const [mapconfig, setMapconfig] = useState({
         flyTo: [], // coordinates for a smoth flying to animation
         center: {
-            longitude: props.location.longitude ? 7.72,
-            latitude: props.location.latitude ? 48.5
+            longitude: props.location && props.location.longitude ? props.location.longitude : 7.72,
+            latitude: props.location && props.location.latitude ? props.location.latitude : 48.5
         }
     });
-    
     const mapConfigProps = {
         data: mapconfig,
         setMapconfig: setMapconfig
@@ -53,7 +42,7 @@ export default function CommerceMapList({ commercesProps }){
         <div className="flex flex-col w-full min-h-screen overflow-y-auto md:flex-row">
             <div className="relative w-full rounded-lg md:w-2/3">
 ´               <CommerceMap 
-                    commercesProps={childCommerceProps}
+                    commercesProps={commercesProps}
                     routesProps={routesProps}
                     mapconfigProps={mapConfigProps}
                 />
@@ -62,9 +51,9 @@ export default function CommerceMapList({ commercesProps }){
                 {routes.alternatives.length > 0 ? (
                    <RoutesDirections routesProps={routesProps} />
                 ):(
-                    commerces?.length > 0 ? (
+                    commercesProps.data.commerces?.length > 0 ? (
                         <CommercesList 
-                            commercesProps={childCommerceProps}
+                            commercesProps={commercesProps}
                             routesProps={routesProps}
                             mapconfigProps={mapConfigProps}
                         />

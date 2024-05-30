@@ -7,29 +7,18 @@ import { Button, Menu, MenuHandler, MenuItem, MenuList } from "@material-tailwin
 
 
 
-export default function Sort({setPageCommerces}){
+export default function Sort({commerces}){
 
     const [openSort, setopenSort] = React.useState(false);
-    const getCommerces = (attribute = '', direction = 'asc') => {
 
-        const currentUrl = new URL(window.location.href);
-        currentUrl.searchParams.delete('sortBy');
-        currentUrl.searchParams.delete('sortDirection');
-      
-        if (attribute !== ''){
-            // Add a new parameter
-            currentUrl.searchParams.append('sortBy', attribute);
-            currentUrl.searchParams.append('sortDirection', direction);
-        }
-
-        router.visit(currentUrl, {
-            only: ['commerces'],
-            preserveState: true,
-            preserveScroll: true,
-            onSuccess: (page) => {
-                setPageCommerces(page.props.commerces);
-            }
-        })
+    const getCommerces = (sortBy = '', direction = 'asc') => {
+        commerces.setCommerces((prev) => ({
+            ...prev,
+            'sort': {
+                'sortBy': sortBy,
+                'sortDirection': direction
+            },
+        }));
     }
 
     return (
@@ -44,7 +33,7 @@ export default function Sort({setPageCommerces}){
                 <Button 
                     variant="text"
                     ripple={false}
-                    className="text-base text-gray-500 hover:text-gray-700 focus-visible:border-none focus-visible:border-0 px-0"
+                    className="px-0 text-base text-gray-500 hover:text-gray-700 focus-visible:border-none focus-visible:border-0"
                 >
                     <span className="pr-4">
                         Tri

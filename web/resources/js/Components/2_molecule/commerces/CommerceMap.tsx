@@ -26,6 +26,10 @@ export default function CommerceMap({
         }));
     };
 
+
+    console.log('map');
+    console.log(commercesProps.data.commerces);
+
     const formatGeoData = (commerces) => {
         const formattedData = commerces.map(commerce => ({
             type: 'Feature',
@@ -47,7 +51,20 @@ export default function CommerceMap({
             type: 'FeatureCollection',
             features: formattedData
         };
+    };    
+    
+    const getCommercesOnVisibleMap = () => {
+        if (!map.current) return;
+
+        let filter = commercesProps.data.filter;
+        filter.bounds = map.current.getBounds();
+        commercesProps.setCommerces((prev) => ({
+            ...prev,
+            filter: filter
+        }));
     };
+
+
 
     useEffect(() => {
         if (map.current) return; // Initialize map only once
@@ -69,10 +86,12 @@ export default function CommerceMap({
         map.current.on('load', () => {
             map.current.addControl(new mapboxgl.NavigationControl());
             map.current.addControl(new mapboxgl.ScaleControl());
-            getCommercesOnVisibleMap();
+            //if (commerces.length !== 1) {
+                getCommercesOnVisibleMap();
+            //}
             map.current.addSource('commerces', {
                 type: 'geojson',
-                data: formatGeoData(commerces),
+                data: formatGeoData(commercesProps.data.commerces),
                 cluster: true,
                 clusterMaxZoom: 14,
                 clusterRadius: 50
@@ -189,8 +208,7 @@ export default function CommerceMap({
         });
 
         map.current.on('styledata', () => {
-            // Now we know the style is fully loaded, we can safely add layers
-            if (routes.alternatives && routes.alternatives.length > 0) {
+            if (routes && routes.alternatives && routes.alternatives.length > 0) {
                 const geojson = {
                     type: 'Feature',
                     properties: {},
@@ -228,15 +246,14 @@ export default function CommerceMap({
 
 
     useEffect(() => {
-        commercesProps.setCommerces(commerces);
         if (map.current) {
-            const geojson = formatGeoData(commerces);
+            const geojson = formatGeoData(commercesProps.data.commerces);
             const source = map.current.getSource('commerces');
             if (source) {
                 source.setData(geojson);
             }
         }
-    }, [commerces]);
+    }, [commercesProps.data.commerces]);
 
 
     useEffect(() => {
@@ -252,88 +269,72 @@ export default function CommerceMap({
         }));
     }, [mapconfig.flyTo]);
 
-    useEffect(() => {
-        if (!routes.trip.destination) return;
+    if (routes) {
+        useEffect(() => {
+            if (!routes.trip.destination) return;
 
-        const url = `https://api.mapbox.com/directions/v5/mapbox/${routes.trip.mode}/${routes.trip.origin.longitude},${routes.trip.origin.latitude};${routes.trip.destination.longitude},${routes.trip.destination.latitude}`;
-        const params = {
-            overview: 'full',
-            steps: true,
-            geometries: 'geojson',
-            access_token: mapboxgl.accessToken,
-            alternatives: true,
-            language: 'fr',
-            annotations: 'distance,duration'
-        };
+            const url = `https://api.mapbox.com/directions/v5/mapbox/${routes.trip.mode}/${routes.trip.origin.longitude},${routes.trip.origin.latitude};${routes.trip.destination.longitude},${routes.trip.destination.latitude}`;
+            const params = {
+                overview: 'full',
+                steps: true,
+                geometries: 'geojson',
+                access_token: mapboxgl.accessToken,
+                alternatives: true,
+                language: 'fr',
+                annotations: 'distance,duration'
+            };
 
-        axios.get(url, { params })
-            .then(response => {
-                if (response.data.routes.length === 0) return;
-                setAttribute('alternatives', response.data.routes);
-            })
-            .catch(error => {
-                console.error('Error fetching data: ', error);
-            });
-    }, [routes.trip]);
+            axios.get(url, { params })
+                .then(response => {
+                    if (response.data.routes.length === 0) return;
+                    setAttribute('alternatives', response.data.routes);
+                })
+                .catch(error => {
+                    console.error('Error fetching data: ', error);
+                });
+        }, [routes.trip]);
 
-    useEffect(() => {
-        if (!routes.alternatives || routes.alternatives.length === 0) {
-            if (map.current.getLayer('route')) {
-                map.current.setLayoutProperty('route', 'visibility', 'none');
-            }
-            return;
-        }
-
-        const geojson = {
-            type: 'Feature',
-            properties: {},
-            geometry: {
-                type: 'LineString',
-                coordinates: routes.alternatives[routes.activeRouteId].geometry.coordinates
-            }
-        };
-
-        if (map.current.getSource('route')) {
-            map.current.getSource('route').setData(geojson);
-            map.current.setLayoutProperty('route', 'visibility', 'visible');
-        } else {
-            map.current.addLayer({
-                id: 'route',
-                type: 'line',
-                source: {
-                    type: 'geojson',
-                    data: geojson
-                },
-                layout: {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                },
-                paint: {
-                    'line-color': '#ec4899',
-                    'line-width': 5,
-                    'line-opacity': 0.75
+        useEffect(() => {
+            if (!routes.alternatives || routes.alternatives.length === 0) {
+                if (map.current.getLayer('route')) {
+                    map.current.setLayoutProperty('route', 'visibility', 'none');
                 }
-            });
-        }
-    }, [routes.alternatives, routes.activeRouteId]);
-
-    const getCommercesOnVisibleMap = () => {
-        if (!map.current) return;
-
-        const bounds = map.current.getBounds().toArray();
-        const currentUrl = new URL(window.location.href);
-        currentUrl.searchParams.delete('bounds');
-        currentUrl.searchParams.append('bounds', bounds);
-
-        router.visit(currentUrl, {
-            only: ['initialCommerces'],
-            preserveState: true,
-            preserveScroll: true,
-            onSuccess: (page) => {
-                setCommerces(page.props.initialCommerces);
+                return;
             }
-        });
-    };
+
+            const geojson = {
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                    type: 'LineString',
+                    coordinates: routes.alternatives[routes.activeRouteId].geometry.coordinates
+                }
+            };
+
+            if (map.current.getSource('route')) {
+                map.current.getSource('route').setData(geojson);
+                map.current.setLayoutProperty('route', 'visibility', 'visible');
+            } else {
+                map.current.addLayer({
+                    id: 'route',
+                    type: 'line',
+                    source: {
+                        type: 'geojson',
+                        data: geojson
+                    },
+                    layout: {
+                        'line-join': 'round',
+                        'line-cap': 'round'
+                    },
+                    paint: {
+                        'line-color': '#ec4899',
+                        'line-width': 5,
+                        'line-opacity': 0.75
+                    }
+                });
+            }
+        }, [routes.alternatives, routes.activeRouteId]);
+    }
 
     const getHtmlMarker = (color) => {
         const markerContainer = document.createElement('div');

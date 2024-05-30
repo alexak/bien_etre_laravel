@@ -1,8 +1,10 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import CommerceCard from "@/Components/2_molecule/commerces/CommerceCard";
-import CommerceMapList from "@/Components/4_organism/CommerceMapList";
+import CommerceMapList from "@/Components/4_organism/Commerces/CommerceMapList";
 import Sort from "@/Components/1_atom/Sort";
+import { router, usePage } from "@inertiajs/react";
+
 
 
 /**
@@ -10,16 +12,44 @@ import Sort from "@/Components/1_atom/Sort";
  * 
  * @returns 
  */
-export default function Commerces({initialCommerces}){
+export default function Commerces({initialCommerces, filter, sort}){
 
     const [displayMode, setDisplayMode] = React.useState('card');
-    const [commerces, setCommerces] = React.useState(initialCommerces);
+    const [commerces, setCommerces] = React.useState({
+        commerces: initialCommerces,
+        filter: filter,
+        sort: sort
+    });
 
     const commercesProps = {
         data: commerces,
         setCommerces: setCommerces,
     };
+
+    useEffect(() => {
+        const routeData = {
+            filter: commerces.filter,
+            sort: commerces.sort
+        };
+        router.get('/commerces', routeData,
+        {
+            preserveState: true,
+            only: ['initialCommerces'],
+            onSuccess: (page) => {
+                setCommerces((prev) => ({
+                    ...prev,
+                    'commerces': page.props.initialCommerces,
+                }));
+            },
+            onError: (error) => {
+                console.error('Error fetching data:', error);
+            }
+        });
+    }, [commerces.filter, commerces.sort]);
     
+
+
+
     return (
         <>    
             {/** Main content */}
@@ -29,7 +59,7 @@ export default function Commerces({initialCommerces}){
                 <div className="flex flex-row justify-between py-4">
                     {/** Header left */}
                     <div>
-                        <Sort setPageCommerces={setCommerces} /> 
+                        <Sort commerces={commercesProps} />
                     </div>
 
                     {/** Header right */}
@@ -64,12 +94,11 @@ export default function Commerces({initialCommerces}){
                 {/** Commerces as cards */}
                 {displayMode === 'card' && (
                     <div className="grid justify-start w-full grid-rows-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-                        {commerces.map((commerce) => (
+                        {commerces.commerces.map((commerce) => (
                             <CommerceCard key={commerce.id} commerce={commerce} />
                         ))}
                     </div>
                     )}
-
                 {displayMode === 'map' && 
                     <CommerceMapList commercesProps={commercesProps} />
                 }

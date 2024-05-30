@@ -30,8 +30,6 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 Route::get('/', [HomeController::class, 'index']);
 
 /** categories  */
-Route::get('/category/{categoryname}', [CategoryController::class, 'index'])
-    ->name('category');
 Route::get('/menucategories', [CategoryController::class, 'menuCategories'])
     ->name('menucategories');
 
@@ -45,6 +43,14 @@ Route::post('/favorites', [FavoriteController::class, 'addFavoriteToUser'])
 Route::delete('/favorites/{commerceId}', [FavoriteController::class, 'deleteFavoriteFromUser'])
     ->middleware(['auth', 'verified'])
     ->name('favorites.delete');
+
+//TODO: create a route with commerces
+
+/** commerces */
+Route::get('/category/{categoryname}', [CommercesController::class, 'getByCategory'])
+    ->name('category');
+Route::get('/commerces', [CommercesController::class, 'getByFilter'])
+    ->name('commerces');
 
 /** commerce detail page */
 Route::get('/commerce/{slug}', [CommerceController::class, 'index'])
