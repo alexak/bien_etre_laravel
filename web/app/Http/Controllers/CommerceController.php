@@ -26,7 +26,8 @@ class CommerceController extends Controller
                     $query->with('user')
                         ->orderBy('created_at', 'desc');
                 },
-                'openingHours'
+                'openingHours',
+                'city'
             ])
             ->where('slug', $slug)
             ->first();

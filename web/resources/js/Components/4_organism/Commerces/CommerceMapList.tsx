@@ -40,11 +40,12 @@ export default function CommerceMapList({ commercesProps }){
 
     return (
         <div className="flex flex-col w-full min-h-screen overflow-y-auto md:flex-row">
-            <div className="relative w-full rounded-lg md:w-2/3">
-´               <CommerceMap 
+            <div className="relative flex-grow">
+                <CommerceMap 
                     commercesProps={commercesProps}
                     routesProps={routesProps}
                     mapconfigProps={mapConfigProps}
+                    className="rounded-lg w-full h-[400px] md:h-screen"
                 />
             </div>
             <div className="w-full md:w-1/3">

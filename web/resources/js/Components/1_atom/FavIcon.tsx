@@ -4,7 +4,6 @@ import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Tooltip from '@material-tailwind/react/components/Tooltip';
 import { useState } from 'react';
-import Inertia from '@inertiajs/core';
 import { router } from '@inertiajs/react'
 
 export default function FavIcon({ commerce, ...props } ) {

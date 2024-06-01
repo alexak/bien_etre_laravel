@@ -11,9 +11,14 @@ import { Link } from "@inertiajs/react";
 import { Carousel } from "@material-tailwind/react";
 import Reviews from '@/Components/4_organism/Reviews';
 import OpeningHours from '@/Components/4_organism/OpeningHours';
+import Location from '@/Components/4_organism/Commerces/Location';
 
 
+//TODO: why reviews and ratings as seperate attributes?
 export default function Commerce({commerce, reviews, ratings}) {
+
+
+    console.log(commerce);
 
     return (
         <div className="p-4 lg:p-20">
@@ -83,13 +88,10 @@ export default function Commerce({commerce, reviews, ratings}) {
                 </ul> 
             </div>
 
-            <div>
-                <section id="opening hours">
-                    <OpeningHours openingHours={commerce.formatted_opening_hours} />
-                </section>
-            </div>
-
-
+            <Location 
+                commerce={ commerce }
+                className="pb-12"
+            />
             <div>
                 <section id="reviews">
                     <Reviews 

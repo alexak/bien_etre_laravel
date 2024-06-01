@@ -8,7 +8,10 @@ const formatTime = (time) => {
   return DateTime.fromISO(`1970-01-01T${time}`).toFormat("HH:mm");
 };
 
-export default function OpeningHours({ openingHours }) {
+export default function OpeningHours({ 
+    openingHours,
+    ...rest
+}) {
   const today = DateTime.local();
   const weekDates = [];
 
@@ -24,8 +27,8 @@ export default function OpeningHours({ openingHours }) {
   const getFormattedDate = (date) => date.toFormat("dd.MM");
 
   return (
-    <div className="flex flex-col w-full pb-8">
-        <div className="pb-4 text-2xl uppercase">
+    <div className={`flex flex-col w-full text-sm text-gray-700 ${rest.className}`}>
+        <div className="pb-4 font-bold uppercase">
             <h2>Nos horaires d'ouvertures</h2>
         </div>
         <div>
@@ -37,9 +40,9 @@ export default function OpeningHours({ openingHours }) {
 
                 return (
                     <div key={index}
-                        className="flex flex-row"
+                        className="flex flex-row text-sm"
                     >
-                        <div className="w-[50px] font-semibold">
+                        <div className="w-[50px] font-medium">
                             {daysOfWeek[index]}
                         </div>
                         {specialHours && specialHours.length > 0 ? (

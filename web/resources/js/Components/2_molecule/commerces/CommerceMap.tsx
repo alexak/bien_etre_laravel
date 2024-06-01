@@ -9,15 +9,15 @@ import CommerceCardSmall from '@/Components/2_molecule/commerces/CommerceCardSma
 export default function CommerceMap({
     commercesProps,
     routesProps,
-    mapconfigProps
+    mapconfigProps,
+    ...rest
 }) {
     const { props } = usePage();
-    const { data:commerces, setCommerces } = commercesProps;
     const { data:routes, setRoutes } = routesProps;
     const { data:mapconfig, setMapconfig } = mapconfigProps;
     const mapContainer = useRef(null);
     const map = useRef(null);
-    const [zoom, setZoom] = useState(10);
+    const [zoom, setZoom] = useState(mapconfigProps.data.zoom ?? 10);
 
     const setAttribute = (attribute, value) => {
         setRoutes((prevRoutes) => ({
@@ -25,10 +25,6 @@ export default function CommerceMap({
             [attribute]: value,
         }));
     };
-
-
-    console.log('map');
-    console.log(commercesProps.data.commerces);
 
     const formatGeoData = (commerces) => {
         const formattedData = commerces.map(commerce => ({
@@ -68,11 +64,13 @@ export default function CommerceMap({
 
     useEffect(() => {
         if (map.current) return; // Initialize map only once
+  
         mapboxgl.accessToken = props.mapbox;
+        console.log('map init');
         
         map.current = new mapboxgl.Map({
             container: mapContainer.current,
-            style: 'mapbox://styles/mapbox/streets-v12',
+            style: mapconfigProps.data.style ?? 'mapbox://styles/mapbox/streets-v12',
             center: [mapconfig.center.longitude, mapconfig.center.latitude],
             zoom: zoom,
             cooperativeGestures: true
@@ -154,6 +152,8 @@ export default function CommerceMap({
                     'icon-size': 0.08
                 }
             });
+
+            map.current.resize();
 
             map.current.on('click', 'unclustered-point', (e) => {
                 const coordinates = e.features[0].geometry.coordinates.slice();
@@ -359,8 +359,9 @@ export default function CommerceMap({
     };
 
     return (
-        <div className="relative w-full">
-            <div ref={mapContainer} className='w-full h-[400px] md:h-screen' />
+        <div className={`relative ${rest.className}`}>
+            <div ref={mapContainer} 
+                className="w-full h-full"/>
             <div className="absolute p-2 text-sm text-white top-2 left-2 bg-slate-600/70">
                 Longitude: {mapconfig.center.longitude} | Latitude: {mapconfig.center.latitude} | Zoom: {zoom}
             </div>
